@@ -1,0 +1,230 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Theme Color Definitions */
+:root { /* Nude Palette (Default) */
+  --color-primary: #3A2D28;
+  --color-primary-rgb: 58, 45, 40;
+  --color-hero-gradient-rgb: 58, 45, 40;
+  --color-secondary: #A48374;
+  --color-accent: #CBAD8D;
+  --color-background-body: #FFFFFF;
+  --color-background-section: #F1EDE6;
+  --color-background-card: #FFFFFF;
+  --color-background-header: #E2E6E8; /* Universal header color */
+  --color-text-primary: #3A2D28;
+  --color-header-text: var(--color-text-primary);
+  --color-text-secondary: rgba(58, 45, 40, 0.8);
+  --color-text-accent: #CBAD8D;
+  --color-text-inverted: #FFFFFF;
+  --color-border: #D1C7BD;
+  --color-footer-text-secondary: #d1d5db; /* gray-300 */
+}
+
+html[data-theme='blue'] {
+  --color-primary: #052659;
+  --color-primary-rgb: 5, 38, 89;
+  --color-hero-gradient-rgb: 5, 38, 89;
+  --color-secondary: #5483B3;
+  --color-accent: #7DA0CA;
+  --color-background-body: #F7FBFF;
+  --color-background-section: #EFF5FB;
+  --color-background-card: #FFFFFF;
+  --color-background-header: #E2E6E8; /* Universal header color */
+  --color-text-primary: #021024;
+  --color-header-text: var(--color-text-primary);
+  --color-text-secondary: #052659;
+  --color-text-accent: #5483B3;
+  --color-text-inverted: #FFFFFF;
+  --color-border: #DDE7F0;
+  --color-footer-text-secondary: #d1d5db; /* gray-300 */
+}
+
+html[data-theme='corporate'] {
+  --color-primary: #0C4160; /* Prussian Blue for footer/main brand color */
+  --color-primary-rgb: 12, 65, 96;
+  --color-hero-gradient-rgb: 12, 65, 96;
+  --color-secondary: #545B5C; /* Dark Slate Gray for secondary elements */
+  --color-accent: #AEA885; /* Muted Gold for buttons/links */
+  --color-background-body: #F8F9FA; /* Very light gray, almost white */
+  --color-background-section: #E2E6E8; /* Light Gray */
+  --color-background-card: #FFFFFF; /* White */
+  --color-background-header: #E2E6E8; /* Universal header color */
+  --color-text-primary: #545B5C; /* Dark Slate Gray for high contrast text */
+  --color-header-text: var(--color-text-primary);
+  --color-text-secondary: rgba(84, 91, 92, 0.8);
+  --color-text-accent: #AEA885; /* Muted Gold */
+  --color-text-inverted: #FFFFFF;
+  --color-border: #C1C3BE; /* Slightly darker gray for borders */
+  --color-footer-text-secondary: #d1d5db; /* standard */
+}
+
+body {
+    background-color: var(--color-background-body);
+    color: var(--color-text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Home Hero Gradient Overlay */
+.hero-gradient-overlay {
+  /* Use a more subtle radial gradient focused on the text area for a softer effect */
+  background: radial-gradient(ellipse at left, rgba(var(--color-hero-gradient-rgb), 0.7), transparent 70%);
+}
+
+/* Custom Scrollbar for Notices */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-secondary);
+}
+
+/* Lightbox Styles */
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 85vh;
+  animation: zoomIn 0.3s ease-out;
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.9); }
+  to { transform: scale(1); }
+}
+
+.lightbox-image {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.lightbox-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  color: white;
+  text-align: center;
+  padding: 24px 16px 16px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  font-size: 1rem;
+}
+
+.lightbox-close, .lightbox-prev, .lightbox-next {
+  position: absolute;
+  background-color: rgba(30, 30, 30, 0.6);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 2.5rem;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  z-index: 2001;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.lightbox-close:hover, .lightbox-prev:hover, .lightbox-next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.lightbox-close {
+  top: 15px;
+  right: 25px;
+  font-size: 2rem;
+}
+
+.lightbox-prev {
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  padding-bottom: 5px;
+}
+
+.lightbox-next {
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  padding-bottom: 5px;
+}
+
+/* On-Scroll Animations */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.scroll-animate.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Back to Top Button */
+.back-to-top-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--color-accent);
+  color: var(--color-text-inverted);
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(20px);
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+}
+.back-to-top-button.visible {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+.back-to-top-button:hover {
+  background-color: var(--color-secondary);
+}

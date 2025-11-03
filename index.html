@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/jpeg" href="/images/common/favicon.jpg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sunshine International School</title>
+    <meta name="author" content="Sunshine International School">
+    <meta name="keywords" content="Sunshine International School, SIS, CBSE School, School in Purushottampur, Ganjam, Best School, Quality Education, School Admissions">
+    <link rel="stylesheet" href="/src/index.css">
+    <style>
+      /* Custom Animations for Hero Section */
+      @keyframes panLeft {
+        0% { transform: scale(1.05) translateX(0); }
+        100% { transform: scale(1.05) translateX(-5%); }
+      }
+      @keyframes panRight {
+        0% { transform: scale(1.05) translateX(0); }
+        100% { transform: scale(1.05) translateX(5%); }
+      }
+      @keyframes zoomIn {
+        0% { transform: scale(1.05); }
+        100% { transform: scale(1.15); }
+      }
+      @keyframes panUp {
+        0% { transform: scale(1.05) translateY(0); }
+        100% { transform: scale(1.05) translateY(-5%); }
+      }
+      .animate-pan-left { animation: panLeft 20s linear infinite; }
+      .animate-pan-right { animation: panRight 20s linear infinite; }
+      .animate-zoom-in { animation: zoomIn 20s linear infinite; }
+      .animate-pan-up { animation: panUp 20s linear infinite; }
+
+      @keyframes jump {
+        0%, 100% { transform: translateX(-50%) translateY(0); }
+        50% { transform: translateX(-50%) translateY(-10px); }
+      }
+      .animate-jump {
+        animation: jump 2s ease-in-out infinite;
+      }
+      
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in-up {
+        animation: fadeInUp 1s ease-out forwards;
+      }
+      
+      /* New Mobile Menu Item Animation */
+      @keyframes slideInFromRight {
+        from {
+          opacity: 0;
+          transform: translateX(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      .animate-slide-in-from-right {
+        animation: slideInFromRight 0.5s ease-out forwards;
+      }
+
+      /* Marquee Animation for Notices */
+      @keyframes marquee {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+      }
+      .animate-marquee {
+        animation: marquee 20s linear infinite;
+        white-space: nowrap;
+        display: inline-block;
+      }
+      
+      .marquee-container:hover .animate-marquee {
+          animation-play-state: paused;
+      }
+
+
+      /* New Mobile Menu Background */
+      .mobile-menu-bg {
+        background-color: #111;
+        background-image: 
+          radial-gradient(circle at 1px 1px, rgba(255,255,255,0.08) 1px, transparent 0);
+        background-size: 25px 25px;
+      }
+
+      /* Text Shadow for Hero Text Readability */
+      .text-shadow {
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+      }
+      .text-shadow-lg {
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.4",
+    "vite": "https://aistudiocdn.com/vite@^7.1.12",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.0",
+    "path": "https://aistudiocdn.com/path@^0.12.7",
+    "@fontsource/roboto/": "https://aistudiocdn.com/@fontsource/roboto@^5.2.8/",
+    "@fortawesome/fontawesome-free/": "https://aistudiocdn.com/@fortawesome/fontawesome-free@^7.1.0/",
+    "@fontsource/montserrat/": "https://aistudiocdn.com/@fontsource/montserrat@^5.2.8/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/src/index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
