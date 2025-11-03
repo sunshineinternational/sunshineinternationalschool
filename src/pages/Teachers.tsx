@@ -19,17 +19,17 @@ const TeacherCard: React.FC<{ imgSrc: string; name: string; role: string; qualif
     
     return (
         <div className="bg-[var(--color-background-card)] rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col sm:flex-row items-stretch">
-            <div className="w-full sm:w-36 flex-shrink-0">
+            <div className="w-full sm:w-36 flex-shrink-0 flex justify-center items-center pt-6 sm:pt-0 bg-[var(--color-background-section)] sm:bg-transparent">
                 <img 
                     src={imgSrc} 
                     alt={name} 
-                    className="w-full h-48 sm:h-full object-cover object-top"
+                    className="w-32 h-32 rounded-full object-cover object-top border-4 border-white shadow-md sm:w-full sm:h-full sm:rounded-none sm:border-0 sm:shadow-none"
                     onError={handleImageError}
                     loading="lazy"
                     decoding="async"
                 />
             </div>
-            <div className="p-4 flex flex-col justify-center text-left flex-grow">
+            <div className="p-4 pt-6 sm:pt-4 flex flex-col justify-center text-center sm:text-left flex-grow">
                 <h3 className="text-lg font-bold font-['Montserrat'] text-[var(--color-text-primary)] mb-1">{name}</h3>
                 <p className="text-[var(--color-text-accent)] font-semibold text-sm mb-2">{role}</p>
                 <div className="border-t border-[var(--color-border)] my-2"></div>
