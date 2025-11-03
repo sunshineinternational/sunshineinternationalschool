@@ -23,9 +23,11 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
                     src={event.img} 
                     alt={event.title} 
                     className="w-full h-56 object-cover" 
-                    onError={(e) => handleImageError(e, { text: event.title })}
+                    onError={(e) => handleImageError(e, { width: 400, height: 224, text: event.title })}
                     loading="lazy"
                     decoding="async"
+                    width="400"
+                    height="224"
                 />
                 <span className={`absolute top-2 right-2 text-xs font-semibold ${colors.bg} ${colors.text} px-2 py-1 rounded-full`}>
                     {event.category}

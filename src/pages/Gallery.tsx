@@ -4,6 +4,7 @@ import Seo from '../components/common/Seo';
 import { galleryImages } from '../data/gallery';
 import type { GalleryImage } from '../types';
 import ScrollAnimator from '../components/common/ScrollAnimator';
+import { handleImageError } from '../utils';
 
 // Lightbox Component
 const Lightbox: React.FC<{
@@ -77,16 +78,6 @@ const Gallery: React.FC = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex - 1 + filteredImages.length) % filteredImages.length);
   };
 
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    e.currentTarget.onerror = null; // Prevent infinite loop
-    const placeholderSvg = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="400" height="224" viewBox="0 0 400 224">
-        <rect fill="#F1EDE6" width="400" height="224"/>
-        <text fill="#A48374" font-family="sans-serif" font-size="20" dy="7" x="50%" y="50%" text-anchor="middle">Image Not Found</text>
-      </svg>`;
-    e.currentTarget.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(placeholderSvg)}`;
-  };
-
   return (
     <div>
       <Seo
@@ -137,9 +128,11 @@ const Gallery: React.FC = () => {
                     src={image.src} 
                     alt={`${image.caption} at Sunshine International School`}
                     className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110" 
-                    onError={handleImageError}
+                    onError={(e) => handleImageError(e, { width: 400, height: 224, text: "Image Not Found" })}
                     loading="lazy"
                     decoding="async"
+                    width="400"
+                    height="224"
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-500 flex items-end justify-start p-4">
                     <h3 className="text-white text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">{image.caption}</h3>

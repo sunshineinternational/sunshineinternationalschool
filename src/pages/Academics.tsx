@@ -3,6 +3,7 @@ import PageHero from '../components/common/PageHero';
 import Seo from '../components/common/Seo';
 import type { Curriculum, Program } from '../types';
 import ScrollAnimator from '../components/common/ScrollAnimator';
+import { handleImageError } from '../utils';
 
 const curriculumData: Curriculum[] = [
     {
@@ -78,13 +79,6 @@ const schoolUniform: string[] = [
 ];
 
 const Academics: React.FC = () => {
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    const target = e.currentTarget;
-    target.onerror = null;
-    const placeholderSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="160" viewBox="0 0 400 160"><rect fill="#F1EDE6" width="400" height="160"/><text fill="#A48374" font-family="sans-serif" font-size="16" dy="6" x="50%" y="50%" text-anchor="middle">${target.alt}</text></svg>`;
-    target.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(placeholderSvg)}`;
-  };
-
   return (
     <div>
       <Seo
@@ -208,7 +202,7 @@ const Academics: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {programsData.map((program, index) => (
                   <div key={index} className="bg-[var(--color-background-card)] rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2">
-                      <img src={program.img} alt={`${program.title} at Sunshine International School`} className="w-full h-40 object-cover" onError={handleImageError} loading="lazy" decoding="async" />
+                      <img src={program.img} alt={`${program.title} at Sunshine International School`} className="w-full h-40 object-cover" onError={(e) => handleImageError(e, { width: 400, height: 160, text: e.currentTarget.alt })} loading="lazy" decoding="async" width="400" height="160" />
                       <div className="p-6">
                           <h3 className="text-lg font-bold mb-2 font-['Montserrat'] text-[var(--color-text-primary)]">{program.title}</h3>
                           <p className="text-[var(--color-text-secondary)] text-sm">{program.desc}</p>

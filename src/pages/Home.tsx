@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { fetchNoticesData } from '../services/dataService';
 import type { Notice, Event as SchoolEvent, QuickLink, Testimonial } from '../types';
 import { leadershipData } from '../data/teachers';
-import { handleImageError as handleGenericImageError, parseDDMMYYYY } from '../utils';
+import { handleImageError, parseDDMMYYYY } from '../utils';
 import { FaqItem } from '../components/common/FaqItem';
 import Seo from '../components/common/Seo';
 import { eventsData } from '../data/events';
@@ -15,7 +15,7 @@ import ScrollAnimator from '../components/common/ScrollAnimator';
 
 
 const heroSlidesData = [
-  { type: 'video', src: '/images/pages/home/video.mp4', animationClass: 'animate-pan-left' },
+  { type: 'video', src: '/images/pages/home/video.mp4', animationClass: 'animate-pan-left', poster: '/images/pages/home/video-poster.jpg' },
   { type: 'image', src: '/images/pages/home/hero-1.jpg', animationClass: 'animate-pan-right' },
   { type: 'image', src: '/images/pages/home/hero-2.jpg', animationClass: 'animate-zoom-in' },
   { type: 'image', src: '/images/pages/home/hero-3.jpg', animationClass: 'animate-pan-up' },
@@ -54,7 +54,7 @@ const Hero: React.FC = () => {
                 {slides.map((slide, index) => (
                     <div key={slide.src} className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}>
                         {slide.type === 'video' ? (
-                            <video key={slide.src} playsInline autoPlay muted loop className={`w-full h-full object-cover scale-105 ${slide.animationClass}`} onError={() => handleMediaError(slide.src)}>
+                            <video key={slide.src} playsInline autoPlay muted loop poster={slide.poster} className={`w-full h-full object-cover scale-105 ${slide.animationClass}`} onError={() => handleMediaError(slide.src)}>
                                 <source src={slide.src} type="video/mp4" />
                             </video>
                         ) : (
@@ -139,9 +139,11 @@ const SchoolLifeMoments = () => (
                         src={moment.src} 
                         alt={moment.caption} 
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
-                        onError={(e) => handleGenericImageError(e, { text: moment.caption })}
+                        onError={(e) => handleImageError(e, { text: moment.caption })}
                         loading="lazy"
                         decoding="async"
+                        width="400"
+                        height="400"
                     />
                     <div className="absolute inset-0 bg-black/60 transition-all duration-300 opacity-0 group-hover:opacity-100">
                         <div className="absolute bottom-0 left-0 p-4 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
@@ -247,9 +249,11 @@ const LatestEvents = () => {
                                 src={event.img} 
                                 alt={event.title} 
                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
-                                onError={(e) => handleGenericImageError(e, { text: event.title })}
+                                onError={(e) => handleImageError(e, { text: event.title })}
                                 loading="lazy"
                                 decoding="async"
+                                width="400"
+                                height="300"
                             />
                             <div className="absolute inset-0 bg-black/60 transition-all duration-300 opacity-0 group-hover:opacity-100">
                                <div className="absolute bottom-0 left-0 w-full p-4 transition-all duration-300 transform translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100">
@@ -277,16 +281,6 @@ const Leadership = () => {
         return null;
     }
 
-    const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, name: string) => {
-        e.currentTarget.onerror = null;
-        const placeholderSvg = `
-          <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
-            <rect fill="#F1EDE6" width="192" height="192" rx="8"/>
-            <text fill="#A48374" font-family="sans-serif" font-size="16" dy="6" x="50%" y="50%" text-anchor="middle">${name}</text>
-          </svg>`;
-        e.currentTarget.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(placeholderSvg)}`;
-    };
-
     return (
         <section className="py-16">
             <div className="container mx-auto px-4">
@@ -299,9 +293,11 @@ const Leadership = () => {
                                     src={leader.img} 
                                     alt={leader.name} 
                                     className="w-full rounded-lg object-cover object-center aspect-[4/5]"
-                                    onError={(e) => handleImageError(e, leader.name)}
+                                    onError={(e) => handleImageError(e, { width: 192, height: 240, text: leader.name })}
                                     loading="lazy"
                                     decoding="async"
+                                    width="192"
+                                    height="240"
                                 />
                             </div>
                             <div className="flex flex-col w-full">
@@ -343,12 +339,6 @@ const Testimonials = () => {
         setCurrentTestimonial(prev => (prev + 1) % testimonialsData.length);
     };
 
-    const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-        e.currentTarget.onerror = null;
-        const placeholderSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><rect fill="#D1C7BD" width="80" height="80" rx="40"/><text fill="#FFFFFF" font-family="sans-serif" font-size="24" dy="8" x="50%" y="50%" text-anchor="middle">👤</text></svg>`;
-        e.currentTarget.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(placeholderSvg)}`;
-    };
-
     if (testimonialsData.length === 0) return null;
 
     return (
@@ -368,9 +358,11 @@ const Testimonials = () => {
                                         src={testimonial.img}
                                         alt={testimonial.name}
                                         className="w-20 h-20 rounded-full object-cover border-4 border-white -mt-16 mb-4 shadow-md"
-                                        onError={handleImageError}
+                                        onError={(e) => handleImageError(e, { width: 80, height: 80, text: '👤' })}
                                         loading="lazy"
                                         decoding="async"
+                                        width="80"
+                                        height="80"
                                     />
                                     <i className="fas fa-quote-left text-2xl text-[var(--color-text-accent)] opacity-30 mb-4"></i>
                                     <p className="text-[var(--color-text-secondary)] italic text-base mb-4 flex-grow">"{testimonial.quote}"</p>

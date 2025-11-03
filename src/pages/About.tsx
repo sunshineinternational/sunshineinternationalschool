@@ -2,15 +2,9 @@ import React from 'react';
 import PageHero from '../components/common/PageHero';
 import Seo from '../components/common/Seo';
 import ScrollAnimator from '../components/common/ScrollAnimator';
+import { handleImageError } from '../utils';
 
 const About: React.FC = () => {
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    const target = e.currentTarget;
-    target.onerror = null;
-    const placeholderSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="192" viewBox="0 0 400 192"><rect fill="#EBE3DB" width="400" height="192"/><text fill="#A48374" font-family="sans-serif" font-size="16" dy="6" x="50%" y="50%" text-anchor="middle">${target.alt}</text></svg>`;
-    target.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(placeholderSvg)}`;
-  };
-
   return (
     <div>
       <Seo
@@ -92,21 +86,21 @@ const About: React.FC = () => {
             <h2 className="text-3xl font-bold text-center mb-12 font-['Montserrat'] text-[var(--color-text-primary)]">Our Facilities</h2>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="bg-[var(--color-background-card)] rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2">
-                <img src="/images/pages/about/facility-classroom.jpg" alt="Modern Classrooms at Sunshine International School" className="w-full h-48 object-cover" onError={handleImageError} loading="lazy" decoding="async" />
+                <img src="/images/pages/about/facility-classroom.jpg" alt="Modern Classrooms at Sunshine International School" className="w-full h-48 object-cover" onError={(e) => handleImageError(e, { width: 400, height: 192, text: e.currentTarget.alt })} loading="lazy" decoding="async" width="400" height="192" />
                 <div className="p-6">
                   <h3 className="text-xl font-bold mb-2 text-[var(--color-text-primary)]">Modern Classrooms</h3>
                   <p className="text-[var(--color-text-secondary)]">Spacious, well-equipped classrooms with smart learning technology</p>
                 </div>
               </div>
               <div className="bg-[var(--color-background-card)] rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2">
-                <img src="/images/pages/about/facility-library.jpg" alt="Digital Library at Sunshine International School" className="w-full h-48 object-cover" onError={handleImageError} loading="lazy" decoding="async" />
+                <img src="/images/pages/about/facility-library.jpg" alt="Digital Library at Sunshine International School" className="w-full h-48 object-cover" onError={(e) => handleImageError(e, { width: 400, height: 192, text: e.currentTarget.alt })} loading="lazy" decoding="async" width="400" height="192" />
                 <div className="p-6">
                   <h3 className="text-xl font-bold mb-2 text-[var(--color-text-primary)]">Digital Library</h3>
                   <p className="text-[var(--color-text-secondary)]">Extensive collection of books and digital resources</p>
                 </div>
               </div>
               <div className="bg-[var(--color-background-card)] rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2">
-                <img src="/images/pages/about/facility-sports.jpg" alt="Sports Facilities at Sunshine International School" className="w-full h-48 object-cover" onError={handleImageError} loading="lazy" decoding="async" />
+                <img src="/images/pages/about/facility-sports.jpg" alt="Sports Facilities at Sunshine International School" className="w-full h-48 object-cover" onError={(e) => handleImageError(e, { width: 400, height: 192, text: e.currentTarget.alt })} loading="lazy" decoding="async" width="400" height="192" />
                 <div className="p-6">
                   <h3 className="text-xl font-bold mb-2 text-[var(--color-text-primary)]">Sports Facilities</h3>
                   <p className="text-[var(--color-text-secondary)]">State-of-the-art sports complex and playgrounds</p>

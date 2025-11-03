@@ -3,6 +3,7 @@ import PageHero from '../components/common/PageHero';
 import Seo from '../components/common/Seo';
 import type { House } from '../types';
 import ScrollAnimator from '../components/common/ScrollAnimator';
+import { handleImageError } from '../utils';
 
 const houseData: House[] = [
   {
@@ -32,12 +33,6 @@ const houseData: House[] = [
 ];
 
 const HouseSystem: React.FC = () => {
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, houseName: string) => {
-    e.currentTarget.onerror = null; // Prevent infinite loops
-    const placeholderSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="225" viewBox="0 0 400 225"><rect fill="#EBE3DB" width="400" height="225"/><text fill="#A48374" font-family="sans-serif" font-size="16" dy="6" x="50%" y="50%" text-anchor="middle">${houseName} House</text></svg>`;
-    e.currentTarget.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(placeholderSvg)}`;
-  };
-
   return (
     <div>
       <Seo
@@ -83,7 +78,9 @@ const HouseSystem: React.FC = () => {
                               className="w-full h-full object-cover"
                               loading="lazy"
                               decoding="async"
-                              onError={(e) => handleImageError(e, house.name)}
+                              width="400"
+                              height="225"
+                              onError={(e) => handleImageError(e, { width: 400, height: 225, text: `${house.name} House` })}
                           />
                       </div>
                     {/* Description is intentionally left blank as per user request */}

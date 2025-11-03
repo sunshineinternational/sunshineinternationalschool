@@ -4,18 +4,9 @@ import { facultyData } from '../data/teachers';
 import type { Teacher } from '../types';
 import Seo from '../components/common/Seo';
 import ScrollAnimator from '../components/common/ScrollAnimator';
+import { handleImageError } from '../utils';
 
 const TeacherCard: React.FC<{ imgSrc: string; name: string; role: string; qualification: string; experience: string; }> = ({ imgSrc, name, role, qualification, experience }) => {
-    const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-        e.currentTarget.onerror = null; // Prevent infinite loop
-        const initials = name.split(' ').map(n=>n[0]).join('');
-        const placeholderSvg = `
-          <svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewBox="0 0 144 144">
-            <rect fill="#F1EDE6" width="144" height="144"/>
-            <text fill="#A48374" font-family="sans-serif" font-size="32" dy="10" x="50%" y="50%" text-anchor="middle">${initials}</text>
-          </svg>`;
-        e.currentTarget.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(placeholderSvg)}`;
-    };
     
     return (
         <div className="bg-[var(--color-background-card)] rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col sm:flex-row items-stretch">
@@ -24,9 +15,11 @@ const TeacherCard: React.FC<{ imgSrc: string; name: string; role: string; qualif
                     src={imgSrc} 
                     alt={name} 
                     className="w-32 h-32 rounded-full object-cover object-top border-4 border-white shadow-md sm:w-full sm:h-full sm:rounded-none sm:border-0 sm:shadow-none"
-                    onError={handleImageError}
+                    onError={(e) => handleImageError(e, { width: 128, height: 128, text: name.split(' ').map(n=>n[0]).join('') })}
                     loading="lazy"
                     decoding="async"
+                    width="128"
+                    height="128"
                 />
             </div>
             <div className="p-4 pt-6 sm:pt-4 flex flex-col justify-center text-center sm:text-left flex-grow">
