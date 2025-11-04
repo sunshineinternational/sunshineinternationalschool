@@ -34,10 +34,12 @@ export const galleryImages: GalleryImage[] = [
 
    // Tree Plantation Day 2024
   { src: '/images/pages/gallery/tree-planting-1.jpg', caption: 'Students planting saplings', event: 'Tree Plantation Day 2024' },
-  { src: '/images/pages/gallery/tree-planting-2.jpg', caption: 'Our green initiative', event: 'Tree Plantation Day 2024' }
+  { src: '/images/pages/gallery/tree-planting-2.jpg', caption: 'Our green initiative', event: 'Tree Plantation Day 2024' },
   
-
-
-
-
+  // Class of 2022
+  { src: '/images/pages/gallery/class22(1).webp', caption: 'A memorable moment from the Class of 2022.', event: 'Class of 2022' },
+  { src: '/images/pages/gallery/class22(2).webp', caption: 'Class of 2022 working together on their final projects.', event: 'Class of 2022' },
+  { src: '/images/pages/gallery/class22(3).webp', caption: 'Celebrating academic achievements with the Class of 2022.', event: 'Class of 2022' },
+  { src: '/images/pages/gallery/class22(4).webp', caption: 'Class of 2022 showcasing their hard work.', event: 'Class of 2022' },
+  { src: '/images/pages/gallery/class22(5).webp', caption: 'Friendships and memories from the Class of 2022.', event: 'Class of 2022' },
 ];
