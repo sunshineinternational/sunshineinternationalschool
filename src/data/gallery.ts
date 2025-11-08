@@ -1,13 +1,28 @@
 import type { GalleryImage } from '../types';
 
 export const galleryImages: GalleryImage[] = [
-  // Annual Day 2023
-  { src: '/images/pages/gallery/gallery-1.jpg', caption: 'Grand Stage Performance', event: 'Annual Day 2023' },
-  { src: '/images/pages/events/annual-day-2023.jpg', caption: 'Inaugural Lamp Lighting', event: 'Annual Day 2023' },
-  { src: '/images/pages/home/moments-1.jpg', caption: 'Energetic Dance Routine', event: 'Annual Day 2023' },
-  { src: '/images/pages/gallery/annual-day-1.jpg', caption: 'Folk Dance Showcase', event: 'Annual Day 2023' },
-  { src: '/images/pages/gallery/annual-day-2.jpg', caption: 'Skit by Primary Students', event: 'Annual Day 2023' },
-  { src: '/images/pages/gallery/annual-day-3.jpg', caption: 'Award Ceremony', event: 'Annual Day 2023' },
+  // Annual Day 2024-25
+  { src: '/images/pages/gallery/annualfunction2024-25(1).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(2).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(3).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(4).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(5).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(6).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(7).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(8).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(9).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(10).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(11).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(12).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(13).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(14).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(15).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(16).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(17).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(18).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(19).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(20).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
+  { src: '/images/pages/gallery/annualfunction2024-25(21).webp', caption: 'A moment from the Annual Function 2024-25', event: 'Annual Function 2024-25' },
   
   // Science Fair
   { src: '/images/pages/gallery/gallery-2.jpg', caption: 'Working Volcano Model', event: 'Science Fair' },
