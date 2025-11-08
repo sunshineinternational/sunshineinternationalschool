@@ -29,8 +29,8 @@ const curriculumData: Curriculum[] = [
 ];
 
 const programsData: Program[] = [
-    { img: '/images/pages/academics/program-stem.jpg', title: 'STEM Education', desc: 'Hands-on learning in Science, Technology, Engineering, and Mathematics' },
-    { img: '/images/pages/academics/program-olympiad.jpg', title: 'Olympiad Training', desc: 'Specialized coaching for national and international competitions' },
+    { img: '/images/pages/academics/program-stem.webp', title: 'STEM Education', desc: 'Hands-on learning in Science, Technology, Engineering, and Mathematics' },
+    { img: '/images/pages/academics/program-olympiad.png', title: 'Olympiad Training', desc: 'Specialized coaching for national and international competitions' },
     { img: '/images/pages/academics/program-taekwondo.jpg', title: 'Taekwondo Classes', desc: 'Martial arts training focusing on discipline and self-defense' },
     { img: '/images/pages/academics/program-language.jpg', title: 'Language Programs', desc: 'Comprehensive learning in English, Hindi, and French' },
 ];
@@ -59,23 +59,18 @@ const visionGoalsRight: string[] = [
 ];
 
 const schoolTimings: string[] = [
-    "Reporting Time for Teachers: 7.30 a.m.",
-    "Reporting Time for Students: 7.45 a.m.",
-    "First Bell: 7.45 a.m. (To proceed to the classrooms)",
-    "Warning Bell: 7.50 a.m. (To be ready for prayer/assembly)",
-    "Prayer / Assembly: 7.55 a.m.",
-    "Instructional Hours: LKG - UKG : 8:00 a.m. – 12:10 p.m.",
-    "1 - 2 : 8:00 a.m. – 12:50 p.m.",
-    "3-12 : 8:00 a.m. – 1:30 p.m."
+    "Reporting Time for Students: 8:00 a.m.",
+    "Warning Bell: 8:10 a.m. (To be ready for prayer/assembly)",
+    "Prayer / Assembly: 8:15 a.m.",
+    "Instructional Hours: 8:45 a.m. – 1:30 p.m."
 ];
 
-const schoolUniform: string[] = [
-    "White shirt, grey shorts (shade-94) : KG - 5",
-    "White shirt, white shorts / trousers : Classes 6-12",
-    "White socks, black shoes with laces (white keds on P. E.)",
-    "House badge & identity card.",
-    "Navy blue cardigan / sweater / blazer (during winter)",
-    "Boys may use full-sleeved shirt and full-pants during winter."
+const rulesOfConduct: string[] = [
+    "Students should arrive at school on time.",
+    "Respect for teachers, staff, and fellow students is mandatory.",
+    "School property must be handled with care; any damage will be the student's responsibility.",
+    "Maintaining cleanliness and tidiness of the school premises is expected from all.",
+    "Electronic gadgets, unless permitted for educational purposes, are not allowed."
 ];
 
 const Academics: React.FC = () => {
@@ -176,12 +171,11 @@ const Academics: React.FC = () => {
                                   </li>
                               ))}
                           </ul>
-                          <p className="text-xs text-gray-500 mt-4 italic">The weekly routine is reckoned serially i.e. Day 1, Day 2 ... Day 5, irrespective of the day of the week.</p>
                       </div>
                       <div className="border-t pt-8 md:border-t-0 md:pt-0 md:border-l md:pl-12 border-[var(--color-border)]">
-                          <h3 className="text-xl font-bold mb-4 font-['Montserrat'] text-[var(--color-text-primary)] flex items-center"><i className="fas fa-tshirt mr-3 text-[var(--color-text-accent)]"></i>School Uniform</h3>
+                          <h3 className="text-xl font-bold mb-4 font-['Montserrat'] text-[var(--color-text-primary)] flex items-center"><i className="fas fa-gavel mr-3 text-[var(--color-text-accent)]"></i>Rules of Conduct</h3>
                           <ul className="space-y-3">
-                              {schoolUniform.map((item, index) => (
+                              {rulesOfConduct.map((item, index) => (
                                   <li key={index} className="flex items-start text-sm">
                                       <span className="text-[var(--color-text-accent)] mr-3 mt-1"><i className="fas fa-edit"></i></span>
                                       <p className="text-[var(--color-text-secondary)]">{item}</p>
