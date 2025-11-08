@@ -32,7 +32,7 @@ const programsData: Program[] = [
     { img: '/images/pages/academics/program-stem.webp', title: 'STEM Education', desc: 'Hands-on learning in Science, Technology, Engineering, and Mathematics' },
     { img: '/images/pages/academics/program-olympiad.png', title: 'Olympiad Training', desc: 'Specialized coaching for national and international competitions' },
     { img: '/images/pages/academics/program-taekwondo.jpg', title: 'Taekwondo Classes', desc: 'Martial arts training focusing on discipline and self-defense' },
-    { img: '/images/pages/academics/program-language.jpg', title: 'Language Programs', desc: 'Comprehensive learning in English, Hindi, and French' },
+    { img: '/images/pages/academics/program-language.jpg', title: 'Language Programs', desc: 'Comprehensive learning in English, Hindi, and Odia' },
 ];
 
 const objectivesData: string[] = [
