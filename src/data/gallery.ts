@@ -21,25 +21,39 @@ export const galleryImages: GalleryImage[] = [
   { src: '/images/pages/gallery/sports-meet-1.jpg', caption: 'High Jump Record', event: 'Sports Meet' },
   { src: '/images/pages/gallery/sports-meet-2.jpg', caption: 'Tug of War', event: 'Sports Meet' },
   
-  // Celebrations
-  { src: '/images/pages/gallery/gallery-5.jpg', caption: 'Diya Painting Competition', event: 'Celebrations' },
-  { src: '/images/pages/gallery/gallery-6.jpg', caption: 'Flag Hoisting Ceremony', event: 'Celebrations' },
-  { src: '/images/pages/gallery/gallery-7.jpg', caption: 'Christmas Carol Singing', event: 'Celebrations' },
-  { src: '/images/pages/events/diwali-celebration-2023.jpg', caption: 'Rangoli Making', event: 'Celebrations' },
-  
-  // Art & Other Activities
-  { src: '/images/pages/gallery/gallery-4.jpg', caption: 'Student Artwork Display', event: 'Art Exhibition' },
-  { src: '/images/pages/gallery/gallery-8.jpg', caption: 'Educational Field Trip', event: 'Field Trip' },
-  { src: '/images/pages/home/moments-4.jpg', caption: 'Creative Clay Modeling', event: 'Art Exhibition' },
-
-   // Tree Plantation Day 2024
-  { src: '/images/pages/gallery/tree-planting-1.jpg', caption: 'Students planting saplings', event: 'Tree Plantation Day 2024' },
-  { src: '/images/pages/gallery/tree-planting-2.jpg', caption: 'Our green initiative', event: 'Tree Plantation Day 2024' },
-  
   // Class of 2022
   { src: '/images/pages/gallery/class22(1).webp', caption: 'A memorable moment from the Class of 2022.', event: 'Class of 2022' },
   { src: '/images/pages/gallery/class22(2).webp', caption: 'Class of 2022 working together on their final projects.', event: 'Class of 2022' },
   { src: '/images/pages/gallery/class22(3).webp', caption: 'Celebrating academic achievements with the Class of 2022.', event: 'Class of 2022' },
   { src: '/images/pages/gallery/class22(4).webp', caption: 'Class of 2022 showcasing their hard work.', event: 'Class of 2022' },
   { src: '/images/pages/gallery/class22(5).webp', caption: 'Friendships and memories from the Class of 2022.', event: 'Class of 2022' },
+
+  // Archive 2012-2020
+  { src: '/images/pages/gallery/archive2012-2020(1).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(2).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(3).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(4).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(5).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(6).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(7).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(8).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(9).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(11).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(12).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(13).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(14).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(15).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(16).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(17).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(18).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(19).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(20).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(21).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(22).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(23).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(24).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(25).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(26).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(27).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
+  { src: '/images/pages/gallery/archive2012-2020(28).webp', caption: 'A moment from the 2012-2020 archives.', event: 'Archive 2012-2020' },
 ];

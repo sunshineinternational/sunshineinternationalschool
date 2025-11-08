@@ -51,8 +51,7 @@ const NoticeTicker: React.FC = () => {
     }
 
     return (
-        <div className="bg-yellow-400 text-yellow-900 sticky top-[75px] z-[999] transition-transform duration-300"
-             style={{ transform: isVisible ? 'translateY(0)' : 'translateY(-100%)' }}>
+        <div className="bg-yellow-400 text-yellow-900">
             <div className="container mx-auto px-4 py-2 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3 flex-shrink min-w-0">
                     <span className="font-bold bg-yellow-500 text-yellow-900 text-xs px-2 py-0.5 rounded-full flex-shrink-0">NEW</span>

@@ -12,6 +12,7 @@ import { homeFaqData } from '../data/faqs';
 import { whyChooseUsData } from '../data/whyChooseUs';
 import { testimonialsData } from '../data/testimonials';
 import ScrollAnimator from '../components/common/ScrollAnimator';
+import NoticeTicker from '../components/common/NoticeTicker';
 
 
 const heroSlidesData = [
@@ -432,6 +433,7 @@ const Home: React.FC = () => {
         imageUrl="/images/pages/home/hero-1.jpg"
       />
       <Hero />
+      <NoticeTicker />
       <div id="quick-links" className="scroll-mt-[75px]">
         <ScrollAnimator>
           <QuickLinks />

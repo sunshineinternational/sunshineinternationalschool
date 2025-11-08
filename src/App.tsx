@@ -14,7 +14,6 @@ import Events from './pages/Events';
 import HouseSystem from './pages/HouseSystem';
 import { ThemeProvider } from './contexts/ThemeContext';
 import BackToTopButton from './components/common/BackToTopButton';
-import NoticeTicker from './components/common/NoticeTicker';
 
 const Layout: React.FC = () => {
   const location = useLocation();
@@ -47,7 +46,6 @@ const Layout: React.FC = () => {
     <div className="font-['Roboto']">
       <Header />
       <main style={{ paddingTop: '75px' }}>
-        <NoticeTicker />
         <Outlet />
       </main>
       <Footer />
