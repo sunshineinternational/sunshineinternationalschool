@@ -2,6 +2,13 @@ import type { Event } from '../types';
 
 export const eventsData: Event[] = [
   {
+    img: '/images/pages/events/bandemaataram.webp',
+    title: '150th Anniversary of "Bande Maataram"',
+    date: '2025-11-07',
+    description: 'A grand program was held to mark the 150th anniversary of the composition of "Bande Maataram".',
+    category: 'Cultural',
+  },
+  {
     img: '/images/pages/events/annual-day-2023.jpg',
     title: 'Annual Day "Utsav 2023"',
     date: '2023-12-22',
@@ -22,19 +29,6 @@ export const eventsData: Event[] = [
     description: 'A day filled with energetic competitions, sportsmanship, and record-breaking performances on the field.',
     category: 'Sports',
   },
-  {
-    img: '/images/pages/events/diwali-celebration-2023.jpg',
-    title: 'Diwali Celebration',
-    date: '2023-11-10',
-    description: 'The school was adorned with lights and diyas as students and staff celebrated the festival of lights with joy.',
-    category: 'Celebration',
-  },
-  {
-    img: '/images/pages/events/independence-day-2023.jpg',
-    title: 'Independence Day',
-    date: '2023-08-15',
-    description: 'Patriotic fervor marked the 77th Independence Day celebrations with flag hoisting and cultural programs.',
-    category: 'Celebration',
-  },
+
  
 ];
