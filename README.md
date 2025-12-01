@@ -17,3 +17,4 @@ View your app in AI Studio: https://ai.studio/apps/drive/1klJ4S0x7csaNeoQ0TNXsfv
    `npm install`
 2. Run the app:
    `npm run dev`
+"# sunshineinternationalschool" 
