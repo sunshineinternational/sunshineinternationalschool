@@ -16,11 +16,11 @@ import NoticeTicker from '../components/common/NoticeTicker';
 
 
 const heroSlidesData = [
-  { type: 'video', src: '/images/pages/home/video.mp4', animationClass: 'animate-pan-left', poster: '/images/pages/home/video-poster.jpg' },
+  { type: 'image', src: '/images/pages/home/hero-3.jpg', animationClass: 'animate-pan-up' },
   { type: 'image', src: '/images/pages/home/hero-1.jpg', animationClass: 'animate-pan-right' },
   { type: 'image', src: '/images/pages/home/hero-2.jpg', animationClass: 'animate-zoom-in' },
-  { type: 'image', src: '/images/pages/home/hero-3.jpg', animationClass: 'animate-pan-up' },
   { type: 'image', src: '/images/pages/home/hero-4.jpg', animationClass: 'animate-pan-left' },
+  { type: 'video', src: '/images/pages/home/video.mp4', animationClass: 'animate-pan-left', poster: '/images/pages/home/video-poster.jpg' },
 ];
 
 const Hero: React.FC = () => {
@@ -68,7 +68,7 @@ const Hero: React.FC = () => {
             
             <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up">
                 <div className="max-w-2xl text-left text-white">
-                    <h1 className="text-4xl md:text-6xl font-bold font-['Montserrat'] mb-4 leading-tight text-shadow-lg">Inspiring Young Minds for a Brighter Tomorrow</h1>
+                    <h1 className="text-4xl md:text-6xl font-bold font-[\'Montserrat\'] mb-4 leading-tight text-shadow-lg">Inspiring Young Minds for a Brighter Tomorrow</h1>
                     <p className="text-lg md:text-xl mb-8 text-shadow">A nurturing environment where knowledge meets excellence.</p>
                     <div className="flex flex-col sm:flex-row gap-4">
                         <Link to="/admission" className="btn-primary inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-full text-[var(--color-text-inverted)] bg-[var(--color-accent)] hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105 shadow-lg">Admissions Open 2025-26</Link>
@@ -95,12 +95,12 @@ const quickLinksData: QuickLink[] = [
 const QuickLinks = () => (
   <section className="bg-[var(--color-background-section)] py-16">
     <div className="container mx-auto px-4">
-      <h2 className="text-3xl font-bold text-center mb-12 font-['Montserrat'] text-[var(--color-text-primary)]">Discover Sunshine International School</h2>
+      <h2 className="text-3xl font-bold text-center mb-12 font-[\'Montserrat\'] text-[var(--color-text-primary)]">Discover Sunshine International School</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {quickLinksData.map((link) => (
             <div key={link.title} className="bg-[var(--color-background-card)] p-6 rounded-lg shadow-md text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-xl flex flex-col">
               <div className="text-4xl text-[var(--color-text-accent)] mb-4"><i className={link.icon}></i></div>
-              <h3 className="text-xl font-bold mb-2 font-['Montserrat'] text-[var(--color-text-primary)]">{link.title}</h3>
+              <h3 className="text-xl font-bold mb-2 font-[\'Montserrat\'] text-[var(--color-text-primary)]">{link.title}</h3>
               <p className="text-[var(--color-text-secondary)] mb-4 text-sm flex-grow">{link.description}</p>
               <Link to={link.path} className="font-semibold text-[var(--color-text-primary)] hover:text-[var(--color-text-accent)] mt-auto">
                 Learn More &rarr;
@@ -115,12 +115,12 @@ const QuickLinks = () => (
 const WhyChooseUs = () => (
   <section className="py-16">
     <div className="container mx-auto px-4">
-      <h2 className="text-3xl font-bold text-center mb-12 font-['Montserrat'] text-[var(--color-text-primary)]">Why Choose Sunshine?</h2>
+      <h2 className="text-3xl font-bold text-center mb-12 font-[\'Montserrat\'] text-[var(--color-text-primary)]">Why Choose Sunshine?</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
         {whyChooseUsData.map((item) => (
           <div key={item.title} className="bg-[var(--color-background-card)] p-6 rounded-lg shadow-md text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
             <div className="text-5xl text-[var(--color-text-accent)] mb-4"><i className={item.icon}></i></div>
-            <h3 className="text-xl font-bold mb-3 font-['Montserrat'] text-[var(--color-text-primary)]">{item.title}</h3>
+            <h3 className="text-xl font-bold mb-3 font-[\'Montserrat\'] text-[var(--color-text-primary)]">{item.title}</h3>
             <p className="text-[var(--color-text-secondary)] text-sm">{item.description}</p>
           </div>
         ))}
@@ -132,7 +132,7 @@ const WhyChooseUs = () => (
 
 const SchoolLifeMoments = () => (
     <div>
-        <h2 className="text-3xl font-bold text-center lg:text-left mb-8 font-['Montserrat'] text-[var(--color-text-primary)]">School Life Moments</h2>
+        <h2 className="text-3xl font-bold text-center lg:text-left mb-8 font-[\'Montserrat\'] text-[var(--color-text-primary)]">School Life Moments</h2>
         <div className="grid grid-cols-2 gap-4">
             {schoolLifeMomentsData.map((moment, index) => (
                 <div key={index} className="group relative overflow-hidden rounded-lg shadow-md cursor-pointer aspect-w-1 aspect-h-1">
@@ -187,7 +187,7 @@ const HomepageNotices = () => {
 
     return (
         <div>
-            <h2 className="text-3xl font-bold text-center lg:text-left mb-8 font-['Montserrat'] text-[var(--color-text-primary)]">Notices</h2>
+            <h2 className="text-3xl font-bold text-center lg:text-left mb-8 font-[\'Montserrat\'] text-[var(--color-text-primary)]">Notices</h2>
             <div className="bg-[var(--color-background-card)] p-6 rounded-lg shadow-md">
                 {loading && <p className="text-center text-[var(--color-text-secondary)]">Loading notices...</p>}
                 {error && <p className="text-center text-red-600">{error}</p>}
@@ -242,7 +242,7 @@ const LatestEvents = () => {
     return (
         <section className="py-16 bg-[var(--color-background-section)]">
             <div className="container mx-auto px-4">
-                <h2 className="text-3xl font-bold text-center mb-12 font-['Montserrat'] text-[var(--color-text-primary)]">Latest Events</h2>
+                <h2 className="text-3xl font-bold text-center mb-12 font-[\'Montserrat\'] text-[var(--color-text-primary)]">Latest Events</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     {latestEvents.map((event, index) => (
                         <div key={index} className="group relative rounded-lg shadow-md overflow-hidden aspect-[4/3] cursor-pointer">
@@ -258,12 +258,12 @@ const LatestEvents = () => {
                             />
                             <div className="absolute inset-0 bg-black/60 transition-all duration-300 opacity-0 group-hover:opacity-100">
                                <div className="absolute bottom-0 left-0 w-full p-4 transition-all duration-300 transform translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100">
-                                    <h3 className="text-md font-bold font-['Montserrat'] text-white">{event.title}</h3>
+                                    <h3 className="text-md font-bold font-[\'Montserrat\'] text-white">{event.title}</h3>
                                     <p className="text-xs text-gray-300 mt-1">{new Date(event.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    ))}\
                 </div>
                 <div className="text-center mt-12">
                     <Link to="/events" className="btn-secondary inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-full text-[var(--color-text-inverted)] bg-[var(--color-primary)] hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105 shadow-lg">
@@ -285,7 +285,7 @@ const Leadership = () => {
     return (
         <section className="py-16">
             <div className="container mx-auto px-4">
-                <h2 className="text-3xl font-bold text-center mb-12 font-['Montserrat'] text-[var(--color-text-primary)]">From The Founders</h2>
+                <h2 className="text-3xl font-bold text-center mb-12 font-[\'Montserrat\'] text-[var(--color-text-primary)]">From The Founders</h2>
                 <div className="flex flex-col gap-8 max-w-5xl mx-auto">
                     {leaders.map(leader => (
                         <div key={leader.name} className="bg-[var(--color-background-card)] rounded-lg shadow-md flex flex-col sm:flex-row items-start p-6 sm:p-8 transition-shadow duration-300 hover:shadow-xl">
@@ -302,7 +302,7 @@ const Leadership = () => {
                                 />
                             </div>
                             <div className="flex flex-col w-full">
-                                <h3 className="text-xl font-bold font-['Montserrat'] text-[var(--color-text-primary)]">{`From the ${leader.role}'s Desk`}</h3>
+                                <h3 className="text-xl font-bold font-[\'Montserrat\'] text-[var(--color-text-primary)]">{`From the ${leader.role}'s Desk`}</h3>
                                 <p className="text-sm text-gray-500 mb-4">{`${leader.role}, Sunshine International School`}</p>
                                 
                                 {leader.testimonial && <p className="text-[var(--color-text-secondary)] text-base mb-4 flex-grow">"{leader.testimonial}"</p>}
@@ -313,7 +313,7 @@ const Leadership = () => {
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    ))}\
                 </div>
             </div>
         </section>
@@ -345,7 +345,7 @@ const Testimonials = () => {
     return (
         <section className="py-16 bg-[var(--color-background-section)]">
             <div className="container mx-auto px-4">
-                <h2 className="text-3xl font-bold text-center mb-12 font-['Montserrat'] text-[var(--color-text-primary)]">What Our Community Says</h2>
+                <h2 className="text-3xl font-bold text-center mb-12 font-[\'Montserrat\'] text-[var(--color-text-primary)]">What Our Community Says</h2>
                 <div className="max-w-3xl mx-auto relative">
                     <div className="relative overflow-hidden min-h-[250px] sm:min-h-[200px]">
                         {testimonialsData.map((testimonial, index) => (
@@ -368,12 +368,12 @@ const Testimonials = () => {
                                     <i className="fas fa-quote-left text-2xl text-[var(--color-text-accent)] opacity-30 mb-4"></i>
                                     <p className="text-[var(--color-text-secondary)] italic text-base mb-4 flex-grow">"{testimonial.quote}"</p>
                                     <div>
-                                        <h4 className="font-bold font-['Montserrat'] text-[var(--color-text-primary)]">{testimonial.name}</h4>
+                                        <h4 className="font-bold font-[\'Montserrat\'] text-[var(--color-text-primary)]">{testimonial.name}</h4>
                                         <p className="text-sm text-gray-500">{testimonial.relation}</p>
                                     </div>
                                 </div>
                             </div>
-                        ))}
+                        ))}\
                     </div>
                     {testimonialsData.length > 1 && (
                         <>
@@ -394,7 +394,7 @@ const Testimonials = () => {
                             aria-label={`Go to testimonial ${index + 1}`}
                             className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentTestimonial ? 'bg-[var(--color-accent)] scale-125' : 'bg-[var(--color-border)] hover:bg-[var(--color-secondary)]'}`}
                         ></button>
-                    ))}
+                    ))}\
                 </div>
             </div>
         </section>
@@ -407,7 +407,7 @@ const FAQ = () => {
     return (
         <section id="faq-section" className="bg-[var(--color-background-body)] py-16 scroll-mt-[75px]">
             <div className="container mx-auto px-4 max-w-3xl">
-                <h2 className="text-3xl font-bold text-center mb-8 font-['Montserrat'] text-[var(--color-text-primary)]">Frequently Asked Questions</h2>
+                <h2 className="text-3xl font-bold text-center mb-8 font-[\'Montserrat\'] text-[var(--color-text-primary)]">Frequently Asked Questions</h2>
                 <div className="bg-[var(--color-background-card)] p-4 sm:p-8 rounded-lg shadow-md">
                     {homeFaqData.map((faq, index) => (
                         <FaqItem 
@@ -416,7 +416,7 @@ const FAQ = () => {
                             isOpen={openIndex === index}
                             onClick={() => setOpenIndex(openIndex === index ? null : index)}
                         />
-                    ))}
+                    ))}\
                 </div>
             </div>
         </section>
