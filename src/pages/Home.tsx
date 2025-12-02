@@ -26,6 +26,22 @@ const heroSlidesData = [
 const Hero: React.FC = () => {
     const [slides, setSlides] = useState(heroSlidesData);
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    useEffect(() => {
+        const filteredSlides = isMobile
+            ? heroSlidesData.filter(slide => slide.type !== 'video')
+            : heroSlidesData;
+        setSlides(filteredSlides);
+    }, [isMobile]);
 
     const nextSlide = useCallback(() => {
         if (slides.length === 0) return;
@@ -347,14 +363,14 @@ const Testimonials = () => {
             <div className="container mx-auto px-4">
                 <h2 className="text-3xl font-bold text-center mb-12 font-[\'Montserrat\'] text-[var(--color-text-primary)]">What Our Community Says</h2>
                 <div className="max-w-3xl mx-auto relative">
-                    <div className="relative overflow-hidden min-h-[250px] sm:min-h-[200px]">
+                    <div className="relative overflow-hidden min-h-[220px] sm:min-h-[200px]">
                         {testimonialsData.map((testimonial, index) => (
                             <div
                                 key={index}
                                 className={`absolute top-0 left-0 w-full h-full transition-opacity duration-700 ease-in-out ${index === currentTestimonial ? 'opacity-100' : 'opacity-0'}`}
                                 aria-hidden={index !== currentTestimonial}
                             >
-                                <div className="bg-[var(--color-background-card)] p-8 rounded-lg shadow-lg relative h-full flex flex-col items-center text-center">
+                                <div className="bg-[var(--color-background-card)] p-4 sm:p-8 rounded-lg shadow-lg relative h-full flex flex-col items-center text-center">
                                     <img
                                         src={testimonial.img}
                                         alt={testimonial.name}
