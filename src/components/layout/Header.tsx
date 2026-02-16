@@ -72,6 +72,10 @@ const Header: React.FC = () => {
   const mobileActiveLinkClass = "text-[var(--color-text-accent)]";
   const mobileBaseLinkClass = "text-[var(--color-footer-text-secondary)] hover:text-white";
 
+  const handleMobileDropdown = (dropdownName: string) => {
+    setOpenMobileDropdown(prev => prev === dropdownName ? null : dropdownName);
+  };
+
 
   return (
     <header className={`fixed top-0 left-0 w-full bg-[var(--color-background-header)] text-[var(--color-header-text)] z-[1000] transition-shadow duration-300 ${isScrolled ? 'shadow-lg' : 'border-b border-gray-300'}`}>
@@ -145,7 +149,7 @@ const Header: React.FC = () => {
               {link.children ? (
                 <div className="w-full">
                   <button 
-                    onClick={() => setOpenMobileDropdown(openMobileDropdown === link.name ? null : link.name)}
+                    onClick={() => handleMobileDropdown(link.name)}
                     className={`text-2xl font-semibold w-full flex justify-center items-center gap-2 ${link.children.some(child => location.pathname === child.path) ? mobileActiveLinkClass : mobileBaseLinkClass}`}
                   >
                     {link.name}

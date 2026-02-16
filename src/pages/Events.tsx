@@ -5,13 +5,7 @@ import { eventsData } from '../data/events';
 import type { Event } from '../types';
 import { handleImageError } from '../utils';
 import ScrollAnimator from '../components/common/ScrollAnimator';
-
-const categoryColors: { [key: string]: { bg: string; text: string; } } = {
-    'Academic': { bg: 'bg-blue-100', text: 'text-blue-800' },
-    'Sports': { bg: 'bg-green-100', text: 'text-green-800' },
-    'Cultural': { bg: 'bg-purple-100', text: 'text-purple-800' },
-    'Celebration': { bg: 'bg-yellow-100', text: 'text-yellow-800' },
-};
+import { categoryColors } from '../data/eventColors';
 
 const EventCard: React.FC<{ event: Event }> = ({ event }) => {
     const colors = categoryColors[event.category] || { bg: 'bg-gray-100', text: 'text-gray-800' };

@@ -8,10 +8,8 @@
     <meta name="author" content="Sunshine International School">
     <meta name="keywords" content="Sunshine International School, SIS, CBSE School, School in Purushottampur, Ganjam, Best School, Quality Education, School Admissions">
     
-    <!-- Preload critical assets for faster LCP -->
-    <link rel="preload" as="image" href="/images/pages/home/video-poster.jpg" fetchpriority="high">
-    <link rel="preload" as="image" href="/images/pages/home/hero-1.jpg" fetchpriority="high">
-    <link rel="preload" as="video" href="/images/pages/home/video.mp4" type="video/mp4" fetchpriority="high">
+    <!-- Preload the first visible hero image for faster LCP -->
+    <link rel="preload" as="image" href="/images/pages/home/hero-3.jpg" fetchpriority="high">
 
     <!-- Defer non-critical CSS. In a production build, critical CSS should be inlined in the <style> block below. -->
     <link rel="preload" href="/src/index.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -133,7 +131,6 @@
 </head>
   <body>
     <div id="root"></div>
-  <script type="module" src="/src/index.tsx"></script>
-<script type="module" src="/index.tsx"></script>
+    <script type="module" src="/src/index.tsx"></script>
 </body>
 </html>
