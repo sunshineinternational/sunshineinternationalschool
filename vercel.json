@@ -1,5 +1,14 @@
 {
+  "redirects": [
+    {
+      "source": "/qr",
+      "destination": "https://wa.me/917815087065?text=Hello!%20I%20have%20a%20query%20regarding%20Sunshine%20International%20School.",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
+
+
