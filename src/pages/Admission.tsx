@@ -13,12 +13,12 @@ const Admission: React.FC = () => {
     return (
         <div>
             <Seo
-                title="Admissions 2025-26 | Sunshine International School, Purushottampur"
-                description="Join our community of learners. Find information about the admission process, eligibility, and required documents for the 2025-26 session at Sunshine International School (SIS), a premier CBSE school in Purushottampur."
+                title="Admissions 2026-27 | Sunshine International School, Purushottampur"
+                description="Join our community of learners. Find information about the admission process, eligibility, and required documents for the 2026-27 session at Sunshine International School (SIS), a premier CBSE school in Purushottampur."
                 imageUrl="/images/pages/admission/hero.jpg"
             />
             <PageHero
-                title="Admissions 2025-26"
+                title="Admissions 2026-27"
                 subtitle="Join our community of learners and thinkers. Your future starts here."
                 imageUrl="/images/pages/admission/hero.jpg"
             />

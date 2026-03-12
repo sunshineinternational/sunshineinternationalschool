@@ -233,7 +233,7 @@ body {
 /* Floating WhatsApp Button */
 .floating-whatsapp-button {
   position: fixed;
-  bottom: 85px; /* Positioned above the back-to-top button */
+  bottom: 20px; /* Default low position */
   right: 20px;
   background-color: #25D366;
   color: white;
@@ -247,8 +247,12 @@ body {
   cursor: pointer;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   z-index: 1001;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Snappy bounce effect */
   animation: whatsapp-pulse 2s infinite;
+}
+
+.floating-whatsapp-button.shifted {
+  bottom: 85px; /* Moves up when scroll-to-top button is visible */
 }
 
 .floating-whatsapp-button:hover {
