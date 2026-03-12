@@ -14,6 +14,7 @@ import Events from './pages/Events';
 import HouseSystem from './pages/HouseSystem';
 import { ThemeProvider } from './contexts/ThemeContext';
 import BackToTopButton from './components/common/BackToTopButton';
+import FloatingWhatsAppButton from './components/common/FloatingWhatsAppButton';
 
 const Layout: React.FC = () => {
   const location = useLocation();
@@ -49,6 +50,7 @@ const Layout: React.FC = () => {
         <Outlet />
       </main>
       <Footer />
+      <FloatingWhatsAppButton />
       <BackToTopButton />
     </div>
   );

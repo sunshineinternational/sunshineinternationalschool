@@ -48,9 +48,9 @@ const Footer: React.FC = () => {
           <div className="footer-social">
             <h3 className="text-lg font-bold mb-4 font-['Montserrat']">Connect With Us</h3>
             <div className="flex space-x-4">
-              <a href="#" aria-label="Visit our Facebook page" className="text-xl hover:text-[var(--color-text-accent)] transition-transform hover:scale-110"><i className="fab fa-facebook-f"></i></a>
-              <a href="#" aria-label="Visit our Instagram profile" className="text-xl hover:text-[var(--color-text-accent)] transition-transform hover:scale-110"><i className="fab fa-instagram"></i></a>
-              <a href="#" aria-label="Visit our Twitter profile" className="text-xl hover:text-[var(--color-text-accent)] transition-transform hover:scale-110"><i className="fab fa-twitter"></i></a>
+              <a href="https://www.facebook.com/profile.php?id=61587215428404" aria-label="Visit our Facebook page" className="text-xl hover:text-[var(--color-text-accent)] transition-transform hover:scale-110"><i className="fab fa-facebook-f"></i></a>
+              <a href="https://www.instagram.com/school.sunshine.international/" aria-label="Visit our Instagram profile" className="text-xl hover:text-[var(--color-text-accent)] transition-transform hover:scale-110"><i className="fab fa-instagram"></i></a>
+              <a href="https://wa.me/917815087065?text=Hello!%20I%20have%20a%20query%20regarding%20Sunshine%20International%20School." target="_blank" rel="noopener noreferrer" aria-label="Chat with us on WhatsApp" className="text-xl hover:text-[#25D366] transition-transform hover:scale-110"><i className="fab fa-whatsapp"></i></a>
             </div>
             <ThemeSwitcher />
           </div>
