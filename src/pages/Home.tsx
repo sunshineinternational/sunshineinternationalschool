@@ -28,9 +28,17 @@ const heroSlidesData = [
 const Hero: React.FC = () => {
     const [slides, setSlides] = useState(heroSlidesData);
     const [currentSlide, setCurrentSlide] = useState(0);
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [isMobile, setIsMobile] = useState(false); // Default to false for server
     const [isPaused, setIsPaused] = useState(false);
     const [scrollOutput, setScrollOutput] = useState(0);
+
+    // Update isMobile once the browser is ready
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        handleResize(); // Check once at start
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
     const [textIndex, setTextIndex] = useState(0);
     const heroTextWords = ["Leaders", "Innovators", "Scholars"];
     const [displayText, setDisplayText] = useState('');

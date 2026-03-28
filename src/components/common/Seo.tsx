@@ -10,16 +10,20 @@ interface SeoProps {
 const Seo: React.FC<SeoProps> = ({ title, description, imageUrl, keywords }) => {
   useEffect(() => {
     const baseUrl = 'https://www.sisppur.com';
+    const isServer = typeof window === 'undefined';
+    const pathname = isServer ? '/' : window.location.pathname;
+    
     const fullTitle = `${title} | Sunshine International School`;
     const defaultImageUrl = `${baseUrl}/images/common/logo-full.png`;
-    const pageUrl = `${baseUrl}${window.location.pathname}`;
+    const pageUrl = `${baseUrl}${pathname}`;
     const baseKeywords = 'Sunshine International School, SIS, CBSE School, School in Purushottampur, Ganjam, Best School, Quality Education, School Admissions';
 
     // Set title
-    document.title = fullTitle;
+    if (!isServer) document.title = fullTitle;
 
     // Helper to create or update meta tags
     const setMetaTag = (attr: 'name' | 'property', key: string, content: string) => {
+      if (isServer) return; // Meta tags should be handled differently for server but for now we skip to avoid errors
       let element = document.querySelector(`meta[${attr}='${key}']`);
       if (!element) {
         element = document.createElement('meta');
@@ -31,6 +35,7 @@ const Seo: React.FC<SeoProps> = ({ title, description, imageUrl, keywords }) => 
     
     // Helper to create or update link tags
     const setLinkTag = (rel: string, href: string) => {
+        if (isServer) return;
         let element = document.querySelector(`link[rel='${rel}']`);
         if (!element) {
             element = document.createElement('link');
@@ -96,7 +101,7 @@ const Seo: React.FC<SeoProps> = ({ title, description, imageUrl, keywords }) => 
       };
 
     // Breadcrumb Schema
-    const pathParts = window.location.pathname.split('/').filter(p => p);
+    const pathParts = pathname.split('/').filter(p => p);
     const breadcrumbSchema = {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
@@ -117,7 +122,7 @@ const Seo: React.FC<SeoProps> = ({ title, description, imageUrl, keywords }) => 
     };
 
     // Sitelinks Searchbox (Only for Homepage)
-    const sitelinkSchema = window.location.pathname === '/' ? {
+    const sitelinkSchema = pathname === '/' ? {
         '@context': 'https://schema.org',
         '@type': 'WebSite',
         'url': 'https://www.sisppur.com',
