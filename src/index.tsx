@@ -1,6 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { ViteSSG } from 'vite-ssg';
 import App from './App';
+import { routes } from './routes';
 
 // Import fonts from local dependencies for performance
 import '@fontsource/roboto/400.css';
@@ -12,24 +13,12 @@ import '@fontsource/montserrat/700.css';
 // Import Font Awesome from local dependencies
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-
-const rootElement = document.getElementById('root');
-if (!rootElement) {
-  throw new Error("Could not find root element to mount to");
-}
-
-if (rootElement.hasChildNodes()) {
-  ReactDOM.hydrateRoot(
-    rootElement,
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
-} else {
-  const root = ReactDOM.createRoot(rootElement);
-  root.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
-}
+// This replaces the old ReactDOM.createRoot call. 
+// It handles both development and the professional pre-rendering build.
+export const createApp = ViteSSG(
+  App,
+  { routes },
+  ({ app, router, routes, isClient, initialState }) => {
+    // This is where we could add analytics or other setup if needed later
+  }
+);

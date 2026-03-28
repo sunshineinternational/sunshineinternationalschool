@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "postbuild": "react-snap",
+    "build": "vite-ssg build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -24,28 +23,9 @@
     "@vitejs/plugin-react": "^5.0.0",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.39",
-    "react-snap": "^1.23.0",
     "tailwindcss": "^3.4.4",
     "typescript": "~5.8.2",
-    "vite": "^6.2.0"
-  },
-  "reactSnap": {
-    "include": [
-      "/",
-      "/about",
-      "/academics",
-      "/admission",
-      "/teachers",
-      "/notices",
-      "/contact",
-      "/gallery",
-      "/events",
-      "/house-system"
-    ],
-    "source": "dist",
-    "minifyHtml": {
-      "collapseWhitespace": true,
-      "removeComments": true
-    }
+    "vite": "^6.2.0",
+    "vite-ssg": "^28.3.0"
   }
 }
