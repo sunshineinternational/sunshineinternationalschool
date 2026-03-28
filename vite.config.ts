@@ -15,14 +15,6 @@ export default defineConfig(({ mode }) => {
         alias: {
           '@': path.resolve('.', 'src'),
         }
-      },
-      // New: Professional Static Site Generation settings
-      ssgOptions: {
-        script: 'async',
-        formatting: 'minify',
-        crittersOptions: {
-          reduceInlineStyles: false,
-        },
-      },
+      }
     };
 });
