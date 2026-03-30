@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, useRoutes } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { Analytics } from "@vercel/analytics/react";
 import { routes } from './routes';
 
 import '@fontsource/roboto/400.css';
@@ -16,6 +17,7 @@ const MainApp = () => {
     return (
         <ThemeProvider>
             {element}
+            <Analytics />
         </ThemeProvider>
     );
 };
