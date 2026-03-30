@@ -122,18 +122,12 @@ const Results: React.FC = () => {
                     {/* Result Display Section */}
                     {result && (
                         <div className="animate-fade-in-up print:mt-0">
-                            <div className="flex justify-between items-center mb-6 print:hidden">
+                            <div className="mb-6 print:hidden">
                                 <button 
                                     onClick={() => setResult(null)}
                                     className="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] flex items-center gap-2 font-semibold transition-colors"
                                 >
                                     <i className="fas fa-arrow-left"></i> Change Student
-                                </button>
-                                <button 
-                                    onClick={handlePrint}
-                                    className="px-6 py-2 bg-[var(--color-accent)] text-white rounded-full font-bold shadow-md hover:bg-[var(--color-accent-dark)] transition-all flex items-center gap-2"
-                                >
-                                    <i className="fas fa-print"></i> Save / Print PDF
                                 </button>
                             </div>
 
@@ -254,6 +248,17 @@ const Results: React.FC = () => {
                                 </div>
                             </div>
 
+                            {/* Print Button at Bottom */}
+                            <div className="mt-10 flex justify-center print:hidden">
+                                <button 
+                                    onClick={handlePrint}
+                                    className="px-10 py-4 bg-[#F59E0B] hover:bg-[#D97706] text-white rounded-full font-bold shadow-[0_10px_20px_-10px_rgba(245,158,11,0.5)] hover:shadow-[0_15px_25px_-5px_rgba(245,158,11,0.6)] hover:scale-105 transition-all flex items-center gap-3 group"
+                                >
+                                    <i className="fas fa-print group-hover:animate-bounce"></i> 
+                                    Download / Print Official Report Card
+                                </button>
+                            </div>
+
                         </div>
                     )}
                 </div>
@@ -263,7 +268,7 @@ const Results: React.FC = () => {
             <style dangerouslySetInnerHTML={{ __html: `
                 @media print {
                     header, footer, .back-to-top-button, .floating-whatsapp-button { display: none !important; }
-                    body { background: white !important; margin: 0; padding: 0; }
+                    body { background: white !important; margin: 0 !important; padding: 0; }
                     .page-hero { display: none !important; }
                     .container { margin: 0 !important; width: 100% !important; max-width: none !important; }
                     #report-card { 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { Analytics } from "@vercel/analytics/react";
 import { routes } from './routes';
 
 const App: React.FC = () => {
@@ -10,6 +11,7 @@ const App: React.FC = () => {
     return (
         <ThemeProvider>
             {element}
+            <Analytics />
         </ThemeProvider>
     );
 };

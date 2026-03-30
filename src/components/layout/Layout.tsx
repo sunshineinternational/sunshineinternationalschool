@@ -4,6 +4,7 @@ import Header from './Header';
 import Footer from './Footer';
 import BackToTopButton from '../common/BackToTopButton';
 import FloatingWhatsAppButton from '../common/FloatingWhatsAppButton';
+import ResultPopup from '../common/ResultPopup';
 
 const Layout: React.FC = () => {
     const location = useLocation();
@@ -35,6 +36,7 @@ const Layout: React.FC = () => {
             <Footer />
             <FloatingWhatsAppButton />
             <BackToTopButton />
+            <ResultPopup />
         </div>
     );
 };

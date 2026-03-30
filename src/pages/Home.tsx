@@ -192,9 +192,8 @@ const Hero: React.FC = () => {
 
                     {/* Triple CTA Buttons */}
                     <div className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center md:justify-start">
-                        <Link to="/results" className="group relative inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white bg-[var(--color-accent)] rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(var(--color-accent-rgb),0.6)] shadow-xl border-2 border-[var(--color-accent)]">
-                            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-80 group-hover:h-80 opacity-20"></span>
-                            <span className="relative flex items-center gap-2 uppercase tracking-wider">
+                        <Link to="/results" className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white bg-[#F59E0B] hover:bg-[#D97706] rounded-full transition-all duration-300 shadow-[0_10px_20px_-10px_rgba(245,158,11,0.5)] hover:shadow-[0_15px_25px_-5px_rgba(245,158,11,0.6)] hover:scale-105 active:scale-95">
+                            <span className="flex items-center gap-2 uppercase tracking-wider">
                                 <i className="fas fa-graduation-cap"></i>
                                 Check 2025-26 Results
                             </span>
@@ -219,20 +218,6 @@ const Hero: React.FC = () => {
                         </a>
                     </div>
                 </div>
-            </div>
-
-            {/* Quick Stats Strip - Glassmorphism */}
-            <div className="absolute top-1/2 -translate-y-1/2 right-0 hidden lg:flex flex-col gap-6 mr-8 z-20">
-                {[
-                    { number: "25+", label: "Years of Excellence" },
-                    { number: "100%", label: "Result Success" },
-                    { number: "1:20", label: "Teacher Ratio" }
-                ].map((stat, idx) => (
-                    <div key={idx} className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20 shadow-lg text-center w-32 transform transition-transform hover:scale-105 hover:bg-white/20">
-                        <div className="text-2xl font-bold text-[var(--color-accent)] font-['Montserrat']">{stat.number}</div>
-                        <div className="text-xs text-white/90 font-medium">{stat.label}</div>
-                    </div>
-                ))}
             </div>
 
             {/* Navigation Dots */}
