@@ -190,10 +190,18 @@ const Hero: React.FC = () => {
                         A nurturing environment where knowledge meets excellence, empowering students to lead with confidence.
                     </p>
 
-                    {/* Dual CTA Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                        <Link to="/admission" className="group relative inline-flex items-center justify-center px-8 py-4 text-base font-bold text-[#3A2D28] bg-[#CBAD8D] rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(203,173,141,0.6)] shadow-xl ring-2 ring-[#CBAD8D] ring-offset-2 ring-offset-black/20">
+                    {/* Triple CTA Buttons */}
+                    <div className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center md:justify-start">
+                        <Link to="/results" className="group relative inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white bg-[var(--color-accent)] rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(var(--color-accent-rgb),0.6)] shadow-xl border-2 border-[var(--color-accent)]">
                             <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-80 group-hover:h-80 opacity-20"></span>
+                            <span className="relative flex items-center gap-2 uppercase tracking-wider">
+                                <i className="fas fa-graduation-cap"></i>
+                                Check 2025-26 Results
+                            </span>
+                        </Link>
+
+                        <Link to="/admission" className="group relative inline-flex items-center justify-center px-8 py-4 text-base font-bold text-[#3A2D28] bg-white border-2 border-white rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] shadow-xl">
+                            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-[var(--color-primary)] rounded-full group-hover:w-80 group-hover:h-80 opacity-10"></span>
                             <span className="relative flex items-center gap-2">
                                 Apply for Admission 2026-27
                                 <i className="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
@@ -207,7 +215,7 @@ const Hero: React.FC = () => {
                             className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white border-2 border-white/60 bg-white/5 rounded-full hover:bg-white hover:text-[#25D366] hover:border-white transition-all duration-300 backdrop-blur-sm drop-shadow-md"
                         >
                             <i className="fab fa-whatsapp text-xl mr-2"></i>
-                            Chat on WhatsApp
+                            WhatsApp Query
                         </a>
                     </div>
                 </div>
@@ -563,7 +571,7 @@ const Leadership = () => {
                                     src={leader.img}
                                     alt={leader.name}
                                     className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover object-center mx-auto border-4 border-[var(--color-background-section)] shadow-md"
-                                    onError={(e) => handleImageError(e, { width: 160, height: 160, text: leader.name, isAvatar: true })}
+                                    onError={(e) => handleImageError(e, { width: 160, height: 160, text: leader.name })}
                                     loading="lazy"
                                     decoding="async"
                                     width="160"

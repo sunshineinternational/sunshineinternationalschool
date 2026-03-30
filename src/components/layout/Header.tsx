@@ -17,6 +17,7 @@ const navLinks: NavLinkItem[] = [
   { name: 'About Us', path: '/about' },
   { name: 'Academics', path: '/academics' },
   { name: 'Admission', path: '/admission' },
+  { name: 'Results', path: '/results' },
   { 
     name: 'Explore', 
     children: [

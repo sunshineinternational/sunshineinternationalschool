@@ -11,6 +11,7 @@ import Gallery from './pages/Gallery';
 import Notices from './pages/Notices';
 import Events from './pages/Events';
 import HouseSystem from './pages/HouseSystem';
+import Results from './pages/Results';
 
 export const routes: RouteObject[] = [
   {
@@ -27,6 +28,7 @@ export const routes: RouteObject[] = [
       { path: 'gallery', element: <Gallery /> },
       { path: 'events', element: <Events /> },
       { path: 'house-system', element: <HouseSystem /> },
+      { path: 'results', element: <Results /> },
     ],
   },
 ];
