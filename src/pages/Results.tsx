@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PageHero from '../components/common/PageHero';
 import Seo from '../components/common/Seo';
-import studentResults from '../data/student_results.json';
+import studentResults from '../data/student_results_final.json';
 import ScrollAnimator from '../components/common/ScrollAnimator';
 
 interface SubjectResult {
@@ -33,19 +33,24 @@ const Results: React.FC = () => {
         setResult(null);
         setIsSearching(true);
 
-        // Simulate a small loading for "Premium" feel
         setTimeout(() => {
-            const found = (studentResults as StudentResult[]).find(s => 
-                s.class.toUpperCase() === searchClass.toUpperCase() && 
-                s.roll_number.padStart(2, '0') === rollNumber.padStart(2, '0')
-            );
+            try {
+                const found = (studentResults as StudentResult[]).find(s => 
+                    s.class.toUpperCase() === searchClass.toUpperCase() && 
+                    parseInt(s.roll_number.toString()) === parseInt(rollNumber)
+                );
 
-            if (found) {
-                setResult(found);
-            } else {
-                setError('No result found. Please check Class and Roll Number.');
+                if (found) {
+                    setResult(found);
+                } else {
+                    setError(`No result found for Class ${searchClass} Roll No ${rollNumber}.`);
+                }
+            } catch (err) {
+                console.error('Search error:', err);
+                setError('Could not process search. Please try again.');
+            } finally {
+                setIsSearching(false);
             }
-            setIsSearching(false);
         }, 800);
     };
 
@@ -167,8 +172,8 @@ const Results: React.FC = () => {
                                         <thead>
                                             <tr className="bg-[var(--color-primary)] text-white text-xs uppercase tracking-widest">
                                                 <th rowSpan={2} className="p-3 border border-gray-200 text-left">Subject</th>
-                                                <th colSpan={5} className="p-2 border border-gray-200 text-center">Term 1</th>
-                                                <th colSpan={5} className="p-2 border border-gray-200 text-center">Term 2</th>
+                                                <th colSpan={6} className="p-2 border border-gray-200 text-center">Term 1</th>
+                                                <th colSpan={6} className="p-2 border border-gray-200 text-center">Term 2</th>
                                             </tr>
                                             <tr className="bg-gray-100 text-[10px] font-bold text-gray-600">
                                                 <th className="p-2 border border-gray-200">PT</th>
@@ -176,11 +181,13 @@ const Results: React.FC = () => {
                                                 <th className="p-2 border border-gray-200">SE</th>
                                                 <th className="p-2 border border-gray-200">TE</th>
                                                 <th className="p-2 border border-gray-200 bg-gray-200 font-black">Tot</th>
+                                                <th className="p-2 border border-gray-200 bg-amber-50">Grd</th>
                                                 <th className="p-2 border border-gray-200">PT</th>
                                                 <th className="p-2 border border-gray-200">NB</th>
                                                 <th className="p-2 border border-gray-200">SE</th>
                                                 <th className="p-2 border border-gray-200">TE</th>
                                                 <th className="p-2 border border-gray-200 bg-gray-200 font-black">Tot</th>
+                                                <th className="p-2 border border-gray-200 bg-amber-50">Grd</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -192,13 +199,15 @@ const Results: React.FC = () => {
                                                     <td className="p-2 border border-gray-200 text-center text-xs">{sub.term1.nb || '-'}</td>
                                                     <td className="p-2 border border-gray-200 text-center text-xs">{sub.term1.se || '-'}</td>
                                                     <td className="p-2 border border-gray-200 text-center text-xs">{sub.term1.te || '-'}</td>
-                                                    <td className="p-2 border border-gray-200 text-center text-xs bg-gray-50 font-bold">{sub.term1.total || sub.term1.te}</td>
+                                                    <td className="p-2 border border-gray-200 text-center text-xs bg-gray-50 font-bold">{Math.max(sub.term1.total, sub.term1.te) || '-'}</td>
+                                                    <td className="p-2 border border-gray-200 text-center text-xs font-black text-amber-700 bg-amber-50/30">{sub.term1.grade || '-'}</td>
                                                     {/* Term 2 */}
                                                     <td className="p-2 border border-gray-200 text-center text-xs">{sub.term2.pt || '-'}</td>
                                                     <td className="p-2 border border-gray-200 text-center text-xs">{sub.term2.nb || '-'}</td>
                                                     <td className="p-2 border border-gray-200 text-center text-xs">{sub.term2.se || '-'}</td>
                                                     <td className="p-2 border border-gray-200 text-center text-xs">{sub.term2.te || '-'}</td>
-                                                    <td className="p-2 border border-gray-200 text-center text-xs bg-gray-50 font-bold">{sub.term2.total || sub.term2.te}</td>
+                                                    <td className="p-2 border border-gray-200 text-center text-xs bg-gray-50 font-bold">{Math.max(sub.term2.total, sub.term2.te) || '-'}</td>
+                                                    <td className="p-2 border border-gray-200 text-center text-xs font-black text-amber-700 bg-amber-50/30">{sub.term2.grade || '-'}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
