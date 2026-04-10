@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
-import { fetchNoticesData } from '../services/dataService';
-import type { Notice, QuickLink, Testimonial } from '../types';
-import { leadershipData } from '../data/teachers';
+import { leadershipData as fallbackLeaders } from '../data/teachers';
+import { fetchNoticesData, fetchTeachersData } from '../services/dataService';
+import type { Notice, QuickLink, Testimonial, Teacher } from '../types';
 import { handleImageError, parseDDMMYYYY } from '../utils';
+import { client } from '../lib/sanity';
 import { FaqItem } from '../components/common/FaqItem';
 import Seo from '../components/common/Seo';
 import { eventsData } from '../data/events';
@@ -199,10 +200,10 @@ const Hero: React.FC = () => {
                             </span>
                         </Link>
 
-                        <Link to="/admission" className="group relative inline-flex items-center justify-center px-8 py-4 text-base font-bold text-[#3A2D28] bg-white border-2 border-white rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] shadow-xl">
+                        <Link to="/admission#inquiry-form" className="group relative inline-flex items-center justify-center px-8 py-4 text-base font-bold text-[#3A2D28] bg-white border-2 border-white rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] shadow-xl">
                             <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-[var(--color-primary)] rounded-full group-hover:w-80 group-hover:h-80 opacity-10"></span>
                             <span className="relative flex items-center gap-2">
-                                Apply for Admission 2026-27
+                                Enroll for 2026-27
                                 <i className="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                             </span>
                         </Link>
@@ -538,7 +539,21 @@ const LatestEvents = () => {
 };
 
 const Leadership = () => {
-    const leaders = leadershipData;
+    const [leaders, setLeaders] = useState<Teacher[]>([]);
+    
+    useEffect(() => {
+        const loadLeaders = async () => {
+            const data = await fetchTeachersData();
+            // Filter sanity data for leadership roles if they exist
+            const sanityLeaders = data.filter(t => 
+                t.role.toLowerCase().includes('principal') || 
+                t.role.toLowerCase().includes('president') ||
+                t.role.toLowerCase().includes('chairman')
+            );
+            setLeaders(sanityLeaders.length > 0 ? sanityLeaders : fallbackLeaders);
+        };
+        loadLeaders();
+    }, []);
 
     if (leaders.length === 0) {
         return null;

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PageHero from '../components/common/PageHero';
 import Seo from '../components/common/Seo';
-import { galleryImages } from '../data/gallery';
+import { galleryImages as fallbackImages } from '../data/gallery';
 import type { GalleryImage } from '../types';
+import { fetchGalleryData } from '../services/dataService';
 import ScrollAnimator from '../components/common/ScrollAnimator';
 import { handleImageError } from '../utils';
 
@@ -46,20 +47,29 @@ const Lightbox: React.FC<{
 
 
 const Gallery: React.FC = () => {
+  const [images, setImages] = useState<GalleryImage[]>([]);
   const [selectedEvent, setSelectedEvent] = useState('All');
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const IMAGES_PER_PAGE = 12;
 
-  const events = useMemo(() => ['All', ...Array.from(new Set(galleryImages.map(img => img.event)))], []);
+  useEffect(() => {
+    const loadImages = async () => {
+      const data = await fetchGalleryData();
+      setImages(data.length > 0 ? [...data, ...fallbackImages] : fallbackImages);
+    };
+    loadImages();
+  }, []);
+
+  const events = useMemo(() => ['All', ...Array.from(new Set(images.map(img => img.event)))], [images]);
   
   const filteredImages = useMemo(() => {
     if (selectedEvent === 'All') {
-      return galleryImages;
+      return images;
     }
-    return galleryImages.filter(img => img.event === selectedEvent);
-  }, [selectedEvent]);
+    return images.filter(img => img.event === selectedEvent);
+  }, [selectedEvent, images]);
 
   // Reset to first page whenever the event filter changes
   useEffect(() => {
