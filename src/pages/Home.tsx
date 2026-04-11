@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
-import { fetchNoticesData, fetchTeachersData } from '../services/dataService';
+import { fetchNoticesData, fetchTeachersData, fetchEventsData } from '../services/dataService';
 import type { Notice, QuickLink, Testimonial, Teacher } from '../types';
 import { handleImageError, parseDDMMYYYY } from '../utils';
 import { client } from '../lib/sanity';
@@ -419,9 +419,21 @@ const HomepageNotices = () => {
 };
 
 const LatestEvents = () => {
-    const latestEvents = [...eventsData]
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-        .slice(0, 6);
+    const [latestEvents, setLatestEvents] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadEvents = async () => {
+            const data = await fetchEventsData();
+            // Sort and take top 6
+            const sorted = [...data]
+                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                .slice(0, 6);
+            setLatestEvents(sorted);
+            setLoading(false);
+        };
+        loadEvents();
+    }, []);
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
