@@ -112,3 +112,28 @@ export async function fetchTeachersData(): Promise<any[]> {
         return [];
     }
 }
+
+/**
+ * Fetches events from Sanity.
+ */
+export async function fetchEventsData(): Promise<any[]> {
+    try {
+        const query = `*[_type == "event"] | order(date desc)`;
+        const sanityEvents = await client.fetch(query);
+        
+        if (sanityEvents && sanityEvents.length > 0) {
+            return sanityEvents.map((e: any) => ({
+                title: e.title,
+                date: e.date,
+                img: e.mainImage ? urlFor(e.mainImage).url() : '/images/pages/home/hero-1.jpg',
+                description: e.description || '',
+                showOnHome: e.showOnHome || false,
+                gallery: e.gallery ? e.gallery.map((img: any) => urlFor(img).url()) : []
+            }));
+        }
+        return [];
+    } catch (error) {
+        console.error("Events fetch failed:", error);
+        return [];
+    }
+}
