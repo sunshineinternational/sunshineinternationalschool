@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
-import { leadershipData as fallbackLeaders } from '../data/teachers';
 import { fetchNoticesData, fetchTeachersData } from '../services/dataService';
 import type { Notice, QuickLink, Testimonial, Teacher } from '../types';
 import { handleImageError, parseDDMMYYYY } from '../utils';
 import { client } from '../lib/sanity';
 import { FaqItem } from '../components/common/FaqItem';
 import Seo from '../components/common/Seo';
-import { eventsData } from '../data/events';
 import { schoolLifeMomentsData } from '../data/schoolLifeMoments';
 import { homeFaqData } from '../data/faqs';
 import { whyChooseUsData } from '../data/whyChooseUs';
@@ -544,13 +542,24 @@ const Leadership = () => {
     useEffect(() => {
         const loadLeaders = async () => {
             const data = await fetchTeachersData();
-            // Filter sanity data for leadership roles if they exist
+            // Filter sanity data for leadership roles
             const sanityLeaders = data.filter(t => 
                 t.role.toLowerCase().includes('principal') || 
                 t.role.toLowerCase().includes('president') ||
                 t.role.toLowerCase().includes('chairman')
             );
-            setLeaders(sanityLeaders.length > 0 ? sanityLeaders : fallbackLeaders);
+            
+            // Sort by priority (President first, then Principal)
+            const sorted = sanityLeaders.sort((a, b) => {
+                const getOrder = (role: string) => {
+                    if (role.toLowerCase().includes('president')) return 1;
+                    if (role.toLowerCase().includes('principal')) return 2;
+                    return 3;
+                };
+                return getOrder(a.role) - getOrder(b.role);
+            });
+
+            setLeaders(sorted);
         };
         loadLeaders();
     }, []);

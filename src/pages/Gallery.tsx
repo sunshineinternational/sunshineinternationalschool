@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PageHero from '../components/common/PageHero';
 import Seo from '../components/common/Seo';
-import { galleryImages as fallbackImages } from '../data/gallery';
 import type { GalleryImage } from '../types';
 import { fetchGalleryData } from '../services/dataService';
 import ScrollAnimator from '../components/common/ScrollAnimator';
@@ -57,7 +56,7 @@ const Gallery: React.FC = () => {
   useEffect(() => {
     const loadImages = async () => {
       const data = await fetchGalleryData();
-      setImages(data.length > 0 ? [...data, ...fallbackImages] : fallbackImages);
+      setImages(data);
     };
     loadImages();
   }, []);
@@ -103,10 +102,9 @@ const Gallery: React.FC = () => {
   const handlePageChange = (newPage: number) => {
       if (newPage >= 1 && newPage <= totalPages) {
           setCurrentPage(newPage);
-          // Scroll to the top of the gallery section for better UX on page change
           const gallerySection = document.getElementById('gallery-section');
           if (gallerySection) {
-              const headerOffset = 75; // Adjust for fixed header height
+              const headerOffset = 75;
               const elementPosition = gallerySection.getBoundingClientRect().top;
               const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
               

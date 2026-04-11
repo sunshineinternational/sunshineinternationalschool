@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PageHero from '../components/common/PageHero';
 import Seo from '../components/common/Seo';
-import { eventsData } from '../data/events';
 import type { Event } from '../types';
 import { handleImageError } from '../utils';
 import ScrollAnimator from '../components/common/ScrollAnimator';
 import { categoryColors } from '../data/eventColors';
+import { fetchEventsData } from '../services/dataService';
 
 const EventCard: React.FC<{ event: Event }> = ({ event }) => {
+    // @ts-ignore
     const colors = categoryColors[event.category] || { bg: 'bg-gray-100', text: 'text-gray-800' };
 
     return (
@@ -24,7 +25,8 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
                     height="224"
                 />
                 <span className={`absolute top-2 right-2 text-xs font-semibold ${colors.bg} ${colors.text} px-2 py-1 rounded-full`}>
-                    {event.category}
+                    {/* @ts-ignore */}
+                    {event.category || 'General'}
                 </span>
             </div>
             <div className="p-6 flex flex-col flex-grow">
@@ -38,7 +40,18 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
 
 
 const Events: React.FC = () => {
-    const sortedEvents = [...eventsData].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const [events, setEvents] = useState<Event[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadEvents = async () => {
+            setLoading(true);
+            const data = await fetchEventsData();
+            setEvents(data);
+            setLoading(false);
+        };
+        loadEvents();
+    }, []);
 
   return (
     <div>
@@ -50,17 +63,27 @@ const Events: React.FC = () => {
       <PageHero 
         title="Latest Events & Happenings"
         subtitle="Explore the vibrant life and activities at our school"
-        imageUrl="/images/pages/events/hero.jpg" // Using gallery hero as a placeholder
+        imageUrl="/images/pages/events/hero.jpg" 
       />
 
       <ScrollAnimator>
         <section className="py-16 bg-[var(--color-background-section)]">
           <div className="container mx-auto px-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {sortedEvents.map((event, index) => (
-                      <EventCard key={index} event={event} />
-                  ))}
-              </div>
+              {loading ? (
+                  <div className="text-center py-12">
+                      <p className="text-lg text-[var(--color-text-secondary)]">Loading events...</p>
+                  </div>
+              ) : events.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                      {events.map((event, index) => (
+                          <EventCard key={index} event={event} />
+                      ))}
+                  </div>
+              ) : (
+                <div className="text-center py-12">
+                    <p className="text-lg text-[var(--color-text-secondary)]">No events found.</p>
+                </div>
+              )}
           </div>
         </section>
       </ScrollAnimator>
@@ -68,4 +91,4 @@ const Events: React.FC = () => {
   );
 };
 
-export default Events;
+export default Events;

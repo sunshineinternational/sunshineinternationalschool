@@ -7,7 +7,7 @@ export const galleryType = defineType({
   fields: [
     defineField({
       name: 'title',
-      title: 'Album Title',
+      title: 'Photo Title / Caption',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
@@ -22,13 +22,17 @@ export const galleryType = defineType({
     }),
     defineField({
       name: 'category',
-      title: 'Category',
+      title: 'Album / Category',
       type: 'string',
       options: {
         list: [
-          {title: 'Events', value: 'events'},
-          {title: 'Infrastructure', value: 'infrastructure'},
-          {title: 'Classroom', value: 'classroom'},
+          {title: 'Annual Function 2024-25', value: 'Annual Function 2024-25'},
+          {title: 'Science Fair', value: 'Science Fair'},
+          {title: 'Sports Meet', value: 'Sports Meet'},
+          {title: 'Class of 2022', value: 'Class of 2022'},
+          {title: 'Archive 2012-2020', value: 'Archive 2012-2020'},
+          {title: 'Campus & Infrastructure', value: 'infrastructure'},
+          {title: 'Classroom Activities', value: 'classroom'},
           {title: 'Other', value: 'other'},
         ],
       },
@@ -36,8 +40,8 @@ export const galleryType = defineType({
     }),
     defineField({
       name: 'caption',
-      title: 'Photo Description',
-      type: 'string',
+      title: 'Detailed Description (Optional)',
+      type: 'text',
     }),
   ],
 })

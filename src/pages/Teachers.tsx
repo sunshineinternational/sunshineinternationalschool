@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import PageHero from '../components/common/PageHero';
-import { facultyData } from '../data/teachers';
 import type { Teacher } from '../types';
 import Seo from '../components/common/Seo';
 import ScrollAnimator from '../components/common/ScrollAnimator';
 import { handleImageError } from '../utils';
+import { fetchTeachersData } from '../services/dataService';
+import { useLocation } from 'react-router-dom';
 
 const TeacherCard: React.FC<{ imgSrc: string; name: string; role: string; qualification: string; experience: string; }> = ({ imgSrc, name, role, qualification, experience }) => {
     
@@ -33,22 +34,28 @@ const TeacherCard: React.FC<{ imgSrc: string; name: string; role: string; qualif
     );
 };
 
-interface Testimonial {
-    quote: string;
-    name: string;
-    role: string;
-}
-
 const Teachers: React.FC = () => {
+  const [faculty, setFaculty] = useState<Teacher[]>([]);
+  const [loading, setLoading] = useState(true);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
-  const testimonials: Testimonial[] = facultyData
+  useEffect(() => {
+    const loadTeachers = async () => {
+        setLoading(true);
+        const sanityData = await fetchTeachersData();
+        setFaculty(sanityData);
+        setLoading(false);
+    };
+    loadTeachers();
+  }, []);
+
+  const testimonials = useMemo(() => faculty
     .filter(t => t.testimonial && t.testimonial.trim() !== '')
     .map(t => ({
       quote: t.testimonial!,
       name: t.name,
       role: t.role,
-    }));
+    })), [faculty]);
 
   useEffect(() => {
     if (testimonials.length > 1) {
@@ -84,12 +91,12 @@ const Teachers: React.FC = () => {
         <section className="py-16 bg-[var(--color-background-section)]">
           <div className="container mx-auto px-4">
               <>
-                {facultyData.length > 0 ? (
+                {faculty.length > 0 ? (
                   <div>
                     <h2 className="text-3xl font-bold text-center mb-4 font-['Montserrat'] text-[var(--color-text-primary)]">Our Esteemed Faculty</h2>
                     <p className="text-center text-[var(--color-text-secondary)] max-w-2xl mx-auto mb-12">A team of passionate educators dedicated to student success.</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {facultyData.map(t => <TeacherCard key={t.name} imgSrc={t.img} name={t.name} role={t.role} qualification={t.qualification} experience={`${t.experience} years experience`} />)}
+                      {faculty.map(t => <TeacherCard key={t.name} imgSrc={t.img} name={t.name} role={t.role} qualification={t.qualification} experience={t.experience ? `${t.experience} years experience` : ''} />)}
                     </div>
                   </div>
                 ) : (

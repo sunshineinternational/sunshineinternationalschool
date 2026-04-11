@@ -101,7 +101,7 @@ export async function fetchTeachersData(): Promise<any[]> {
                 name: t.name,
                 role: t.role,
                 qualification: t.qualification || '',
-                experience: '',
+                experience: t.experience || '',
                 img: t.image ? urlFor(t.image).url() : '/images/staff/default-teacher.jpg',
                 testimonial: t.bio || ''
             }));
