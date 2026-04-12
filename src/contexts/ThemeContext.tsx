@@ -10,19 +10,19 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<Theme>(() => {
+  const [theme, setThemeState] = useState<Theme>('nude');
+
+  // Load theme from localStorage only after mount (client-side)
+  useEffect(() => {
     try {
       const savedTheme = localStorage.getItem('theme') as Theme | null;
-      // If the saved theme is one of the valid themes, use it.
       if (savedTheme && ['nude', 'blue'].includes(savedTheme)) {
-        return savedTheme;
+        setThemeState(savedTheme);
       }
-      return 'nude'; // Default to Oxford Blue & Gold otherwise
     } catch (error) {
       console.warn('Could not read theme from localStorage', error);
-      return 'nude';
     }
-  });
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);

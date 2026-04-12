@@ -421,6 +421,7 @@ const SchoolLifeMoments = () => {
                 )}
             </div>
         </div>
+    </section>
     );
 };
 

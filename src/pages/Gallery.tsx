@@ -104,6 +104,7 @@ const Gallery: React.FC = () => {
           setCurrentPage(newPage);
           const gallerySection = document.getElementById('gallery-section');
           if (gallerySection) {
+              if (typeof window === 'undefined') return;
               const headerOffset = 75;
               const elementPosition = gallerySection.getBoundingClientRect().top;
               const offsetPosition = elementPosition + window.pageYOffset - headerOffset;

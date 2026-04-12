@@ -10,6 +10,8 @@ const Layout: React.FC = () => {
     const location = useLocation();
 
     React.useEffect(() => {
+        if (typeof window === 'undefined') return;
+
         // Smooth scroll for hash links or top of page
         if (location.hash) {
             const id = location.hash.substring(1);
