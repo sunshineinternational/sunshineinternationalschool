@@ -258,7 +258,7 @@ const quickLinksData: QuickLink[] = [
 ];
 
 const QuickLinks = () => (
-    <section className="bg-[var(--color-background-section)] py-16">
+    <section className="bg-[var(--color-background-body)] py-24">
         <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12 font-['Montserrat'] text-[var(--color-text-primary)]">Discover Sunshine International School</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -365,8 +365,9 @@ const SchoolLifeMoments = () => {
     if (moments.length === 0) return null;
 
     return (
-        <div className="w-full">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+        <section className="py-24 bg-[var(--color-background-body)]">
+            <div className="container mx-auto px-4 max-w-6xl">
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
                 <div>
                     <span className="text-[var(--color-accent)] font-bold text-xs uppercase tracking-[0.3em] mb-2 block">Candid Memories</span>
                     <h2 className="text-3xl md:text-5xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)]">School Life Moments</h2>
@@ -630,9 +631,14 @@ const Leadership = () => {
     }
 
     return (
-        <section className="py-16">
-            <div className="container mx-auto px-4">
-                <h2 className="text-3xl font-bold text-center mb-12 font-['Montserrat'] text-[var(--color-text-primary)]">From The Founders</h2>
+        <section className="py-24 bg-[var(--color-background-body)] border-t border-black/5">
+            <div className="container mx-auto px-4 max-w-6xl">
+                <div className="text-center mb-16">
+                    <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-widest text-[var(--color-primary)] uppercase bg-[var(--color-accent)]/20 rounded-full mb-4">
+                        Leadership Reflection
+                    </span>
+                    <h2 className="text-3xl md:text-5xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)]">From The Founders</h2>
+                </div>
                 <div className="flex flex-col gap-12 max-w-4xl mx-auto">
                     {leaders.map(leader => (
                         <div key={leader.name} className="bg-[var(--color-background-card)] rounded-lg shadow-lg flex flex-col md:flex-row items-center p-6 sm:p-8 transition-shadow duration-300 hover:shadow-xl overflow-hidden">
@@ -672,10 +678,13 @@ const Leadership = () => {
     );
 };
 const Testimonials = () => (
-    <section className="bg-[var(--color-background-section)] py-20 overflow-hidden">
+    <section className="bg-[var(--color-background-body)] py-24 border-t border-black/5 overflow-hidden">
         <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
-            <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-extrabold mb-4 font-['Montserrat'] text-[var(--color-text-primary)]">Voices of our Community</h2>
+            <div className="text-center mb-16">
+                <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-widest text-[var(--color-primary)] uppercase bg-[var(--color-accent)]/20 rounded-full mb-4">
+                    Community Voices
+                </span>
+                <h2 className="text-3xl md:text-5xl font-bold mb-4 font-['Work_Sans'] text-[var(--color-text-primary)]">Voices of our Community</h2>
                 <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto">Hear from the parents and alumni who have experienced the sunshine approach to excellence.</p>
             </div>
             
