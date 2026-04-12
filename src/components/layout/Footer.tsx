@@ -15,14 +15,14 @@ const Footer: React.FC = () => {
           <div className="footer-links">
             <h3 className="text-lg font-bold mb-4 font-['Montserrat']">Quick Links</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors">Home</Link></li>
-              <li><Link to="/about" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors">About Us</Link></li>
-              <li><Link to="/academics" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors">Academics</Link></li>
-              <li><Link to="/admission" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors">Admission</Link></li>
-              <li><Link to="/teachers" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors">Teachers</Link></li>
-              <li><Link to="/notices" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors">Notices</Link></li>
-              <li><Link to="/gallery" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors">Gallery</Link></li>
-              <li><Link to="/contact" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors">Contact Us</Link></li>
+              <li><Link to="/" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-accent)] transition-colors">Home</Link></li>
+              <li><Link to="/about" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-accent)] transition-colors">About Us</Link></li>
+              <li><Link to="/academics" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-accent)] transition-colors">Academics</Link></li>
+              <li><Link to="/admission" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-accent)] transition-colors">Admission</Link></li>
+              <li><Link to="/teachers" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-accent)] transition-colors">Teachers</Link></li>
+              <li><Link to="/notices" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-accent)] transition-colors">Notices</Link></li>
+              <li><Link to="/gallery" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-accent)] transition-colors">Gallery</Link></li>
+              <li><Link to="/contact" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-accent)] transition-colors">Contact Us</Link></li>
             </ul>
           </div>
           <div className="footer-contact">
@@ -35,13 +35,13 @@ const Footer: React.FC = () => {
               <div className="flex items-start">
                 <i className="fas fa-phone mt-1 mr-3 text-[var(--color-text-accent)]"></i>
                 <div className="flex flex-col text-sm">
-                  <a href="tel:+919692977727" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors">+91 9692977727</a>
-                  <a href="tel:+919348181404" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors">+91 9348181404</a>
+                  <a href="tel:+919692977727" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-accent)] transition-colors">+91 9692977727</a>
+                  <a href="tel:+919348181404" className="text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-accent)] transition-colors">+91 9348181404</a>
                 </div>
               </div>
               <div className="flex items-start">
                 <i className="fas fa-envelope mt-1 mr-3 text-[var(--color-text-accent)]"></i>
-                <a href="mailto:schoolsunshineinternational@gmail.com" className="text-sm text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors break-all">schoolsunshineinternational@gmail.com</a>
+                <a href="mailto:schoolsunshineinternational@gmail.com" className="text-sm text-[var(--color-footer-text-secondary)] hover:text-[var(--color-text-accent)] transition-colors break-all">schoolsunshineinternational@gmail.com</a>
               </div>
             </div>
           </div>

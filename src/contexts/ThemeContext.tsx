@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-type Theme = 'nude' | 'blue' | 'corporate';
+type Theme = 'nude' | 'blue';
 
 interface ThemeContextType {
   theme: Theme;
@@ -14,10 +14,10 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     try {
       const savedTheme = localStorage.getItem('theme') as Theme | null;
       // If the saved theme is one of the valid themes, use it.
-      if (savedTheme && ['nude', 'blue', 'corporate'].includes(savedTheme)) {
+      if (savedTheme && ['nude', 'blue'].includes(savedTheme)) {
         return savedTheme;
       }
-      return 'nude'; // Default to 'nude' otherwise
+      return 'nude'; // Default to Oxford Blue & Gold otherwise
     } catch (error) {
       console.warn('Could not read theme from localStorage', error);
       return 'nude';

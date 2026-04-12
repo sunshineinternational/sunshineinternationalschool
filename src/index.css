@@ -3,23 +3,24 @@
 @tailwind utilities;
 
 /* Global Theme Color Definitions */
-:root { /* Nude Palette (Default) */
-  --color-primary: #3A2D28;
-  --color-primary-rgb: 58, 45, 40;
-  --color-hero-gradient-rgb: 58, 45, 40;
-  --color-secondary: #A48374;
-  --color-accent: #CBAD8D;
+:root { /* Oxford Blue & Gold (Main School Identity) */
+  --color-primary: #002A45; /* Prussian Blue */
+  --color-primary-rgb: 0, 42, 69;
+  --color-hero-gradient-rgb: 1, 27, 47; /* Oxford Blue */
+  --color-secondary: #003F66; /* Indigo Dye */
+  --color-accent: #FFB915; /* Selective Yellow */
   --color-background-body: #FFFFFF;
-  --color-background-section: #F1EDE6;
+  --color-background-section: #F8F9FA;
   --color-background-card: #FFFFFF;
-  --color-background-header: #E2E6E8; /* Universal header color */
-  --color-text-primary: #3A2D28;
+  --color-background-header: #FFFFFF;
+  --color-text-primary: #011B2F; /* Oxford Blue */
   --color-header-text: var(--color-text-primary);
-  --color-text-secondary: rgba(58, 45, 40, 0.8);
-  --color-text-accent: #CBAD8D;
+  --color-text-secondary: rgba(1, 27, 47, 0.8);
+  --color-text-accent: #FFB915;
   --color-text-inverted: #FFFFFF;
-  --color-border: #D1C7BD;
-  --color-footer-text-secondary: #d1d5db; /* gray-300 */
+  --color-button-text: #011B2F; /* Deep blue text on gold components */
+  --color-border: #DDE1E3;
+  --color-footer-text-secondary: #d1d5db;
 }
 
 html[data-theme='blue'] {
@@ -41,24 +42,6 @@ html[data-theme='blue'] {
   --color-footer-text-secondary: #d1d5db; /* gray-300 */
 }
 
-html[data-theme='corporate'] {
-  --color-primary: #0C4160; /* Prussian Blue for footer/main brand color */
-  --color-primary-rgb: 12, 65, 96;
-  --color-hero-gradient-rgb: 12, 65, 96;
-  --color-secondary: #545B5C; /* Dark Slate Gray for secondary elements */
-  --color-accent: #AEA885; /* Muted Gold for buttons/links */
-  --color-background-body: #F8F9FA; /* Very light gray, almost white */
-  --color-background-section: #E2E6E8; /* Light Gray */
-  --color-background-card: #FFFFFF; /* White */
-  --color-background-header: #E2E6E8; /* Universal header color */
-  --color-text-primary: #545B5C; /* Dark Slate Gray for high contrast text */
-  --color-header-text: var(--color-text-primary);
-  --color-text-secondary: rgba(84, 91, 92, 0.8);
-  --color-text-accent: #AEA885; /* Muted Gold */
-  --color-text-inverted: #FFFFFF;
-  --color-border: #C1C3BE; /* Slightly darker gray for borders */
-  --color-footer-text-secondary: #d1d5db; /* standard */
-}
 
 body {
     background-color: var(--color-background-body);

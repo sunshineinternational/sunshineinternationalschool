@@ -92,15 +92,15 @@ const Notices: React.FC = () => {
                                                         <td className="px-6 py-4 whitespace-nowrap">{formatDate(notice.date)}</td>
                                                         <td className="px-6 py-4 font-medium text-[var(--color-text-primary)]">
                                                             {notice.title}
-                                                            {notice.type && <span className="ml-2 bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-full align-middle">{notice.type}</span>}
-                                                            {isNew && <span className="ml-2 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded align-middle">New</span>}
+                                                            {notice.type && <span className="ml-2 bg-[var(--color-secondary)]/20 text-[var(--color-secondary)] text-xs font-bold px-2 py-1 rounded-full align-middle">{notice.type}</span>}
+                                                            {isNew && <span className="ml-2 bg-[var(--color-accent)] text-[var(--color-button-text)] text-xs font-bold px-2 py-1 rounded align-middle">New</span>}
                                                         </td>
                                                         <td className="px-6 py-4 text-center">
                                                             <a 
                                                                 href={notice.url} 
                                                                 target="_blank" 
                                                                 rel="noopener noreferrer" 
-                                                                className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[var(--color-accent)] text-[var(--color-text-inverted)] hover:bg-[var(--color-secondary)] transition-colors"
+                                                                className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[var(--color-accent)] text-[var(--color-button-text)] hover:bg-[var(--color-secondary)] hover:text-white transition-colors"
                                                                 aria-label={`View notice: ${notice.title}`}
                                                             >
                                                                 <i className="fas fa-eye"></i>

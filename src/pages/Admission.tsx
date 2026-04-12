@@ -29,7 +29,7 @@ const Admission: React.FC = () => {
                         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {admissionProcessData.map((step, index) => (
                                 <div key={index} className="bg-[var(--color-background-card)] p-6 rounded-lg shadow-md text-center transition-transform duration-300 hover:-translate-y-2 flex flex-col items-center">
-                                    <div className="text-4xl text-[var(--color-text-accent)] mb-4"><i className={step.icon}></i></div>
+                                    <div className="text-4xl text-[var(--color-primary)] mb-4"><i className={step.icon}></i></div>
                                     <h3 className="text-xl font-bold mb-3 font-['Montserrat'] text-[var(--color-text-primary)]">{step.title}</h3>
                                     <p className="text-[var(--color-text-secondary)] text-sm flex-grow">{step.description}</p>
                                 </div>
@@ -52,11 +52,11 @@ const Admission: React.FC = () => {
                                 </p>
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-4 text-[var(--color-text-primary)]">
-                                        <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600"><i className="fas fa-phone-alt"></i></div>
+                                        <div className="w-10 h-10 rounded-full bg-[var(--color-accent)]/20 flex items-center justify-center text-[var(--color-primary)]"><i className="fas fa-phone-alt"></i></div>
                                         <div className="font-medium">+91 9692977727</div>
                                     </div>
                                     <div className="flex items-center gap-4 text-[var(--color-text-primary)]">
-                                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"><i className="fas fa-envelope"></i></div>
+                                        <div className="w-10 h-10 rounded-full bg-[var(--color-secondary)]/20 flex items-center justify-center text-[var(--color-secondary)]"><i className="fas fa-envelope"></i></div>
                                         <div className="font-medium">schoolsunshineinternational@gmail.com</div>
                                     </div>
                                 </div>

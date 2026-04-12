@@ -200,14 +200,14 @@ const Results: React.FC = () => {
                                                     <td className="p-2 border border-gray-200 text-center text-xs">{sub.term1.se || '-'}</td>
                                                     <td className="p-2 border border-gray-200 text-center text-xs">{sub.term1.te || '-'}</td>
                                                     <td className="p-2 border border-gray-200 text-center text-xs bg-gray-50 font-bold">{Math.max(sub.term1.total, sub.term1.te) || '-'}</td>
-                                                    <td className="p-2 border border-gray-200 text-center text-xs font-black text-amber-700 bg-amber-50/30">{sub.term1.grade || '-'}</td>
+                                                    <td className="p-2 border border-gray-200 text-center text-xs font-black text-[var(--color-primary)] bg-[var(--color-accent)]/10">{sub.term1.grade || '-'}</td>
                                                     {/* Term 2 */}
                                                     <td className="p-2 border border-gray-200 text-center text-xs">{sub.term2.pt || '-'}</td>
                                                     <td className="p-2 border border-gray-200 text-center text-xs">{sub.term2.nb || '-'}</td>
                                                     <td className="p-2 border border-gray-200 text-center text-xs">{sub.term2.se || '-'}</td>
                                                     <td className="p-2 border border-gray-200 text-center text-xs">{sub.term2.te || '-'}</td>
                                                     <td className="p-2 border border-gray-200 text-center text-xs bg-gray-50 font-bold">{Math.max(sub.term2.total, sub.term2.te) || '-'}</td>
-                                                    <td className="p-2 border border-gray-200 text-center text-xs font-black text-amber-700 bg-amber-50/30">{sub.term2.grade || '-'}</td>
+                                                    <td className="p-2 border border-gray-200 text-center text-xs font-black text-[var(--color-primary)] bg-[var(--color-accent)]/10">{sub.term2.grade || '-'}</td>
                                                 </tr>
                                             ))}
                                         </tbody>

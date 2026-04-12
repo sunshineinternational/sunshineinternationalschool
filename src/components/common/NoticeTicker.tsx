@@ -51,19 +51,19 @@ const NoticeTicker: React.FC = () => {
     }
 
     return (
-        <div className="bg-yellow-400 text-yellow-900">
+        <div className="bg-[var(--color-accent)] text-[var(--color-button-text)]">
             <div className="container mx-auto px-4 py-2 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3 flex-shrink min-w-0">
-                    <span className="font-bold bg-yellow-500 text-yellow-900 text-xs px-2 py-0.5 rounded-full flex-shrink-0">NEW</span>
+                    <span className="font-bold bg-[var(--color-primary)] text-white text-xs px-2 py-0.5 rounded-full flex-shrink-0">NEW</span>
                     <div className="overflow-hidden flex-grow marquee-container">
-                      <Link to="/notices" className="animate-marquee hover:underline">
+                      <Link to="/notices" className="animate-marquee hover:underline font-medium">
                         {latestNotice.title}
                       </Link>
                     </div>
                 </div>
                 <div className="flex items-center gap-4 flex-shrink-0">
-                    <Link to="/notices" className="hidden sm:inline-block font-semibold text-sm hover:underline">View All</Link>
-                    <button onClick={handleDismiss} aria-label="Dismiss notice" className="text-lg hover:bg-yellow-500 rounded-full w-6 h-6 flex items-center justify-center">
+                    <Link to="/notices" className="hidden sm:inline-block font-bold text-sm hover:underline">View All</Link>
+                    <button onClick={handleDismiss} aria-label="Dismiss notice" className="text-lg hover:bg-black/10 rounded-full w-6 h-6 flex items-center justify-center transition-colors">
                         <i className="fas fa-times"></i>
                     </button>
                 </div>

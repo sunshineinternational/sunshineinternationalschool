@@ -75,6 +75,7 @@ export async function fetchGalleryData(): Promise<GalleryImage[]> {
         if (sanityImages && sanityImages.length > 0) {
             const formatted = sanityImages.map((img: any) => ({
                 src: urlFor(img.image).url(),
+                thumbnail: urlFor(img.image).width(400).height(400).fit('crop').url(),
                 caption: img.caption || img.title,
                 event: img.category ? (img.category.charAt(0).toUpperCase() + img.category.slice(1)) : 'General'
             }));

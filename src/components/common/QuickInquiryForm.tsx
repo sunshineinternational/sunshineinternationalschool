@@ -105,7 +105,7 @@ const QuickInquiryForm: React.FC<QuickInquiryFormProps> = ({
                 <button 
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-[var(--color-primary)] text-white font-bold py-4 px-8 rounded-xl hover:bg-[var(--color-secondary)] hover:shadow-lg transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center transform active:scale-95 translate-y-2"
+                    className="w-full bg-[var(--color-primary)] text-[var(--color-text-inverted)] font-bold py-4 px-8 rounded-xl hover:bg-[var(--color-secondary)] hover:shadow-lg transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center transform active:scale-95 translate-y-2"
                 >
                     {isSubmitting ? (
                         <>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
-import { fetchNoticesData, fetchTeachersData, fetchEventsData } from '../services/dataService';
+import { fetchNoticesData, fetchTeachersData, fetchEventsData, fetchGalleryData } from '../services/dataService';
 import type { Notice, QuickLink, Testimonial, Teacher } from '../types';
 import { handleImageError, parseDDMMYYYY } from '../utils';
 import { client } from '../lib/sanity';
@@ -162,7 +162,7 @@ const Hero: React.FC = () => {
 
                     {/* Welcome Badge & Play Button Row */}
                     <div className="flex flex-col md:flex-row items-center md:items-start gap-4 mb-6">
-                        <span className="inline-block px-4 py-1.5 text-xs font-bold tracking-wider text-white uppercase bg-[var(--color-accent)] rounded-full shadow-md drop-shadow-md">
+                        <span className="inline-block px-4 py-1.5 text-xs font-bold tracking-wider text-[var(--color-button-text)] uppercase bg-[var(--color-accent)] rounded-full shadow-md drop-shadow-md">
                             Welcome to Excellence
                         </span>
                         {/* Pulsing Play Button */}
@@ -191,14 +191,14 @@ const Hero: React.FC = () => {
 
                     {/* Triple CTA Buttons */}
                     <div className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center md:justify-start">
-                        <Link to="/results" className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white bg-[#F59E0B] hover:bg-[#D97706] rounded-full transition-all duration-300 shadow-[0_10px_20px_-10px_rgba(245,158,11,0.5)] hover:shadow-[0_15px_25px_-5px_rgba(245,158,11,0.6)] hover:scale-105 active:scale-95">
+                        <Link to="/results" className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-[var(--color-button-text)] bg-[var(--color-accent)] hover:bg-[#D97706] rounded-full transition-all duration-300 shadow-[0_10px_20px_-10px_rgba(245,158,11,0.5)] hover:shadow-[0_15px_25px_-5px_rgba(245,158,11,0.6)] hover:scale-105 active:scale-95">
                             <span className="flex items-center gap-2 uppercase tracking-wider">
                                 <i className="fas fa-graduation-cap"></i>
                                 Check 2025-26 Results
                             </span>
                         </Link>
 
-                        <Link to="/admission#inquiry-form" className="group relative inline-flex items-center justify-center px-8 py-4 text-base font-bold text-[#3A2D28] bg-white border-2 border-white rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] shadow-xl">
+                        <Link to="/admission#inquiry-form" className="group relative inline-flex items-center justify-center px-8 py-4 text-base font-bold text-[var(--color-primary)] bg-white border-2 border-white rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] shadow-xl">
                             <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-[var(--color-primary)] rounded-full group-hover:w-80 group-hover:h-80 opacity-10"></span>
                             <span className="relative flex items-center gap-2">
                                 Enroll for 2026-27
@@ -235,21 +235,16 @@ const Hero: React.FC = () => {
             </div>
 
             <div className="absolute bottom-0 left-0 w-full z-20">
-                {/* Scroll Indicator (Floating above wave) */}
-                <div className="absolute bottom-12 md:bottom-20 left-1/2 transform -translate-x-1/2 w-full hidden md:flex justify-center pointer-events-none">
+                {/* Scroll Indicator (Floating at bottom) */}
+                <div className="flex justify-center pb-8 animate-bounce">
                     <button
                         onClick={scrollToContent}
-                        className="flex flex-col items-center text-white/80 hover:text-white transition-colors cursor-pointer animate-bounce drop-shadow-md pointer-events-auto"
+                        className="text-white/80 hover:text-white transition-colors cursor-pointer"
                         aria-label="Scroll down"
                     >
                         <i className="fas fa-chevron-down text-3xl md:text-2xl filter drop-shadow-lg"></i>
                     </button>
                 </div>
-
-                {/* Wave SVG */}
-                <svg className="w-full h-12 md:h-24 fill-[var(--color-background-body)]" viewBox="0 0 1440 320" preserveAspectRatio="none">
-                    <path fillOpacity="1" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,261.3C960,256,1056,224,1152,197.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-                </svg>
             </div>
         </section>
     );
@@ -296,47 +291,67 @@ const WhyChooseUs = () => (
                 ))}
             </div>
         </div>
-        {/* Gentle Wave Divider */}
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0]">
-            <svg className="relative block w-[calc(140%+1.3px)] h-[60px] md:h-[120px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-[var(--color-background-section)]" transform="scale(1, -1) translate(0, -120)"></path>
-            </svg>
-        </div>
     </section >
 );
 
 
-const SchoolLifeMoments = () => (
-    <div>
-        <h2 className="text-3xl font-bold text-center lg:text-left mb-8 font-['Montserrat'] text-[var(--color-text-primary)]">School Life Moments</h2>
-        <div className="grid grid-cols-2 gap-4">
-            {schoolLifeMomentsData.map((moment, index) => (
-                <div key={index} className="group relative overflow-hidden rounded-lg shadow-md cursor-pointer aspect-w-1 aspect-h-1">
-                    <img
-                        src={moment.src}
-                        alt={moment.caption}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        onError={(e) => handleImageError(e, { text: moment.caption })}
-                        loading="lazy"
-                        decoding="async"
-                        width="400"
-                        height="400"
-                    />
-                    <div className="absolute inset-0 bg-black/60 transition-all duration-300 opacity-0 group-hover:opacity-100">
-                        <div className="absolute bottom-0 left-0 p-4 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-                            <h3 className="text-white text-sm sm:text-base font-bold">{moment.caption}</h3>
+const SchoolLifeMoments = () => {
+    const [moments, setMoments] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    
+    useEffect(() => {
+        const loadMoments = async () => {
+            const data = await fetchGalleryData();
+            // Take the 4 most recent images
+            setMoments(data.slice(0, 4));
+            setLoading(false);
+        };
+        loadMoments();
+    }, []);
+
+    if (loading) {
+        return (
+            <div>
+                <h2 className="text-3xl font-bold text-center lg:text-left mb-8 font-['Montserrat'] text-[var(--color-text-primary)]">School Life Moments</h2>
+                <div className="grid grid-cols-2 gap-4">
+                    {[1, 2, 3, 4].map((i) => (
+                        <div key={i} className="aspect-square bg-gray-200 animate-pulse rounded-lg"></div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    if (moments.length === 0) return null;
+
+    return (
+        <div>
+            <h2 className="text-3xl font-bold text-center lg:text-left mb-8 font-['Montserrat'] text-[var(--color-text-primary)]">School Life Moments</h2>
+            <div className="grid grid-cols-2 gap-4">
+                {moments.map((moment, index) => (
+                    <div key={index} className="group relative overflow-hidden rounded-lg shadow-md cursor-pointer aspect-square">
+                        <img
+                            src={moment.thumbnail || moment.src}
+                            alt={moment.caption}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            loading="lazy"
+                            decoding="async"
+                        />
+                        <div className="absolute inset-0 bg-black/60 transition-all duration-300 opacity-0 group-hover:opacity-100 flex items-end p-4">
+                            <h3 className="text-white text-xs sm:text-sm font-bold transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">{moment.caption}</h3>
                         </div>
                     </div>
-                </div>
-            ))}
+                ))}
+            </div>
+            <div className="text-center mt-8 md:text-left">
+                <Link to="/gallery" className="inline-flex items-center gap-2 font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors group">
+                    View All Moments
+                    <i className="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                </Link>
+            </div>
         </div>
-        <div className="text-center mt-8">
-            <Link to="/gallery" className="btn-secondary inline-flex items-center justify-center px-6 py-3 text-sm font-bold rounded-full text-[var(--color-text-inverted)] bg-[var(--color-primary)] hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105 shadow-lg">
-                View All Moments
-            </Link>
-        </div>
-    </div>
-);
+    );
+};
 
 const HomepageNotices = () => {
     const [notices, setNotices] = useState<Notice[]>([]);
