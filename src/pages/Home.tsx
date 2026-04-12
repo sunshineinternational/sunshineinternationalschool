@@ -278,20 +278,62 @@ const QuickLinks = () => (
 );
 
 const WhyChooseUs = () => (
-    <section className="py-16">
-        <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12 font-['Montserrat'] text-[var(--color-text-primary)]">Why Choose Sunshine?</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-                {whyChooseUsData.map((item) => (
-                    <div key={item.title} className="bg-[var(--color-background-card)] p-6 rounded-lg shadow-md text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-                        <div className="text-5xl text-[var(--color-text-accent)] mb-4"><i className={item.icon}></i></div>
-                        <h3 className="text-xl font-bold mb-3 font-['Montserrat'] text-[var(--color-text-primary)]">{item.title}</h3>
-                        <p className="text-[var(--color-text-secondary)] text-sm">{item.description}</p>
+    <section className="py-24 bg-[var(--color-background-body)]">
+        <div className="container mx-auto px-4 max-w-6xl">
+            <div className="text-center mb-16">
+                <span className="text-[12px] font-extrabold tracking-[0.2em] text-[var(--color-primary)] opacity-50 uppercase mb-3 block">Foundation of Excellence</span>
+                <h2 className="text-3xl md:text-5xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] mb-6">Our Core Pillars</h2>
+                <div className="w-20 h-1.5 bg-[var(--color-accent)] mx-auto rounded-full"></div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 auto-rows-[180px]">
+                {/* Academic Excellence - Large Main Block */}
+                <div className="md:col-span-2 md:row-span-2 bg-[#131b2e] text-white p-8 rounded-[20px] relative overflow-hidden group shadow-lg">
+                    <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-white/10 transition-all duration-700"></div>
+                    <div className="relative z-10 h-full flex flex-col justify-end">
+                        <div className="w-12 h-12 bg-[var(--color-accent)]/20 rounded-xl flex items-center justify-center mb-4 border border-white/10">
+                            <i className="fas fa-graduation-cap text-2xl text-[var(--color-accent)]"></i>
+                        </div>
+                        <h3 className="text-2xl font-bold font-['Work_Sans'] mb-2">Academic Excellence</h3>
+                        <p className="text-white/70 text-sm leading-relaxed max-w-sm">Our rigorous curriculum and dedicated educators foster a culture of curiosity and critical thinking.</p>
                     </div>
-                ))}
+                </div>
+
+                {/* Modern Infrastructure - Smaller Secondary */}
+                <div className="bg-white p-6 rounded-[20px] shadow-sm border border-black/5 flex flex-col justify-between group hover:shadow-md transition-all duration-500">
+                    <div className="w-10 h-10 bg-[var(--color-primary)]/10 rounded-lg flex items-center justify-center text-[var(--color-primary)] group-hover:bg-[var(--color-primary)] group-hover:text-white transition-all">
+                        <i className="fas fa-building text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 className="text-lg font-bold font-['Work_Sans'] mb-1 text-[var(--color-text-primary)]">Modern Infrastructure</h3>
+                        <p className="text-[var(--color-text-secondary)] text-xs leading-relaxed line-clamp-2">State-of-the-art labs, libraries, and smart classrooms for the digital age.</p>
+                    </div>
+                </div>
+
+                {/* Holistic Development - Smaller Secondary */}
+                <div className="bg-white p-6 rounded-[20px] shadow-sm border border-black/5 flex flex-col justify-between group hover:shadow-md transition-all duration-500">
+                    <div className="w-10 h-10 bg-[#8B5CF6]/10 rounded-lg flex items-center justify-center text-[#8B5CF6] group-hover:bg-[#8B5CF6] group-hover:text-white transition-all">
+                        <i className="fas fa-heart text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 className="text-lg font-bold font-['Work_Sans'] mb-1 text-[var(--color-text-primary)]">Holistic Growth</h3>
+                        <p className="text-[var(--color-text-secondary)] text-xs leading-relaxed line-clamp-2">Balancing arts, sports, and value-based education for all students.</p>
+                    </div>
+                </div>
+
+                {/* Safe & Nurturing - Wide Base Block */}
+                <div className="md:col-span-3 bg-[var(--color-accent)] p-6 md:p-10 rounded-[20px] shadow-md flex flex-col md:flex-row items-center gap-6 group">
+                    <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center shrink-0 border border-white/30 group-hover:scale-110 transition-transform">
+                        <i className="fas fa-shield-alt text-2xl text-[var(--color-primary)]"></i>
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-bold font-['Work_Sans'] mb-1 text-[var(--color-primary)]">Safe & Nurturing Environment</h3>
+                        <p className="text-[var(--color-primary)] opacity-80 text-md">A secure, child-centric campus where every student feels valued and encouraged.</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </section >
+    </section>
 );
 
 
@@ -302,8 +344,8 @@ const SchoolLifeMoments = () => {
     useEffect(() => {
         const loadMoments = async () => {
             const data = await fetchGalleryData();
-            // Take the 4 most recent images
-            setMoments(data.slice(0, 4));
+            // Take the 5 most recent images for a better bento feel
+            setMoments(data.slice(0, 5));
             setLoading(false);
         };
         loadMoments();
@@ -311,13 +353,11 @@ const SchoolLifeMoments = () => {
 
     if (loading) {
         return (
-            <div>
-                <h2 className="text-3xl font-bold text-center lg:text-left mb-8 font-['Montserrat'] text-[var(--color-text-primary)]">School Life Moments</h2>
-                <div className="grid grid-cols-2 gap-4">
-                    {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className="aspect-square bg-gray-200 animate-pulse rounded-lg"></div>
-                    ))}
-                </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-2 gap-4 h-[500px]">
+                <div className="col-span-2 row-span-2 bg-gray-200 animate-pulse rounded-2xl"></div>
+                <div className="bg-gray-200 animate-pulse rounded-2xl"></div>
+                <div className="bg-gray-200 animate-pulse rounded-2xl"></div>
+                <div className="col-span-2 bg-gray-200 animate-pulse rounded-2xl"></div>
             </div>
         );
     }
@@ -325,29 +365,59 @@ const SchoolLifeMoments = () => {
     if (moments.length === 0) return null;
 
     return (
-        <div>
-            <h2 className="text-3xl font-bold text-center lg:text-left mb-8 font-['Montserrat'] text-[var(--color-text-primary)]">School Life Moments</h2>
-            <div className="grid grid-cols-2 gap-4">
-                {moments.map((moment, index) => (
-                    <div key={index} className="group relative overflow-hidden rounded-lg shadow-md cursor-pointer aspect-square">
-                        <img
-                            src={moment.thumbnail || moment.src}
-                            alt={moment.caption}
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                            loading="lazy"
-                            decoding="async"
-                        />
-                        <div className="absolute inset-0 bg-black/60 transition-all duration-300 opacity-0 group-hover:opacity-100 flex items-end p-4">
-                            <h3 className="text-white text-xs sm:text-sm font-bold transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">{moment.caption}</h3>
+        <div className="w-full">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                <div>
+                    <span className="text-[var(--color-accent)] font-bold text-xs uppercase tracking-[0.3em] mb-2 block">Candid Memories</span>
+                    <h2 className="text-3xl md:text-5xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)]">School Life Moments</h2>
+                </div>
+                <Link to="/gallery" className="inline-flex items-center gap-2 font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-all group pb-1 border-b-2 border-transparent hover:border-[var(--color-accent)]">
+                    Enter Full Gallery
+                    <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </Link>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:h-[600px] auto-rows-[250px] md:auto-rows-auto">
+                {/* Image 1 - Large Feature */}
+                {moments[0] && (
+                    <div className="col-span-2 row-span-2 group relative overflow-hidden rounded-[24px] shadow-sm hover:shadow-2xl transition-all duration-700">
+                        <img src={moments[0].src} alt={moments[0].caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-8">
+                            <span className="text-[var(--color-accent)] text-[10px] uppercase font-bold tracking-widest mb-1">{moments[0].event}</span>
+                            <h3 className="text-white font-bold text-xl">{moments[0].caption}</h3>
                         </div>
                     </div>
-                ))}
-            </div>
-            <div className="text-center mt-8 md:text-left">
-                <Link to="/gallery" className="inline-flex items-center gap-2 font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors group">
-                    View All Moments
-                    <i className="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                </Link>
+                )}
+
+                {/* Image 2 - Square */}
+                {moments[1] && (
+                    <div className="col-span-1 row-span-1 group relative overflow-hidden rounded-[24px] shadow-sm hover:shadow-xl transition-all duration-700">
+                        <img src={moments[1].src} alt={moments[1].caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-4">
+                            <p className="text-white text-xs font-bold text-center">{moments[1].caption}</p>
+                        </div>
+                    </div>
+                )}
+
+                {/* Image 3 - Square */}
+                {moments[2] && (
+                    <div className="col-span-1 row-span-1 group relative overflow-hidden rounded-[24px] shadow-sm hover:shadow-xl transition-all duration-700">
+                        <img src={moments[2].src} alt={moments[2].caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-4">
+                            <p className="text-white text-xs font-bold text-center">{moments[2].caption}</p>
+                        </div>
+                    </div>
+                )}
+
+                {/* Image 4 - Wide Feature */}
+                {moments[3] && (
+                    <div className="col-span-2 row-span-1 group relative overflow-hidden rounded-[24px] shadow-sm hover:shadow-xl transition-all duration-700">
+                        <img src={moments[3].src} alt={moments[3].caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
+                            <h3 className="text-white font-bold text-sm">{moments[3].caption}</h3>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -420,7 +490,7 @@ const InstitutionalNotices = () => {
             
             <div className="mt-8 pt-6 border-t border-white/10 relative z-10">
                 <Link to="/notices" className="flex items-center justify-between w-full group/btn">
-                    <span className="text-sm font-bold text-[var(--color-accent)] group-hover/btn:tracking-widest transition-all uppercase tracking-wider">Board Archive</span>
+                    <span className="text-sm font-bold text-[var(--color-accent)] group-hover/btn:tracking-widest transition-all uppercase tracking-wider">View All Notices</span>
                     <span className="material-symbols-outlined text-[var(--color-accent)] text-xl group-hover/btn:translate-x-2 transition-transform">arrow_right_alt</span>
                 </Link>
             </div>
@@ -454,7 +524,7 @@ const InstitutionalHighlights = () => {
                     <h3 className="text-2xl font-bold font-['Work_Sans'] tracking-tight text-[var(--color-text-primary)]">Highlights & Events</h3>
                 </div>
                 <Link to="/events" className="text-sm font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors hidden sm:block">
-                    View Calendar &rarr;
+                    View All Events &rarr;
                 </Link>
             </div>
             
@@ -639,21 +709,62 @@ const Testimonials = () => (
 const FAQ = () => {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     return (
-        <section id="faq-section" className="relative bg-[var(--color-background-body)] py-16 scroll-mt-[75px]">
-            <div className="container mx-auto px-4 max-w-3xl">
-                <h2 className="text-3xl font-bold text-center mb-8 font-['Montserrat'] text-[var(--color-text-primary)]">Frequently Asked Questions</h2>
-                <div className="bg-[var(--color-background-card)] p-4 sm:p-8 rounded-lg shadow-md">
+        <section id="faq-section" className="relative bg-[var(--color-background-body)] py-24 scroll-mt-[75px]">
+            <div className="container mx-auto px-4 max-w-4xl">
+                <div className="text-center mb-16">
+                    <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-widest text-[var(--color-primary)] uppercase bg-[var(--color-accent)]/20 rounded-full mb-4">
+                        Knowledge Hub
+                    </span>
+                    <h2 className="text-3xl md:text-5xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] mb-4">Frequently Asked Questions</h2>
+                    <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto">Providing clear answers to help you navigate our academic environment and community life.</p>
+                </div>
+
+                <div className="space-y-4">
                     {homeFaqData.map((faq, index) => (
-                        <FaqItem
-                            key={index}
-                            faq={faq}
-                            isOpen={openIndex === index}
-                            onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                        />
+                        <div 
+                            key={index} 
+                            className={`group border border-black/5 rounded-[12px] transition-all duration-300 ${openIndex === index ? 'bg-white shadow-lg ring-1 ring-[var(--color-accent)]/30' : 'bg-white/50 hover:bg-white'}`}
+                        >
+                            <button 
+                                onClick={() => setOpenIndex(openIndex === index ? null : index)} 
+                                className="w-full text-left flex justify-between items-center py-6 px-6 sm:px-8 focus:outline-none"
+                            >
+                                <span className={`font-bold text-lg font-['Work_Sans'] transition-colors ${openIndex === index ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-primary)]'}`}>
+                                    {faq.q}
+                                </span>
+                                <span className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${openIndex === index ? 'bg-[var(--color-primary)] text-white rotate-180' : 'bg-gray-100 text-gray-400'}`}>
+                                    <span className="material-symbols-outlined text-xl">
+                                        {openIndex === index ? 'remove' : 'add'}
+                                    </span>
+                                </span>
+                            </button>
+                            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${openIndex === index ? 'max-h-96' : 'max-h-0'}`}>
+                                <div className="px-6 sm:px-8 pb-8">
+                                    <div className="h-px bg-gray-100 mb-6"></div>
+                                    <p className="text-[var(--color-text-secondary)] leading-relaxed text-md">
+                                        {faq.a}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     ))}
                 </div>
+                
+                <div className="mt-16 text-center">
+                    <div className="inline-flex items-center gap-6 p-6 bg-[var(--color-primary)] text-white rounded-[16px] shadow-xl">
+                        <div className="hidden sm:flex w-12 h-12 bg-white/10 rounded-full items-center justify-center">
+                            <span className="material-symbols-outlined">contact_support</span>
+                        </div>
+                        <div className="text-left">
+                            <p className="text-sm opacity-80 font-medium">Have more questions?</p>
+                            <p className="font-bold">Contact our Admissions Office today</p>
+                        </div>
+                        <Link to="/contact" className="px-6 py-2.5 bg-[var(--color-accent)] text-[var(--color-primary)] font-bold rounded-full hover:scale-105 transition-transform text-sm">
+                            Ask Us
+                        </Link>
+                    </div>
+                </div>
             </div>
-        
         </section>
     );
 };
