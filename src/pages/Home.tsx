@@ -373,33 +373,55 @@ const InstitutionalNotices = () => {
     }, []);
 
     return (
-        <div className="bg-[#131b2e] text-white p-8 rounded-[12px] h-full flex flex-col shadow-xl border border-white/5">
-            <div className="flex items-center gap-3 mb-8">
-                <span className="material-symbols-outlined text-[var(--color-accent)] text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>notifications_active</span>
-                <h3 className="text-2xl font-bold font-['Work_Sans'] tracking-tight">Latest Notices</h3>
+        <div className="bg-[#131b2e] text-white p-8 rounded-[16px] h-full flex flex-col shadow-2xl border border-white/5 relative overflow-hidden group">
+            {/* Soft glow/crest decoration for empty space */}
+            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-[var(--color-accent)]/5 rounded-full blur-3xl group-hover:bg-[var(--color-accent)]/10 transition-all duration-700"></div>
+            
+            <div className="flex items-center gap-4 mb-10 relative z-10">
+                <div className="w-12 h-12 bg-[var(--color-accent)]/20 rounded-xl flex items-center justify-center">
+                    <span className="material-symbols-outlined text-[var(--color-accent)] text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>notifications_active</span>
+                </div>
+                <div>
+                    <h3 className="text-2xl font-bold font-['Work_Sans'] tracking-tight">Latest Notices</h3>
+                    <p className="text-[var(--color-accent)] text-[10px] uppercase tracking-widest font-bold">Official Updates</p>
+                </div>
             </div>
             
-            <div className="flex-grow overflow-y-auto no-scrollbar space-y-6 pr-2">
+            <div className="flex-grow overflow-y-auto no-scrollbar space-y-2 relative z-10">
                 {loading ? (
                     [1, 2, 3, 4].map(i => (
-                        <div key={i} className="animate-pulse space-y-2">
-                            <div className="h-4 bg-white/10 rounded w-1/4"></div>
-                            <div className="h-6 bg-white/20 rounded w-full"></div>
+                        <div key={i} className="animate-pulse py-4 border-b border-white/5 space-y-2">
+                            <div className="h-2 bg-white/10 rounded w-1/4"></div>
+                            <div className="h-4 bg-white/20 rounded w-full"></div>
                         </div>
                     ))
                 ) : (
                     notices.map((notice, index) => (
-                        <a key={index} href={notice.url} target="_blank" rel="noopener noreferrer" className="block group border-b border-white/10 pb-4 hover:border-white/30 transition-colors">
-                            <p className="text-[10px] text-[var(--color-accent)] font-bold uppercase tracking-wider mb-1">{notice.date}</p>
-                            <h4 className="font-medium text-white/90 group-hover:text-white transition-colors leading-snug">{notice.title}</h4>
+                        <a key={index} href={notice.url} target="_blank" rel="noopener noreferrer" className="block group/item py-5 border-b border-white/5 hover:border-[var(--color-accent)]/30 transition-all">
+                            <div className="flex items-start gap-3">
+                                <div className="mt-1 w-1 h-1 rounded-full bg-[var(--color-accent)] shrink-0 group-hover/item:scale-150 transition-transform"></div>
+                                <div className="space-y-1">
+                                    <p className="text-[10px] text-[var(--color-accent)] font-bold uppercase tracking-wider">{notice.date}</p>
+                                    <h4 className="font-medium text-white/90 group-hover/item:text-white transition-colors leading-relaxed">
+                                        {notice.title}
+                                    </h4>
+                                </div>
+                            </div>
                         </a>
                     ))
                 )}
+                {!loading && notices.length < 3 && (
+                    <div className="py-10 opacity-30 text-center">
+                        <span className="material-symbols-outlined text-4xl mb-2">history_edu</span>
+                        <p className="text-xs">More updates coming soon</p>
+                    </div>
+                )}
             </div>
             
-            <div className="mt-8 pt-4 border-t border-white/10">
-                <Link to="/notices" className="flex items-center gap-2 text-sm font-bold text-[var(--color-accent)] hover:gap-3 transition-all">
-                    View All Notices <span className="material-symbols-outlined text-sm">arrow_forward</span>
+            <div className="mt-8 pt-6 border-t border-white/10 relative z-10">
+                <Link to="/notices" className="flex items-center justify-between w-full group/btn">
+                    <span className="text-sm font-bold text-[var(--color-accent)] group-hover/btn:tracking-widest transition-all uppercase tracking-wider">Board Archive</span>
+                    <span className="material-symbols-outlined text-[var(--color-accent)] text-xl group-hover/btn:translate-x-2 transition-transform">arrow_right_alt</span>
                 </Link>
             </div>
         </div>
@@ -425,33 +447,52 @@ const InstitutionalHighlights = () => {
     }, []);
 
     return (
-        <div className="h-full">
+        <div className="h-full flex flex-col">
             <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-3">
                     <span className="material-symbols-outlined text-[var(--color-primary)] text-3xl">event_upcoming</span>
                     <h3 className="text-2xl font-bold font-['Work_Sans'] tracking-tight text-[var(--color-text-primary)]">Highlights & Events</h3>
                 </div>
+                <Link to="/events" className="text-sm font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors hidden sm:block">
+                    View Calendar &rarr;
+                </Link>
             </div>
             
-            <div className="flex gap-6 overflow-x-auto no-scrollbar snap-scroll pb-4">
+            <div className="flex gap-6 overflow-x-auto no-scrollbar snap-scroll pb-6 h-full">
                 {loading ? (
-                    [1, 2].map(i => <div key={i} className="shrink-0 w-full md:w-[450px] aspect-[16/10] bg-gray-200 animate-pulse rounded-[12px]"></div>)
+                    [1, 2].map(i => <div key={i} className="shrink-0 w-full md:w-[420px] bg-white rounded-[16px] overflow-hidden shadow-sm animate-pulse h-full"></div>)
                 ) : (
                     events.map((event, index) => (
-                        <div key={index} className="snap-center shrink-0 w-full md:w-[450px] aspect-[16/10] bg-white rounded-[12px] overflow-hidden group shadow-sm hover:shadow-lg transition-all relative">
-                            <img 
-                                src={event.img} 
-                                alt={event.title} 
-                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/images/pages/home/hero-1.jpg'; }}
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#011B2F]/90 via-[#011B2F]/40 to-transparent flex flex-col justify-end p-6">
-                                <div className="space-y-2">
-                                    <span className="inline-block px-3 py-1 bg-[var(--color-accent)] text-[var(--color-primary)] text-[10px] font-bold rounded-full uppercase tracking-tighter">
+                        <div key={index} className="snap-center shrink-0 w-full md:w-[420px] flex flex-col bg-white rounded-[16px] overflow-hidden group shadow-sm hover:shadow-xl transition-all border border-black/5">
+                            {/* Image Part */}
+                            <div className="relative aspect-[16/9] overflow-hidden">
+                                <img 
+                                    src={event.img} 
+                                    alt={event.title} 
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                    onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/images/pages/home/hero-1.jpg'; }}
+                                    loading="lazy"
+                                />
+                                <div className="absolute top-4 left-4">
+                                    <span className="px-3 py-1 bg-[var(--color-accent)] text-[var(--color-primary)] text-[10px] font-bold rounded-full uppercase tracking-tighter shadow-lg">
                                         {event.date}
                                     </span>
-                                    <h4 className="text-white text-xl font-bold leading-tight drop-shadow-sm">{event.title}</h4>
-                                    <p className="text-white/80 text-sm line-clamp-1">{event.description}</p>
+                                </div>
+                            </div>
+                            
+                            {/* Content Part */}
+                            <div className="p-6 flex flex-col justify-between flex-grow bg-white">
+                                <div>
+                                    <h4 className="text-[var(--color-text-primary)] text-xl font-bold leading-tight mb-3 group-hover:text-[var(--color-primary)] transition-colors line-clamp-2 min-h-[56px] font-['Work_Sans']">
+                                        {event.title}
+                                    </h4>
+                                    <p className="text-[var(--color-text-secondary)] text-sm line-clamp-3 leading-relaxed mb-6 italic">
+                                        "{event.description}"
+                                    </p>
+                                </div>
+                                <div className="pt-4 border-t border-gray-100 mt-auto flex items-center justify-between">
+                                    <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400">Featured Highlight</span>
+                                    <span className="material-symbols-outlined text-[var(--color-primary)] group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
                                 </div>
                             </div>
                         </div>
@@ -464,13 +505,19 @@ const InstitutionalHighlights = () => {
 
 const InstitutionalPulse = () => {
     return (
-        <section className="py-20 bg-[var(--color-background-section)]">
+        <section className="py-24 bg-[var(--color-background-body)] relative">
+            {/* Subtle background element for the pulse section */}
+            <div className="absolute top-0 right-0 w-1/3 h-full bg-[var(--color-accent)]/5 rounded-l-full blur-3xl -z-10"></div>
+            
             <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                    <div className="lg:col-span-4 h-[550px]">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch">
+                    {/* Notices Column - Dynamic but minimum matching height */}
+                    <div className="lg:col-span-4 min-h-[580px] h-full flex flex-col">
                         <InstitutionalNotices />
                     </div>
-                    <div className="lg:col-span-8">
+                    
+                    {/* Highlights Column */}
+                    <div className="lg:col-span-8 h-full flex flex-col">
                         <InstitutionalHighlights />
                     </div>
                 </div>
