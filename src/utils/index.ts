@@ -29,19 +29,38 @@ export const handleImageError = (
  * @returns A Date object.
  */
 export const parseDDMMYYYY = (dateString: string): Date => {
-    if (!dateString) return new Date(NaN); // NaN is the standard for invalid dates
-    const parts = dateString.trim().split('/');
-    if (parts.length === 3) {
-        const day = parseInt(parts[0], 10);
-        const month = parseInt(parts[1], 10) - 1; // JS months are 0-indexed
-        const year = parseInt(parts[2], 10);
-        if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
-            const date = new Date(Date.UTC(year, month, day)); // Use UTC to avoid timezone issues
-            // Extra check to ensure date wasn't rolled over by constructor (e.g., day 32)
-            if (date.getUTCFullYear() === year && date.getUTCMonth() === month && date.getUTCDate() === day) {
-                return date;
-            }
+    if (!dateString || typeof dateString !== 'string') return new Date(NaN);
+    
+    // Support both DD/MM/YYYY and DD-MM-YYYY (and even YYYY-MM-DD if reverse split was used)
+    const separators = ['/', '-'];
+    let parts: string[] = [];
+    
+    for (const sep of separators) {
+        const potentialParts = dateString.trim().split(sep);
+        if (potentialParts.length === 3) {
+            parts = potentialParts;
+            break;
         }
     }
-    return new Date(NaN); // Return an invalid date
+
+    if (parts.length === 3) {
+        // We assume DD/MM/YYYY or DD-MM-YYYY
+        // If the first part is 4 digits, it's YYYY-MM-DD
+        let day, month, year;
+        if (parts[0].length === 4) {
+             year = parseInt(parts[0], 10);
+             month = parseInt(parts[1], 10) - 1;
+             day = parseInt(parts[2], 10);
+        } else {
+             day = parseInt(parts[0], 10);
+             month = parseInt(parts[1], 10) - 1;
+             year = parseInt(parts[2], 10);
+        }
+
+        if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+            const date = new Date(Date.UTC(year, month, day));
+            return date;
+        }
+    }
+    return new Date(NaN);
 };

@@ -9,10 +9,10 @@
   --color-hero-gradient-rgb: 1, 27, 47; /* Oxford Blue */
   --color-secondary: #003F66; /* Indigo Dye */
   --color-accent: #FFB915; /* Selective Yellow */
-  --color-background-body: #FFFFFF;
-  --color-background-section: #F8F9FA;
-  --color-background-card: #FFFFFF;
-  --color-background-header: #FFFFFF;
+  --color-background-body: #fff8f6;
+  --color-background-section: #fff1ec;
+  --color-background-card: #ffffff;
+  --color-background-header: #fff8f6;
   --color-text-primary: #011B2F; /* Oxford Blue */
   --color-header-text: var(--color-text-primary);
   --color-text-secondary: rgba(1, 27, 47, 0.8);
@@ -29,9 +29,9 @@ html[data-theme='blue'] {
   --color-hero-gradient-rgb: 5, 38, 89;
   --color-secondary: #5483B3;
   --color-accent: #7DA0CA;
-  --color-background-body: #F7FBFF;
-  --color-background-section: #EFF5FB;
-  --color-background-card: #FFFFFF;
+  --color-background-body: #fff8f6;
+  --color-background-section: #fff1ec;
+  --color-background-card: #ffffff;
   --color-background-header: #E2E6E8; /* Universal header color */
   --color-text-primary: #021024;
   --color-header-text: var(--color-text-primary);
@@ -268,4 +268,4 @@ body {
   0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
   70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
   100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-}
+}@layer utilities { .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; } .snap-scroll { scroll-snap-type: x mandatory; scroll-behavior: smooth; } .snap-center { scroll-snap-align: center; } }

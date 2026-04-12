@@ -353,24 +353,18 @@ const SchoolLifeMoments = () => {
     );
 };
 
-const HomepageNotices = () => {
+const InstitutionalNotices = () => {
     const [notices, setNotices] = useState<Notice[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const loadNotices = async () => {
-            setLoading(true);
-            setError(null);
             try {
-                // Simulate a longer loading time to demonstrate the skeleton
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                const noticesData = await fetchNoticesData();
-                const sortedNotices = (noticesData as Notice[]).sort((a, b) => parseDDMMYYYY(b.date).getTime() - parseDDMMYYYY(a.date).getTime());
-                setNotices(sortedNotices);
+                const data = await fetchNoticesData();
+                const sorted = (data as Notice[]).sort((a, b) => parseDDMMYYYY(b.date).getTime() - parseDDMMYYYY(a.date).getTime());
+                setNotices(sorted.slice(0, 10));
             } catch (err) {
                 console.error(err);
-                setError('Failed to load notices.');
             } finally {
                 setLoading(false);
             }
@@ -378,190 +372,113 @@ const HomepageNotices = () => {
         loadNotices();
     }, []);
 
-    const renderSkeletons = () => {
-        return Array.from({ length: 5 }).map((_, index) => <NoticeSkeleton key={index} />);
-    };
-
     return (
-        <div>
-            <h2 className="text-3xl font-bold text-center lg:text-left mb-8 font-['Montserrat'] text-[var(--color-text-primary)]">Notices</h2>
-            <div className="bg-[var(--color-background-card)] p-6 rounded-lg shadow-md">
-                <div className="max-h-[400px] overflow-y-auto custom-scrollbar pr-4 space-y-4">
-                    {loading && renderSkeletons()}
-                    {error && <p className="text-center text-red-600">{error}</p>}
-
-                    {!loading && !error && (
-                        <>
-                            {notices.length > 0 ? (
-                                notices.map((notice, index) => {
-                                    const isNew = (new Date().getTime() - parseDDMMYYYY(notice.date).getTime()) < 14 * 24 * 60 * 60 * 1000;
-                                    return (
-                                        <a
-                                            key={index}
-                                            href={notice.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="block bg-white p-3 rounded-md border border-[var(--color-border)] transition-all duration-300 hover:shadow-lg hover:border-[var(--color-accent)] hover:-translate-y-0.5"
-                                        >
-                                            <div className="flex justify-between items-center">
-                                                <div>
-                                                    <h3 className="font-bold text-sm text-[var(--color-text-primary)]">{notice.title}</h3>
-                                                    <p className="text-xs text-gray-500 mt-1">{notice.date}</p>
-                                                </div>
-                                                <div className="flex items-center space-x-3 flex-shrink-0 ml-2">
-                                                    {isNew && <span className="text-xs font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded-full">NEW</span>}
-                                                    <i className="fas fa-chevron-right text-gray-400"></i>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    );
-                                })
-                            ) : (
-                                <p className="text-center text-gray-500">No recent notices found.</p>
-                            )}
-                        </>
-                    )}
-                </div>
-
-                <div className="text-center mt-6">
-                    <Link to="/notices" className="btn-secondary inline-flex items-center justify-center px-6 py-3 text-sm font-bold rounded-full text-[var(--color-text-inverted)] bg-[var(--color-primary)] hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105 shadow-lg">
-                        View All Notices
-                    </Link>
-                </div>
+        <div className="bg-[#131b2e] text-white p-8 rounded-[12px] h-full flex flex-col shadow-xl border border-white/5">
+            <div className="flex items-center gap-3 mb-8">
+                <span className="material-symbols-outlined text-[var(--color-accent)] text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>notifications_active</span>
+                <h3 className="text-2xl font-bold font-['Work_Sans'] tracking-tight">Latest Notices</h3>
+            </div>
+            
+            <div className="flex-grow overflow-y-auto no-scrollbar space-y-6 pr-2">
+                {loading ? (
+                    [1, 2, 3, 4].map(i => (
+                        <div key={i} className="animate-pulse space-y-2">
+                            <div className="h-4 bg-white/10 rounded w-1/4"></div>
+                            <div className="h-6 bg-white/20 rounded w-full"></div>
+                        </div>
+                    ))
+                ) : (
+                    notices.map((notice, index) => (
+                        <a key={index} href={notice.url} target="_blank" rel="noopener noreferrer" className="block group border-b border-white/10 pb-4 hover:border-white/30 transition-colors">
+                            <p className="text-[10px] text-[var(--color-accent)] font-bold uppercase tracking-wider mb-1">{notice.date}</p>
+                            <h4 className="font-medium text-white/90 group-hover:text-white transition-colors leading-snug">{notice.title}</h4>
+                        </a>
+                    ))
+                )}
+            </div>
+            
+            <div className="mt-8 pt-4 border-t border-white/10">
+                <Link to="/notices" className="flex items-center gap-2 text-sm font-bold text-[var(--color-accent)] hover:gap-3 transition-all">
+                    View All Notices <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                </Link>
             </div>
         </div>
     );
 };
 
-const LatestEvents = () => {
-    const [latestEvents, setLatestEvents] = useState<any[]>([]);
+const InstitutionalHighlights = () => {
+    const [events, setEvents] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const loadEvents = async () => {
-            const data = await fetchEventsData();
-            // Sort and take top 6
-            const sorted = [...data]
-                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-                .slice(0, 6);
-            setLatestEvents(sorted);
-            setLoading(false);
+            try {
+                const data = await fetchEventsData();
+                setEvents(data.slice(0, 6));
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
         };
         loadEvents();
     }, []);
 
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-    const resetTimeout = () => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-        }
-    };
-
-    useEffect(() => {
-        resetTimeout();
-        timeoutRef.current = setTimeout(
-            () =>
-                setCurrentIndex((prevIndex) =>
-                    prevIndex === latestEvents.length - 1 ? 0 : prevIndex + 1
-                ),
-            3000
-        );
-
-        return () => {
-            resetTimeout();
-        };
-    }, [currentIndex, latestEvents.length]);
-
-    const handlers = useSwipeable({
-        onSwipedLeft: () => setCurrentIndex((prevIndex) => (prevIndex + 1) % latestEvents.length),
-        onSwipedRight: () => setCurrentIndex((prevIndex) => (prevIndex - 1 + latestEvents.length) % latestEvents.length),
-        preventScrollOnSwipe: true,
-        trackMouse: true
-    });
-
     return (
-        <section className="py-16 bg-[var(--color-background-section)]">
-            <div className="container mx-auto px-4">
-                <h2 className="text-3xl font-bold text-center mb-12 font-['Montserrat'] text-[var(--color-text-primary)]">Latest Events</h2>
-
-                {/* Mobile Carousel */}
-                <div className="sm:hidden">
-                    <div {...handlers} className="overflow-hidden relative">
-                        <div
-                            className="flex transition-transform ease-in-out duration-500"
-                            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-                        >
-                            {latestEvents.map((event, index) => (
-                                <div key={index} className="flex-shrink-0 w-full px-2">
-                                    <div className="group relative rounded-lg shadow-md overflow-hidden aspect-[4/3] cursor-pointer">
-                                        <img
-                                            src={event.img}
-                                            alt={event.title}
-                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                            onError={(e) => handleImageError(e, { text: event.title })}
-                                            loading="lazy"
-                                            decoding="async"
-                                            width="400"
-                                            height="300"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex items-end">
-                                            <div className="p-4">
-                                                <h3 className="text-md font-bold font-['Montserrat'] text-white">{event.title}</h3>
-                                                <p className="text-xs text-gray-300 mt-1">{new Date(event.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="flex justify-center mt-4 space-x-2">
-                        {latestEvents.map((_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => setCurrentIndex(index)}
-                                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${index === currentIndex ? 'bg-[var(--color-accent)] scale-125' : 'bg-[var(--color-border)]'}`}
-                                aria-label={`Go to slide ${index + 1}`}
-                            />
-                        ))}
-                    </div>
+        <div className="h-full">
+            <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-3">
+                    <span className="material-symbols-outlined text-[var(--color-primary)] text-3xl">event_upcoming</span>
+                    <h3 className="text-2xl font-bold font-['Work_Sans'] tracking-tight text-[var(--color-text-primary)]">Highlights & Events</h3>
                 </div>
-
-                {/* Desktop Grid */}
-                <div className="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {latestEvents.slice(0, 3).map((event, index) => (
-                        <div key={index} className="group relative rounded-lg shadow-md overflow-hidden aspect-[4/3] cursor-pointer">
-                            <img
-                                src={event.img}
-                                alt={event.title}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                onError={(e) => handleImageError(e, { text: event.title })}
-                                loading="lazy"
-                                decoding="async"
-                                width="400"
-                                height="300"
+            </div>
+            
+            <div className="flex gap-6 overflow-x-auto no-scrollbar snap-scroll pb-4">
+                {loading ? (
+                    [1, 2].map(i => <div key={i} className="shrink-0 w-full md:w-[450px] aspect-[16/10] bg-gray-200 animate-pulse rounded-[12px]"></div>)
+                ) : (
+                    events.map((event, index) => (
+                        <div key={index} className="snap-center shrink-0 w-full md:w-[450px] aspect-[16/10] bg-white rounded-[12px] overflow-hidden group shadow-sm hover:shadow-lg transition-all relative">
+                            <img 
+                                src={event.img} 
+                                alt={event.title} 
+                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/images/pages/home/hero-1.jpg'; }}
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-100 group-hover:opacity-100 transition-opacity duration-300">
-                                <div className="absolute bottom-0 left-0 w-full p-4">
-                                    <h3 className="text-md font-bold font-['Montserrat'] text-white">{event.title}</h3>
-                                    <p className="text-xs text-gray-300 mt-1">{new Date(event.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#011B2F]/90 via-[#011B2F]/40 to-transparent flex flex-col justify-end p-6">
+                                <div className="space-y-2">
+                                    <span className="inline-block px-3 py-1 bg-[var(--color-accent)] text-[var(--color-primary)] text-[10px] font-bold rounded-full uppercase tracking-tighter">
+                                        {event.date}
+                                    </span>
+                                    <h4 className="text-white text-xl font-bold leading-tight drop-shadow-sm">{event.title}</h4>
+                                    <p className="text-white/80 text-sm line-clamp-1">{event.description}</p>
                                 </div>
                             </div>
                         </div>
-                    ))}
-                </div>
+                    ))
+                )}
+            </div>
+        </div>
+    );
+};
 
-                <div className="text-center mt-12">
-                    <Link to="/events" className="btn-secondary inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-full text-[var(--color-text-inverted)] bg-[var(--color-primary)] hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105 shadow-lg">
-                        View All Events
-                    </Link>
+const InstitutionalPulse = () => {
+    return (
+        <section className="py-20 bg-[var(--color-background-section)]">
+            <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                    <div className="lg:col-span-4 h-[550px]">
+                        <InstitutionalNotices />
+                    </div>
+                    <div className="lg:col-span-8">
+                        <InstitutionalHighlights />
+                    </div>
                 </div>
             </div>
         </section>
     );
 };
+
 
 const Leadership = () => {
     const [leaders, setLeaders] = useState<Teacher[]>([]);
@@ -607,7 +524,7 @@ const Leadership = () => {
                                     src={leader.img}
                                     alt={leader.name}
                                     className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover object-center mx-auto border-4 border-[var(--color-background-section)] shadow-md"
-                                    onError={(e) => handleImageError(e, { width: 160, height: 160, text: leader.name })}
+                                    onError={(e) => { e.currentTarget.onerror = null; handleImageError(e, { width: 160, height: 160, text: leader.name }); }}
                                     loading="lazy"
                                     decoding="async"
                                     width="160"
@@ -637,86 +554,39 @@ const Leadership = () => {
         </section>
     );
 };
-const Testimonials = () => {
-    const [currentTestimonial, setCurrentTestimonial] = useState(0);
-
-    useEffect(() => {
-        if (testimonialsData.length > 1) {
-            const timer = setTimeout(() => {
-                setCurrentTestimonial(prev => (prev + 1) % testimonialsData.length);
-            }, 7000);
-            return () => clearTimeout(timer);
-        }
-    }, [currentTestimonial]);
-
-    const handlePrevTestimonial = () => {
-        setCurrentTestimonial(prev => (prev - 1 + testimonialsData.length) % testimonialsData.length);
-    };
-
-    const handleNextTestimonial = () => {
-        setCurrentTestimonial(prev => (prev + 1) % testimonialsData.length);
-    };
-
-    if (testimonialsData.length === 0) return null;
-
-    return (
-        <section className="py-16 bg-[var(--color-background-section)]">
-            <div className="container mx-auto px-4">
-                <h2 className="text-3xl font-bold text-center mb-12 font-['Montserrat'] text-[var(--color-text-primary)]">What Our Community Says</h2>
-                <div className="max-w-3xl mx-auto relative">
-                    <div className="relative overflow-hidden min-h-[220px] sm:min-h-[200px]">
-                        {testimonialsData.map((testimonial, index) => (
-                            <div
-                                key={index}
-                                className={`absolute top-0 left-0 w-full h-full transition-opacity duration-700 ease-in-out ${index === currentTestimonial ? 'opacity-100' : 'opacity-0'}`}
-                                aria-hidden={index !== currentTestimonial}
-                            >
-                                <div className="bg-[var(--color-background-card)] p-4 sm:p-8 rounded-lg shadow-lg relative h-full flex flex-col items-center text-center">
-                                    <img
-                                        src={testimonial.img}
-                                        alt={testimonial.name}
-                                        className="w-20 h-20 rounded-full object-cover border-4 border-white -mt-16 mb-4 shadow-md"
-                                        onError={(e) => handleImageError(e, { width: 80, height: 80, text: '👤' })}
-                                        loading="lazy"
-                                        decoding="async"
-                                        width="80"
-                                        height="80"
-                                    />
-                                    <i className="fas fa-quote-left text-2xl text-[var(--color-text-accent)] opacity-30 mb-4"></i>
-                                    <p className="text-[var(--color-text-secondary)] italic text-base mb-4 flex-grow">"{testimonial.quote}"</p>
-                                    <div>
-                                        <h4 className="font-bold font-['Montserrat'] text-[var(--color-text-primary)]">{testimonial.name}</h4>
-                                        <p className="text-sm text-gray-500">{testimonial.relation}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                    {testimonialsData.length > 1 && (
-                        <>
-                            <button onClick={handlePrevTestimonial} aria-label="Previous testimonial" className="absolute left-0 top-1/2 -translate-y-12 bg-[var(--color-background-card)]/50 text-[var(--color-text-primary)] rounded-full w-10 h-10 hover:bg-[var(--color-background-card)]/80 transition shadow-md -translate-x-6 z-10 hidden sm:flex items-center justify-center">
-                                <i className="fas fa-chevron-left"></i>
-                            </button>
-                            <button onClick={handleNextTestimonial} aria-label="Next testimonial" className="absolute right-0 top-1/2 -translate-y-12 bg-[var(--color-background-card)]/50 text-[var(--color-text-primary)] rounded-full w-10 h-10 hover:bg-[var(--color-background-card)]/80 transition shadow-md translate-x-6 z-10 hidden sm:flex items-center justify-center">
-                                <i className="fas fa-chevron-right"></i>
-                            </button>
-                        </>
-                    )}
-                </div>
-                <div className="flex justify-center mt-6 space-x-2">
-                    {testimonialsData.map((_, index) => (
-                        <button
-                            key={index}
-                            onClick={() => setCurrentTestimonial(index)}
-                            aria-label={`Go to testimonial ${index + 1}`}
-                            className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentTestimonial ? 'bg-[var(--color-accent)] scale-125' : 'bg-[var(--color-border)] hover:bg-[var(--color-secondary)]'}`}
-                        ></button>
-                    ))}
-                </div>
+const Testimonials = () => (
+    <section className="bg-[var(--color-background-section)] py-20 overflow-hidden">
+        <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
+            <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-extrabold mb-4 font-['Montserrat'] text-[var(--color-text-primary)]">Voices of our Community</h2>
+                <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto">Hear from the parents and alumni who have experienced the sunshine approach to excellence.</p>
             </div>
-        </section>
-    );
-};
+            
+            <div className="flex gap-6 overflow-x-auto no-scrollbar snap-scroll px-4 pb-8">
+                {testimonialsData.map((testimonial, index) => (
+                    <div key={index} className="snap-center shrink-0 w-[85%] md:w-[600px] bg-[var(--color-background-card)] p-8 md:p-10 rounded-[12px] shadow-sm relative border border-black/5 hover:shadow-md transition-shadow">
+                        <span className="material-symbols-outlined text-[var(--color-accent)] absolute top-6 right-6 text-6xl opacity-20 pointer-events-none" style={{ fontVariationSettings: "'FILL' 1" }}>format_quote</span>
+                        <p className="text-lg md:text-xl leading-relaxed text-[var(--color-text-primary)] italic mb-8 relative z-10">"{testimonial.quote}"</p>
+                        <div className="flex items-center gap-4">
+                            <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-100 border-2 border-[var(--color-accent)]/30">
+                                <img 
+                                    src={testimonial.img} 
+                                    alt={testimonial.name} 
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => { e.currentTarget.onerror = null; handleImageError(e, { text: testimonial.name.charAt(0) }); }}
+                                />
+                            </div>
+                            <div>
+                                <p className="font-bold text-[var(--color-text-primary)] text-lg">{testimonial.name}</p>
+                                <p className="text-sm text-[var(--color-text-secondary)] font-medium">{testimonial.relation}</p>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </section>
+);
 
 
 const FAQ = () => {
@@ -754,36 +624,37 @@ const Home: React.FC = () => {
             <div id="notices-ticker">
                 <NoticeTicker />
             </div>
-            <div id="quick-links" className="scroll-mt-[75px]">
+            <div id="main-content" className="scroll-mt-[75px]">
                 <ScrollAnimator>
                     <QuickLinks />
                 </ScrollAnimator>
+                
+                <ScrollAnimator>
+                    {/* Live Updates & Cinematic Highlights */}
+                    <InstitutionalPulse />
+                </ScrollAnimator>
+
                 <ScrollAnimator>
                     <WhyChooseUs />
                 </ScrollAnimator>
+
                 <ScrollAnimator>
-                    <LatestEvents />
-                </ScrollAnimator>
-                <ScrollAnimator>
-                    <section className="py-16 bg-[var(--color-background-section)]">
-                        <div className="container mx-auto px-4">
-                            <div className="grid lg:grid-cols-4 gap-12 items-start">
-                                <div className="lg:col-span-3">
-                                    <SchoolLifeMoments />
-                                </div>
-                                <div className="lg:col-span-1">
-                                    <HomepageNotices />
-                                </div>
-                            </div>
+                    {/* School Life Moments */}
+                    <section className="py-20 bg-[var(--color-background-body)]">
+                        <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
+                            <SchoolLifeMoments />
                         </div>
                     </section>
                 </ScrollAnimator>
+
                 <ScrollAnimator>
                     <Leadership />
                 </ScrollAnimator>
+
                 <ScrollAnimator>
                     <Testimonials />
                 </ScrollAnimator>
+
                 <ScrollAnimator>
                     <FAQ />
                 </ScrollAnimator>
