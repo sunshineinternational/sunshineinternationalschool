@@ -176,7 +176,7 @@ const Hero: React.FC = () => {
                         </a>
                     </div>
 
-                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-['Montserrat'] mb-6 leading-tight text-white drop-shadow-xl min-h-[1.2em]">
+                    <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold font-['Montserrat'] mb-6 leading-tight text-white drop-shadow-xl min-h-[1.2em]">
                         Inspiring Young Minds for <br />
                         <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-accent)] to-[#FFE5B4]">
                             {displayText}
@@ -184,7 +184,7 @@ const Hero: React.FC = () => {
                         </span>
                     </h1>
 
-                    <p className="text-lg md:text-2xl mb-10 text-gray-100 font-medium max-w-2xl mx-auto md:mx-0 drop-shadow-md leading-relaxed">
+                    <p className="text-base md:text-xl mb-10 text-gray-100 font-medium max-w-2xl mx-auto md:mx-0 drop-shadow-md leading-relaxed">
                         A nurturing environment where knowledge meets excellence, empowering students to lead with confidence.
                     </p>
 
@@ -297,16 +297,16 @@ const Counter = ({ target, duration = 2000, suffix = "" }: { target: number, dur
     }, [hasStarted, target, duration]);
 
     return (
-        <div ref={elementRef} className="font-['Montserrat'] font-extrabold text-5xl md:text-7xl text-[var(--color-accent)] drop-shadow-sm">
+        <div ref={elementRef} className="font-['Montserrat'] font-extrabold text-3xl md:text-5xl text-[var(--color-accent)] drop-shadow-sm">
             {count}{suffix}
         </div>
     );
 };
 
 const ImpactGrid = () => (
-    <section className="bg-[#131b2e] py-32 relative overflow-hidden">
+    <section className="bg-[#131b2e] py-16 relative overflow-hidden">
         {/* Subtle background crest / glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[var(--color-accent)]/5 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--color-accent)]/5 rounded-full blur-[100px] pointer-events-none"></div>
         
         <div className="container mx-auto px-4 relative z-10">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 md:gap-8">
@@ -339,15 +339,15 @@ const ImpactGrid = () => (
 );
 
 const QuickLinks = () => (
-    <section className="bg-[var(--color-background-body)] py-32">
+    <section className="bg-[var(--color-background-body)] py-20">
         <div className="container mx-auto px-4">
-            <h2 className="text-4xl md:text-6xl font-bold text-center mb-20 font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">Discover Sunshine International</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <h2 className="text-3xl md:text-5xl font-bold text-center mb-12 font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">Discover Sunshine International</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {quickLinksData.map((link) => (
-                    <div key={link.title} className="bg-[var(--color-background-card)] p-8 rounded-[24px] shadow-sm text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-blue-200/50 flex flex-col border border-blue-100 group">
-                        <div className="text-4xl text-[var(--color-text-primary)] mb-6 transition-transform duration-500 group-hover:scale-110"><i className={link.icon}></i></div>
-                        <h3 className="text-xl font-bold mb-3 font-['Work_Sans'] text-[var(--color-text-primary)]">{link.title}</h3>
-                        <p className="text-[var(--color-text-secondary)] mb-8 text-sm leading-relaxed flex-grow">{link.description}</p>
+                    <div key={link.title} className="bg-[var(--color-background-card)] p-6 md:p-7 rounded-[20px] shadow-sm text-center transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-blue-200/50 flex flex-col border border-blue-100 group">
+                        <div className="text-3xl text-[var(--color-text-primary)] mb-5 transition-transform duration-500 group-hover:scale-110"><i className={link.icon}></i></div>
+                        <h3 className="text-lg font-bold mb-2 font-['Work_Sans'] text-[var(--color-text-primary)]">{link.title}</h3>
+                        <p className="text-[var(--color-text-secondary)] mb-6 text-xs leading-relaxed flex-grow">{link.description}</p>
                         <Link to={link.path} className="font-bold text-[var(--color-text-primary)] hover:text-[var(--color-text-accent)] mt-auto inline-flex items-center gap-2 group/link mx-auto">
                             Learn More 
                             <span className="material-symbols-outlined text-sm group-hover/link:translate-x-1 transition-transform">arrow_forward</span>
@@ -389,7 +389,7 @@ const SchoolLifeMoments = () => {
     if (moments.length === 0) return null;
 
     return (
-        <section className="py-24 bg-[var(--color-background-body)]">
+        <section className="py-16 bg-[var(--color-background-body)]">
             <div className="container mx-auto px-4 max-w-6xl">
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
                 <div>
@@ -601,7 +601,7 @@ const InstitutionalHighlights = () => {
 
 const InstitutionalPulse = () => {
     return (
-        <section className="py-32 bg-[var(--color-background-body)] relative">
+        <section className="py-20 bg-[var(--color-background-body)] relative">
             {/* Subtle background element for the pulse section */}
             <div className="absolute top-0 right-0 w-1/3 h-full bg-[var(--color-accent)]/5 rounded-l-full blur-3xl -z-10"></div>
             
@@ -656,43 +656,43 @@ const Leadership = () => {
     }
 
     return (
-        <section className="py-24 bg-[var(--color-background-body)] border-t border-black/5">
+        <section className="py-16 bg-[var(--color-background-body)] border-t border-black/5">
             <div className="container mx-auto px-4 max-w-6xl">
-                <div className="text-center mb-20">
-                    <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.3em] text-[var(--color-primary)] uppercase bg-[var(--color-accent)]/20 rounded-full mb-6">
+                <div className="text-center mb-12">
+                    <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.3em] text-[var(--color-primary)] uppercase bg-blue-100/50 rounded-full mb-6">
                         Leadership Reflection
                     </span>
-                    <h2 className="text-4xl md:text-6xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">From The Founders</h2>
+                    <h2 className="text-2xl md:text-4xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">From The Founders</h2>
                 </div>
                 <div className="flex flex-col gap-12 max-w-4xl mx-auto">
                     {leaders.map(leader => (
-                        <div key={leader.name} className="bg-[var(--color-background-card)] text-[var(--color-text-primary)] rounded-[32px] shadow-md flex flex-col md:flex-row items-center p-8 sm:p-12 transition-all duration-500 hover:shadow-xl hover:shadow-blue-200/30 border border-blue-100 relative overflow-hidden group">
+                        <div key={leader.name} className="bg-[var(--color-background-card)] text-[var(--color-text-primary)] rounded-[24px] shadow-sm flex flex-col md:flex-row items-center p-6 md:p-8 transition-all duration-500 hover:shadow-xl hover:shadow-blue-200/30 border border-blue-100 relative overflow-hidden group">
                             {/* Subtle crest watermark */}
-                            <span className="material-symbols-outlined absolute -bottom-10 -right-10 text-[200px] text-blue-900/5 pointer-events-none group-hover:scale-110 transition-transform duration-1000">school</span>
+                            <span className="material-symbols-outlined absolute -bottom-10 -right-10 text-[120px] text-blue-900/5 pointer-events-none group-hover:scale-110 transition-transform duration-1000">school</span>
                             
-                            <div className="flex-shrink-0 mb-8 md:mb-0 md:mr-10 text-center relative z-10">
+                            <div className="flex-shrink-0 mb-6 md:mb-0 md:mr-8 text-center relative z-10">
                                 <img
                                     src={leader.img}
                                     alt={leader.name}
-                                    className="w-40 h-40 md:w-56 md:h-56 rounded-[24px] object-cover object-center mx-auto border-4 border-white shadow-xl group-hover:border-[var(--color-accent)]/50 transition-all duration-500"
-                                    onError={(e) => { e.currentTarget.onerror = null; handleImageError(e, { width: 224, height: 224, text: leader.name }); }}
+                                    className="w-28 h-28 md:w-36 md:h-36 rounded-[20px] object-cover object-center mx-auto border-4 border-white shadow-lg group-hover:border-[var(--color-accent)]/50 transition-all duration-500"
+                                    onError={(e) => { e.currentTarget.onerror = null; handleImageError(e, { width: 144, height: 144, text: leader.name }); }}
                                     loading="lazy"
                                 />
                             </div>
                             <div className="flex flex-col w-full text-center md:text-left relative z-10">
-                                <h3 className="text-3xl font-bold font-['Montserrat'] text-[var(--color-text-primary)] mb-2 uppercase tracking-tighter">{`The ${leader.role}'s Desk`}</h3>
-                                <p className="text-lg text-[var(--color-text-secondary)] mb-8 font-medium tracking-wide">{`Sunshine International School`}</p>
+                                <h3 className="text-xl md:text-2xl font-bold font-['Montserrat'] text-[var(--color-text-primary)] mb-1 uppercase tracking-tighter">{`The ${leader.role}'s Desk`}</h3>
+                                <p className="text-sm text-[var(--color-text-secondary)] mb-6 font-medium tracking-wide">{`Sunshine International School`}</p>
 
                                 {leader.testimonial && (
-                                    <blockquote className="relative text-[var(--color-text-secondary)] text-lg leading-relaxed italic mb-10 flex-grow">
-                                        <i className="fas fa-quote-left absolute -top-4 -left-6 text-3xl text-[var(--color-accent)] opacity-40"></i>
-                                        <p className="pl-6 border-l-2 border-[var(--color-accent)]/40">{leader.testimonial}</p>
+                                    <blockquote className="relative text-[var(--color-text-secondary)] text-md leading-relaxed italic mb-8 flex-grow">
+                                        <i className="fas fa-quote-left absolute -top-3 -left-4 text-2xl text-[var(--color-accent)] opacity-40"></i>
+                                        <p className="pl-4 border-l-2 border-[var(--color-accent)]/40">{leader.testimonial}</p>
                                     </blockquote>
                                 )}
 
-                                <div className="mt-auto md:text-right border-t border-blue-100 pt-6">
-                                    <p className="font-bold text-xl text-[var(--color-text-primary)] tracking-tight">{leader.name}</p>
-                                    <p className="text-sm text-[var(--color-text-accent)] uppercase font-extrabold tracking-[0.2em]">{leader.role}</p>
+                                <div className="mt-auto md:text-right border-t border-blue-100 pt-4">
+                                    <p className="font-bold text-lg text-[var(--color-text-primary)] tracking-tight">{leader.name}</p>
+                                    <p className="text-[10px] text-[var(--color-text-accent)] uppercase font-extrabold tracking-[0.2em]">{leader.role}</p>
                                 </div>
                             </div>
                         </div>
@@ -703,21 +703,21 @@ const Leadership = () => {
     );
 };
 const Testimonials = () => (
-    <section className="bg-[var(--color-background-body)] py-28 border-t border-blue-100/50 overflow-hidden">
+    <section className="bg-[var(--color-background-body)] py-16 border-t border-blue-100/50 overflow-hidden">
         <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
-            <div className="text-center mb-16">
+            <div className="text-center mb-12">
                 <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.3em] text-[var(--color-primary)] uppercase bg-blue-100/50 rounded-full mb-6">
                     Community Voices
                 </span>
-                <h2 className="text-3xl md:text-5xl font-bold mb-6 font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">Voices of our Community</h2>
-                <p className="text-[var(--color-text-secondary)] text-md max-w-2xl mx-auto leading-relaxed">Hear from parents and alumni who have experienced the sunshine approach to excellence.</p>
+                <h2 className="text-2xl md:text-4xl font-bold mb-4 font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">Voices of our Community</h2>
+                <p className="text-[var(--color-text-secondary)] text-sm max-w-2xl mx-auto leading-relaxed">Hear from parents and alumni who have experienced the sunshine approach to excellence.</p>
             </div>
             
-            <div className="flex gap-6 overflow-x-auto no-scrollbar snap-scroll px-4 pb-12">
+            <div className="flex gap-4 overflow-x-auto no-scrollbar snap-scroll px-4 pb-12">
                 {testimonialsData.map((testimonial, index) => (
-                    <div key={index} className="snap-center shrink-0 w-[85%] md:w-[500px] bg-[var(--color-background-card)] p-8 md:p-10 rounded-[24px] shadow-md relative border border-blue-100 hover:shadow-lg transition-all group">
-                        <span className="material-symbols-outlined text-[var(--color-text-primary)] absolute top-6 right-8 text-6xl opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity" style={{ fontVariationSettings: "'FILL' 1" }}>format_quote</span>
-                        <p className="text-lg leading-relaxed text-[var(--color-text-primary)] italic mb-10 relative z-10 font-['Work_Sans']">"{testimonial.quote}"</p>
+                    <div key={index} className="snap-center shrink-0 w-[85%] md:w-[420px] bg-[var(--color-background-card)] p-6 md:p-8 rounded-[20px] shadow-sm relative border border-blue-100 hover:shadow-lg transition-all group">
+                        <span className="material-symbols-outlined text-[var(--color-text-primary)] absolute top-5 right-6 text-5xl opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity" style={{ fontVariationSettings: "'FILL' 1" }}>format_quote</span>
+                        <p className="text-base leading-relaxed text-[var(--color-text-primary)] italic mb-8 relative z-10 font-['Work_Sans']">"{testimonial.quote}"</p>
                         <div className="flex items-center gap-5 relative z-10">
                             <div className="w-14 h-14 rounded-xl overflow-hidden bg-white border-2 border-blue-100 group-hover:border-[var(--color-accent)] transition-colors shadow-sm">
                                 <img 
@@ -743,14 +743,14 @@ const Testimonials = () => (
 const FAQ = () => {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     return (
-        <section id="faq-section" className="relative bg-[var(--color-background-body)] py-32 border-t border-black/5 scroll-mt-[75px]">
+        <section id="faq-section" className="relative bg-[var(--color-background-body)] py-20 border-t border-black/5 scroll-mt-[75px]">
             <div className="container mx-auto px-4 max-w-4xl">
-                <div className="text-center mb-20">
-                    <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.3em] text-[var(--color-primary)] uppercase bg-[var(--color-accent)]/20 rounded-full mb-6">
+                <div className="text-center mb-12">
+                    <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.3em] text-[var(--color-primary)] uppercase bg-blue-100/50 rounded-full mb-6">
                         Knowledge Hub
                     </span>
-                    <h2 className="text-4xl md:text-6xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] mb-6 tracking-tight">Frequently Asked Questions</h2>
-                    <p className="text-[var(--color-text-secondary)] text-lg max-w-2xl mx-auto leading-relaxed">Providing clear answers to help you navigate our academic environment and community life.</p>
+                    <h2 className="text-2xl md:text-4xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] mb-4 tracking-tight">Frequently Asked Questions</h2>
+                    <p className="text-[var(--color-text-secondary)] text-md max-w-2xl mx-auto leading-relaxed">Providing clear answers to help you navigate our academic environment and community life.</p>
                 </div>
 
                 <div className="space-y-4">
@@ -784,16 +784,13 @@ const FAQ = () => {
                     ))}
                 </div>
                 
-                <div className="mt-16 text-center">
-                    <div className="inline-flex items-center gap-6 p-6 bg-[var(--color-primary)] text-white rounded-[16px] shadow-xl">
-                        <div className="hidden sm:flex w-12 h-12 bg-white/10 rounded-full items-center justify-center">
-                            <span className="material-symbols-outlined">contact_support</span>
-                        </div>
+                <div className="mt-12 text-center">
+                    <div className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-8 p-6 bg-[var(--color-primary)] text-white rounded-[20px] shadow-lg">
                         <div className="text-left">
-                            <p className="text-sm opacity-80 font-medium">Have more questions?</p>
-                            <p className="font-bold">Contact our Admissions Office today</p>
+                            <p className="text-xs opacity-80 font-medium uppercase tracking-wider mb-1">Have more questions?</p>
+                            <p className="font-bold text-lg">Contact our Admissions Office</p>
                         </div>
-                        <Link to="/contact" className="px-6 py-2.5 bg-[var(--color-accent)] text-[var(--color-primary)] font-bold rounded-full hover:scale-105 transition-transform text-sm">
+                        <Link to="/contact" className="px-8 py-2.5 bg-[var(--color-accent)] text-[var(--color-primary)] font-bold rounded-full hover:scale-105 transition-transform text-xs uppercase tracking-widest">
                             Ask Us
                         </Link>
                     </div>
