@@ -9,7 +9,6 @@ import { FaqItem } from '../components/common/FaqItem';
 import Seo from '../components/common/Seo';
 import { schoolLifeMomentsData } from '../data/schoolLifeMoments';
 import { homeFaqData } from '../data/faqs';
-import { whyChooseUsData } from '../data/whyChooseUs';
 import { testimonialsData } from '../data/testimonials';
 import ScrollAnimator from '../components/common/ScrollAnimator';
 import NoticeTicker from '../components/common/NoticeTicker';
@@ -257,18 +256,101 @@ const quickLinksData: QuickLink[] = [
     { icon: 'fas fa-images', title: 'Gallery', description: 'A glimpse into our school life', path: '/gallery' },
 ];
 
+const Counter = ({ target, duration = 2000, suffix = "" }: { target: number, duration?: number, suffix?: string }) => {
+    const [count, setCount] = useState(0);
+    const [hasStarted, setHasStarted] = useState(false);
+    const elementRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting && !hasStarted) {
+                    setHasStarted(true);
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        if (elementRef.current) observer.observe(elementRef.current);
+        return () => observer.disconnect();
+    }, [hasStarted]);
+
+    useEffect(() => {
+        if (!hasStarted) return;
+
+        let startTime: number | null = null;
+        const animate = (timestamp: number) => {
+            if (!startTime) startTime = timestamp;
+            const progress = timestamp - startTime;
+            const percentage = Math.min(progress / duration, 1);
+            
+            // Ease-out cubic for premium deceleration
+            const easeOut = 1 - Math.pow(1 - percentage, 3);
+            setCount(Math.floor(easeOut * target));
+
+            if (percentage < 1) {
+                requestAnimationFrame(animate);
+            }
+        };
+
+        requestAnimationFrame(animate);
+    }, [hasStarted, target, duration]);
+
+    return (
+        <div ref={elementRef} className="font-['Montserrat'] font-extrabold text-5xl md:text-7xl text-[var(--color-accent)] drop-shadow-sm">
+            {count}{suffix}
+        </div>
+    );
+};
+
+const ImpactGrid = () => (
+    <section className="bg-[#131b2e] py-32 relative overflow-hidden">
+        {/* Subtle background crest / glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[var(--color-accent)]/5 rounded-full blur-[120px] pointer-events-none"></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 md:gap-8">
+                <div className="text-center group">
+                    <Counter target={14} suffix="+" />
+                    <p className="mt-4 text-white/90 font-bold uppercase tracking-[0.2em] text-[10px] md:text-xs">Years of Legacy</p>
+                    <div className="w-10 h-1.5 bg-[var(--color-accent)] mx-auto mt-6 rounded-full group-hover:w-20 transition-all duration-500 shadow-[0_0_15px_rgba(255,185,21,0.5)]"></div>
+                </div>
+
+                <div className="text-center group">
+                    <Counter target={100} suffix="%" />
+                    <p className="mt-4 text-white/90 font-bold uppercase tracking-[0.2em] text-[10px] md:text-xs">Board Success</p>
+                    <div className="w-10 h-1.5 bg-[var(--color-accent)] mx-auto mt-6 rounded-full group-hover:w-20 transition-all duration-500 shadow-[0_0_15px_rgba(255,185,21,0.5)]"></div>
+                </div>
+
+                <div className="text-center group">
+                    <Counter target={18} suffix=":1" />
+                    <p className="mt-4 text-white/90 font-bold uppercase tracking-[0.2em] text-[10px] md:text-xs">Student-Teacher Ratio</p>
+                    <div className="w-10 h-1.5 bg-[var(--color-accent)] mx-auto mt-6 rounded-full group-hover:w-20 transition-all duration-500 shadow-[0_0_15px_rgba(255,185,21,0.5)]"></div>
+                </div>
+
+                <div className="text-center group">
+                    <Counter target={50} suffix="+" />
+                    <p className="mt-4 text-white/90 font-bold uppercase tracking-[0.2em] text-[10px] md:text-xs">Annual Activities</p>
+                    <div className="w-10 h-1.5 bg-[var(--color-accent)] mx-auto mt-6 rounded-full group-hover:w-20 transition-all duration-500 shadow-[0_0_15px_rgba(255,185,21,0.5)]"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+);
+
 const QuickLinks = () => (
-    <section className="bg-[var(--color-background-body)] py-24">
+    <section className="bg-[var(--color-background-body)] py-32">
         <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12 font-['Montserrat'] text-[var(--color-text-primary)]">Discover Sunshine International School</h2>
+            <h2 className="text-4xl md:text-6xl font-bold text-center mb-20 font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">Discover Sunshine International</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {quickLinksData.map((link) => (
-                    <div key={link.title} className="bg-[var(--color-background-card)] p-6 rounded-lg shadow-md text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-xl flex flex-col">
-                        <div className="text-4xl text-[var(--color-text-accent)] mb-4"><i className={link.icon}></i></div>
-                        <h3 className="text-xl font-bold mb-2 font-['Montserrat'] text-[var(--color-text-primary)]">{link.title}</h3>
-                        <p className="text-[var(--color-text-secondary)] mb-4 text-sm flex-grow">{link.description}</p>
-                        <Link to={link.path} className="font-semibold text-[var(--color-text-primary)] hover:text-[var(--color-text-accent)] mt-auto">
-                            Learn More &rarr;
+                    <div key={link.title} className="bg-[var(--color-background-card)] p-8 rounded-[24px] shadow-sm text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-blue-200/50 flex flex-col border border-blue-100 group">
+                        <div className="text-4xl text-[var(--color-text-primary)] mb-6 transition-transform duration-500 group-hover:scale-110"><i className={link.icon}></i></div>
+                        <h3 className="text-xl font-bold mb-3 font-['Work_Sans'] text-[var(--color-text-primary)]">{link.title}</h3>
+                        <p className="text-[var(--color-text-secondary)] mb-8 text-sm leading-relaxed flex-grow">{link.description}</p>
+                        <Link to={link.path} className="font-bold text-[var(--color-text-primary)] hover:text-[var(--color-text-accent)] mt-auto inline-flex items-center gap-2 group/link mx-auto">
+                            Learn More 
+                            <span className="material-symbols-outlined text-sm group-hover/link:translate-x-1 transition-transform">arrow_forward</span>
                         </Link>
                     </div>
                 ))}
@@ -277,64 +359,6 @@ const QuickLinks = () => (
     </section>
 );
 
-const WhyChooseUs = () => (
-    <section className="py-24 bg-[var(--color-background-body)]">
-        <div className="container mx-auto px-4 max-w-6xl">
-            <div className="text-center mb-16">
-                <span className="text-[12px] font-extrabold tracking-[0.2em] text-[var(--color-primary)] opacity-50 uppercase mb-3 block">Foundation of Excellence</span>
-                <h2 className="text-3xl md:text-5xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] mb-6">Our Core Pillars</h2>
-                <div className="w-20 h-1.5 bg-[var(--color-accent)] mx-auto rounded-full"></div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 auto-rows-[180px]">
-                {/* Academic Excellence - Large Main Block */}
-                <div className="md:col-span-2 md:row-span-2 bg-[#131b2e] text-white p-8 rounded-[20px] relative overflow-hidden group shadow-lg">
-                    <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-white/10 transition-all duration-700"></div>
-                    <div className="relative z-10 h-full flex flex-col justify-end">
-                        <div className="w-12 h-12 bg-[var(--color-accent)]/20 rounded-xl flex items-center justify-center mb-4 border border-white/10">
-                            <i className="fas fa-graduation-cap text-2xl text-[var(--color-accent)]"></i>
-                        </div>
-                        <h3 className="text-2xl font-bold font-['Work_Sans'] mb-2">Academic Excellence</h3>
-                        <p className="text-white/70 text-sm leading-relaxed max-w-sm">Our rigorous curriculum and dedicated educators foster a culture of curiosity and critical thinking.</p>
-                    </div>
-                </div>
-
-                {/* Modern Infrastructure - Smaller Secondary */}
-                <div className="bg-white p-6 rounded-[20px] shadow-sm border border-black/5 flex flex-col justify-between group hover:shadow-md transition-all duration-500">
-                    <div className="w-10 h-10 bg-[var(--color-primary)]/10 rounded-lg flex items-center justify-center text-[var(--color-primary)] group-hover:bg-[var(--color-primary)] group-hover:text-white transition-all">
-                        <i className="fas fa-building text-lg"></i>
-                    </div>
-                    <div>
-                        <h3 className="text-lg font-bold font-['Work_Sans'] mb-1 text-[var(--color-text-primary)]">Modern Infrastructure</h3>
-                        <p className="text-[var(--color-text-secondary)] text-xs leading-relaxed line-clamp-2">State-of-the-art labs, libraries, and smart classrooms for the digital age.</p>
-                    </div>
-                </div>
-
-                {/* Holistic Development - Smaller Secondary */}
-                <div className="bg-white p-6 rounded-[20px] shadow-sm border border-black/5 flex flex-col justify-between group hover:shadow-md transition-all duration-500">
-                    <div className="w-10 h-10 bg-[#8B5CF6]/10 rounded-lg flex items-center justify-center text-[#8B5CF6] group-hover:bg-[#8B5CF6] group-hover:text-white transition-all">
-                        <i className="fas fa-heart text-lg"></i>
-                    </div>
-                    <div>
-                        <h3 className="text-lg font-bold font-['Work_Sans'] mb-1 text-[var(--color-text-primary)]">Holistic Growth</h3>
-                        <p className="text-[var(--color-text-secondary)] text-xs leading-relaxed line-clamp-2">Balancing arts, sports, and value-based education for all students.</p>
-                    </div>
-                </div>
-
-                {/* Safe & Nurturing - Wide Base Block */}
-                <div className="md:col-span-3 bg-[var(--color-accent)] p-6 md:p-10 rounded-[20px] shadow-md flex flex-col md:flex-row items-center gap-6 group">
-                    <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center shrink-0 border border-white/30 group-hover:scale-110 transition-transform">
-                        <i className="fas fa-shield-alt text-2xl text-[var(--color-primary)]"></i>
-                    </div>
-                    <div>
-                        <h3 className="text-xl font-bold font-['Work_Sans'] mb-1 text-[var(--color-primary)]">Safe & Nurturing Environment</h3>
-                        <p className="text-[var(--color-primary)] opacity-80 text-md">A secure, child-centric campus where every student feels valued and encouraged.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-);
 
 
 const SchoolLifeMoments = () => {
@@ -394,8 +418,8 @@ const SchoolLifeMoments = () => {
                 {moments[1] && (
                     <div className="col-span-1 row-span-1 group relative overflow-hidden rounded-[24px] shadow-sm hover:shadow-xl transition-all duration-700">
                         <img src={moments[1].src} alt={moments[1].caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-4">
-                            <p className="text-white text-xs font-bold text-center">{moments[1].caption}</p>
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-6">
+                            <p className="text-white text-sm font-bold text-center leading-tight">{moments[1].caption}</p>
                         </div>
                     </div>
                 )}
@@ -404,8 +428,8 @@ const SchoolLifeMoments = () => {
                 {moments[2] && (
                     <div className="col-span-1 row-span-1 group relative overflow-hidden rounded-[24px] shadow-sm hover:shadow-xl transition-all duration-700">
                         <img src={moments[2].src} alt={moments[2].caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-4">
-                            <p className="text-white text-xs font-bold text-center">{moments[2].caption}</p>
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-6">
+                            <p className="text-white text-sm font-bold text-center leading-tight">{moments[2].caption}</p>
                         </div>
                     </div>
                 )}
@@ -577,7 +601,7 @@ const InstitutionalHighlights = () => {
 
 const InstitutionalPulse = () => {
     return (
-        <section className="py-24 bg-[var(--color-background-body)] relative">
+        <section className="py-32 bg-[var(--color-background-body)] relative">
             {/* Subtle background element for the pulse section */}
             <div className="absolute top-0 right-0 w-1/3 h-full bg-[var(--color-accent)]/5 rounded-l-full blur-3xl -z-10"></div>
             
@@ -634,41 +658,41 @@ const Leadership = () => {
     return (
         <section className="py-24 bg-[var(--color-background-body)] border-t border-black/5">
             <div className="container mx-auto px-4 max-w-6xl">
-                <div className="text-center mb-16">
-                    <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-widest text-[var(--color-primary)] uppercase bg-[var(--color-accent)]/20 rounded-full mb-4">
+                <div className="text-center mb-20">
+                    <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.3em] text-[var(--color-primary)] uppercase bg-[var(--color-accent)]/20 rounded-full mb-6">
                         Leadership Reflection
                     </span>
-                    <h2 className="text-3xl md:text-5xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)]">From The Founders</h2>
+                    <h2 className="text-4xl md:text-6xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">From The Founders</h2>
                 </div>
                 <div className="flex flex-col gap-12 max-w-4xl mx-auto">
                     {leaders.map(leader => (
-                        <div key={leader.name} className="bg-[var(--color-background-card)] rounded-lg shadow-lg flex flex-col md:flex-row items-center p-6 sm:p-8 transition-shadow duration-300 hover:shadow-xl overflow-hidden">
-                            <div className="flex-shrink-0 mb-6 md:mb-0 md:mr-8 text-center">
+                        <div key={leader.name} className="bg-[var(--color-background-card)] text-[var(--color-text-primary)] rounded-[32px] shadow-md flex flex-col md:flex-row items-center p-8 sm:p-12 transition-all duration-500 hover:shadow-xl hover:shadow-blue-200/30 border border-blue-100 relative overflow-hidden group">
+                            {/* Subtle crest watermark */}
+                            <span className="material-symbols-outlined absolute -bottom-10 -right-10 text-[200px] text-blue-900/5 pointer-events-none group-hover:scale-110 transition-transform duration-1000">school</span>
+                            
+                            <div className="flex-shrink-0 mb-8 md:mb-0 md:mr-10 text-center relative z-10">
                                 <img
                                     src={leader.img}
                                     alt={leader.name}
-                                    className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover object-center mx-auto border-4 border-[var(--color-background-section)] shadow-md"
-                                    onError={(e) => { e.currentTarget.onerror = null; handleImageError(e, { width: 160, height: 160, text: leader.name }); }}
+                                    className="w-40 h-40 md:w-56 md:h-56 rounded-[24px] object-cover object-center mx-auto border-4 border-white shadow-xl group-hover:border-[var(--color-accent)]/50 transition-all duration-500"
+                                    onError={(e) => { e.currentTarget.onerror = null; handleImageError(e, { width: 224, height: 224, text: leader.name }); }}
                                     loading="lazy"
-                                    decoding="async"
-                                    width="160"
-                                    height="160"
                                 />
                             </div>
-                            <div className="flex flex-col w-full text-center md:text-left">
-                                <h3 className="text-2xl font-bold font-['Montserrat'] text-[var(--color-text-primary)]">{`From the ${leader.role}'s Desk`}</h3>
-                                <p className="text-md text-gray-500 mb-4">{`${leader.role}, Sunshine International School`}</p>
+                            <div className="flex flex-col w-full text-center md:text-left relative z-10">
+                                <h3 className="text-3xl font-bold font-['Montserrat'] text-[var(--color-text-primary)] mb-2 uppercase tracking-tighter">{`The ${leader.role}'s Desk`}</h3>
+                                <p className="text-lg text-[var(--color-text-secondary)] mb-8 font-medium tracking-wide">{`Sunshine International School`}</p>
 
                                 {leader.testimonial && (
-                                    <blockquote className="relative text-[var(--color-text-secondary)] text-base italic mb-6 flex-grow">
-                                        <i className="fas fa-quote-left absolute -top-2 -left-4 text-2xl text-[var(--color-border)] opacity-80"></i>
-                                        <p className="pl-2">{leader.testimonial}</p>
+                                    <blockquote className="relative text-[var(--color-text-secondary)] text-lg leading-relaxed italic mb-10 flex-grow">
+                                        <i className="fas fa-quote-left absolute -top-4 -left-6 text-3xl text-[var(--color-accent)] opacity-40"></i>
+                                        <p className="pl-6 border-l-2 border-[var(--color-accent)]/40">{leader.testimonial}</p>
                                     </blockquote>
                                 )}
 
-                                <div className="mt-auto md:text-right">
-                                    <p className="font-semibold text-lg text-[var(--color-text-primary)]">{leader.name}</p>
-                                    <p className="text-sm text-gray-500">{leader.role}</p>
+                                <div className="mt-auto md:text-right border-t border-blue-100 pt-6">
+                                    <p className="font-bold text-xl text-[var(--color-text-primary)] tracking-tight">{leader.name}</p>
+                                    <p className="text-sm text-[var(--color-text-accent)] uppercase font-extrabold tracking-[0.2em]">{leader.role}</p>
                                 </div>
                             </div>
                         </div>
@@ -679,23 +703,23 @@ const Leadership = () => {
     );
 };
 const Testimonials = () => (
-    <section className="bg-[var(--color-background-body)] py-24 border-t border-black/5 overflow-hidden">
+    <section className="bg-[var(--color-background-body)] py-28 border-t border-blue-100/50 overflow-hidden">
         <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
             <div className="text-center mb-16">
-                <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-widest text-[var(--color-primary)] uppercase bg-[var(--color-accent)]/20 rounded-full mb-4">
+                <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.3em] text-[var(--color-primary)] uppercase bg-blue-100/50 rounded-full mb-6">
                     Community Voices
                 </span>
-                <h2 className="text-3xl md:text-5xl font-bold mb-4 font-['Work_Sans'] text-[var(--color-text-primary)]">Voices of our Community</h2>
-                <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto">Hear from the parents and alumni who have experienced the sunshine approach to excellence.</p>
+                <h2 className="text-3xl md:text-5xl font-bold mb-6 font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">Voices of our Community</h2>
+                <p className="text-[var(--color-text-secondary)] text-md max-w-2xl mx-auto leading-relaxed">Hear from parents and alumni who have experienced the sunshine approach to excellence.</p>
             </div>
             
-            <div className="flex gap-6 overflow-x-auto no-scrollbar snap-scroll px-4 pb-8">
+            <div className="flex gap-6 overflow-x-auto no-scrollbar snap-scroll px-4 pb-12">
                 {testimonialsData.map((testimonial, index) => (
-                    <div key={index} className="snap-center shrink-0 w-[85%] md:w-[600px] bg-[var(--color-background-card)] p-8 md:p-10 rounded-[12px] shadow-sm relative border border-black/5 hover:shadow-md transition-shadow">
-                        <span className="material-symbols-outlined text-[var(--color-accent)] absolute top-6 right-6 text-6xl opacity-20 pointer-events-none" style={{ fontVariationSettings: "'FILL' 1" }}>format_quote</span>
-                        <p className="text-lg md:text-xl leading-relaxed text-[var(--color-text-primary)] italic mb-8 relative z-10">"{testimonial.quote}"</p>
-                        <div className="flex items-center gap-4">
-                            <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-100 border-2 border-[var(--color-accent)]/30">
+                    <div key={index} className="snap-center shrink-0 w-[85%] md:w-[500px] bg-[var(--color-background-card)] p-8 md:p-10 rounded-[24px] shadow-md relative border border-blue-100 hover:shadow-lg transition-all group">
+                        <span className="material-symbols-outlined text-[var(--color-text-primary)] absolute top-6 right-8 text-6xl opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity" style={{ fontVariationSettings: "'FILL' 1" }}>format_quote</span>
+                        <p className="text-lg leading-relaxed text-[var(--color-text-primary)] italic mb-10 relative z-10 font-['Work_Sans']">"{testimonial.quote}"</p>
+                        <div className="flex items-center gap-5 relative z-10">
+                            <div className="w-14 h-14 rounded-xl overflow-hidden bg-white border-2 border-blue-100 group-hover:border-[var(--color-accent)] transition-colors shadow-sm">
                                 <img 
                                     src={testimonial.img} 
                                     alt={testimonial.name} 
@@ -704,8 +728,8 @@ const Testimonials = () => (
                                 />
                             </div>
                             <div>
-                                <p className="font-bold text-[var(--color-text-primary)] text-lg">{testimonial.name}</p>
-                                <p className="text-sm text-[var(--color-text-secondary)] font-medium">{testimonial.relation}</p>
+                                <p className="font-bold text-[var(--color-text-primary)] text-lg tracking-tight">{testimonial.name}</p>
+                                <p className="text-xs text-[var(--color-text-accent)] font-extrabold uppercase tracking-widest">{testimonial.relation}</p>
                             </div>
                         </div>
                     </div>
@@ -719,39 +743,39 @@ const Testimonials = () => (
 const FAQ = () => {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     return (
-        <section id="faq-section" className="relative bg-[var(--color-background-body)] py-24 scroll-mt-[75px]">
+        <section id="faq-section" className="relative bg-[var(--color-background-body)] py-32 border-t border-black/5 scroll-mt-[75px]">
             <div className="container mx-auto px-4 max-w-4xl">
-                <div className="text-center mb-16">
-                    <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-widest text-[var(--color-primary)] uppercase bg-[var(--color-accent)]/20 rounded-full mb-4">
+                <div className="text-center mb-20">
+                    <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.3em] text-[var(--color-primary)] uppercase bg-[var(--color-accent)]/20 rounded-full mb-6">
                         Knowledge Hub
                     </span>
-                    <h2 className="text-3xl md:text-5xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] mb-4">Frequently Asked Questions</h2>
-                    <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto">Providing clear answers to help you navigate our academic environment and community life.</p>
+                    <h2 className="text-4xl md:text-6xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] mb-6 tracking-tight">Frequently Asked Questions</h2>
+                    <p className="text-[var(--color-text-secondary)] text-lg max-w-2xl mx-auto leading-relaxed">Providing clear answers to help you navigate our academic environment and community life.</p>
                 </div>
 
                 <div className="space-y-4">
                     {homeFaqData.map((faq, index) => (
                         <div 
                             key={index} 
-                            className={`group border border-black/5 rounded-[12px] transition-all duration-300 ${openIndex === index ? 'bg-white shadow-lg ring-1 ring-[var(--color-accent)]/30' : 'bg-white/50 hover:bg-white'}`}
+                            className={`group border border-blue-100 rounded-[20px] transition-all duration-500 overflow-hidden ${openIndex === index ? 'bg-blue-100/50 shadow-md ring-1 ring-blue-200' : 'bg-white/60 hover:bg-white shadow-sm'}`}
                         >
                             <button 
                                 onClick={() => setOpenIndex(openIndex === index ? null : index)} 
-                                className="w-full text-left flex justify-between items-center py-6 px-6 sm:px-8 focus:outline-none"
+                                className="w-full text-left flex justify-between items-center py-7 px-8 focus:outline-none"
                             >
-                                <span className={`font-bold text-lg font-['Work_Sans'] transition-colors ${openIndex === index ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-primary)]'}`}>
+                                <span className={`font-bold text-xl font-['Work_Sans'] transition-colors duration-300 ${openIndex === index ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-primary)]'}`}>
                                     {faq.q}
                                 </span>
-                                <span className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${openIndex === index ? 'bg-[var(--color-primary)] text-white rotate-180' : 'bg-gray-100 text-gray-400'}`}>
-                                    <span className="material-symbols-outlined text-xl">
+                                <span className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 ${openIndex === index ? 'bg-[var(--color-primary)] text-white rotate-180' : 'bg-blue-50 text-blue-400'}`}>
+                                    <span className="material-symbols-outlined text-2xl">
                                         {openIndex === index ? 'remove' : 'add'}
                                     </span>
                                 </span>
                             </button>
-                            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${openIndex === index ? 'max-h-96' : 'max-h-0'}`}>
-                                <div className="px-6 sm:px-8 pb-8">
-                                    <div className="h-px bg-gray-100 mb-6"></div>
-                                    <p className="text-[var(--color-text-secondary)] leading-relaxed text-md">
+                            <div className={`overflow-hidden transition-all duration-700 ease-in-out ${openIndex === index ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                <div className="px-8 pb-10">
+                                    <div className={`h-px mb-8 transition-colors duration-500 ${openIndex === index ? 'bg-blue-200/50' : 'bg-black/5'}`}></div>
+                                    <p className={`leading-relaxed text-lg transition-colors duration-500 ${openIndex === index ? 'text-[var(--color-text-primary)]/80' : 'text-[var(--color-text-secondary)]'}`}>
                                         {faq.a}
                                     </p>
                                 </div>
@@ -796,15 +820,16 @@ const Home: React.FC = () => {
                 <ScrollAnimator>
                     <QuickLinks />
                 </ScrollAnimator>
+
+                <ScrollAnimator>
+                    <ImpactGrid />
+                </ScrollAnimator>
                 
                 <ScrollAnimator>
                     {/* Live Updates & Cinematic Highlights */}
                     <InstitutionalPulse />
                 </ScrollAnimator>
 
-                <ScrollAnimator>
-                    <WhyChooseUs />
-                </ScrollAnimator>
 
                 <ScrollAnimator>
                     {/* School Life Moments */}

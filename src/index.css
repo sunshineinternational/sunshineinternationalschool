@@ -9,13 +9,13 @@
   --color-hero-gradient-rgb: 1, 27, 47; /* Oxford Blue */
   --color-secondary: #003F66; /* Indigo Dye */
   --color-accent: #FFB915; /* Selective Yellow */
-  --color-background-body: #fff8f6;
-  --color-background-section: #fff8f6;
-  --color-background-card: #ffffff;
-  --color-background-header: #fff8f6;
+  --color-background-body: #f8faff; /* Campus Blue (Base) */
+  --color-background-section: #f8faff;
+  --color-background-card: #e1eefe; /* Academic Sky (Elements) */
+  --color-background-header: #f0f7ff;
   --color-text-primary: #011B2F; /* Oxford Blue */
   --color-header-text: var(--color-text-primary);
-  --color-text-secondary: rgba(1, 27, 47, 0.8);
+  --color-text-secondary: #1a2a3a; /* Deepened Slate Blue - 100% Opaque */
   --color-text-accent: #FFB915;
   --color-text-inverted: #FFFFFF;
   --color-button-text: #011B2F; /* Deep blue text on gold components */
