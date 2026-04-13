@@ -13,15 +13,9 @@ import { testimonialsData } from '../data/testimonials';
 import ScrollAnimator from '../components/common/ScrollAnimator';
 import NoticeTicker from '../components/common/NoticeTicker';
 import NoticeSkeleton from '../components/common/NoticeSkeleton';
+import { fetchHomeSettings } from '../services/dataService';
+import { heroSlidesData, featuredHomeGallery } from '../data/homeConfig';
 
-
-const heroSlidesData = [
-    { type: 'image', src: '/images/pages/home/hero-3.jpg', animationClass: 'animate-pan-up' },
-    { type: 'image', src: '/images/pages/home/hero-1.jpg', animationClass: 'animate-pan-right' },
-    { type: 'image', src: '/images/pages/home/hero-2.jpg', animationClass: 'animate-zoom-in' },
-    { type: 'image', src: '/images/pages/home/hero-4.jpg', animationClass: 'animate-pan-left' },
-    { type: 'video', src: '/images/pages/home/video.mp4', animationClass: 'animate-pan-left', poster: '/images/pages/home/video-poster.jpg' },
-];
 
 const Hero: React.FC = () => {
     const [slides, setSlides] = useState(heroSlidesData);
@@ -29,6 +23,19 @@ const Hero: React.FC = () => {
     const [isMobile, setIsMobile] = useState(false); // Default to false for server
     const [isPaused, setIsPaused] = useState(false);
     const [scrollOutput, setScrollOutput] = useState(0);
+
+    // Live Sanity Data
+    useEffect(() => {
+        const syncHomeSettings = async () => {
+            const liveData = await fetchHomeSettings();
+            if (liveData) {
+                if (liveData.heroSlides && liveData.heroSlides.length > 0) {
+                    setSlides(liveData.heroSlides);
+                }
+            }
+        };
+        syncHomeSettings();
+    }, []);
 
     // Update isMobile once the browser is ready
     useEffect(() => {
@@ -339,9 +346,9 @@ const ImpactGrid = () => (
 );
 
 const QuickLinks = () => (
-    <section className="bg-[var(--color-background-body)] py-20">
+    <section className="bg-[var(--color-background-body)] py-14">
         <div className="container mx-auto px-4">
-            <h2 className="text-3xl md:text-5xl font-bold text-center mb-12 font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">Discover Sunshine International</h2>
+            <h2 className="text-3xl md:text-5xl font-bold text-center mb-10 font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">Discover Sunshine International</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {quickLinksData.map((link) => (
                     <div key={link.title} className="bg-[var(--color-background-card)] p-6 md:p-7 rounded-[20px] shadow-sm text-center transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-blue-200/50 flex flex-col border border-blue-100 group">
@@ -362,87 +369,75 @@ const QuickLinks = () => (
 
 
 const SchoolLifeMoments = () => {
-    const [moments, setMoments] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [moments, setMoments] = useState(featuredHomeGallery);
     
     useEffect(() => {
-        const loadMoments = async () => {
-            const data = await fetchGalleryData();
-            // Take the 5 most recent images for a better bento feel
-            setMoments(data.slice(0, 5));
-            setLoading(false);
+        const syncGallery = async () => {
+            const liveData = await fetchHomeSettings();
+            if (liveData && liveData.featuredGallery && liveData.featuredGallery.length > 0) {
+                setMoments(liveData.featuredGallery);
+            }
         };
-        loadMoments();
+        syncGallery();
     }, []);
 
-    if (loading) {
-        return (
-            <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-2 gap-4 h-[500px]">
-                <div className="col-span-2 row-span-2 bg-gray-200 animate-pulse rounded-2xl"></div>
-                <div className="bg-gray-200 animate-pulse rounded-2xl"></div>
-                <div className="bg-gray-200 animate-pulse rounded-2xl"></div>
-                <div className="col-span-2 bg-gray-200 animate-pulse rounded-2xl"></div>
-            </div>
-        );
-    }
-
-    if (moments.length === 0) return null;
-
     return (
-        <section className="py-16 bg-[var(--color-background-body)]">
+        <section className="py-14 bg-[var(--color-background-body)] border-t border-blue-100/30">
             <div className="container mx-auto px-4 max-w-6xl">
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
                 <div>
-                    <span className="text-[var(--color-accent)] font-bold text-xs uppercase tracking-[0.3em] mb-2 block">Candid Memories</span>
-                    <h2 className="text-3xl md:text-5xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)]">School Life Moments</h2>
+                    <span className="text-[var(--color-accent)] font-bold text-[10px] uppercase tracking-[0.3em] mb-2 block">Curated Memories</span>
+                    <h2 className="text-2xl md:text-4xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">School Life Moments</h2>
                 </div>
-                <Link to="/gallery" className="inline-flex items-center gap-2 font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-all group pb-1 border-b-2 border-transparent hover:border-[var(--color-accent)]">
+                <Link to="/gallery" className="inline-flex items-center gap-2 font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-all group pb-1 border-b border-transparent hover:border-[var(--color-accent)] text-sm">
                     Enter Full Gallery
                     <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
                 </Link>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:h-[600px] auto-rows-[250px] md:auto-rows-auto">
-                {/* Image 1 - Large Feature */}
-                {moments[0] && (
-                    <div className="col-span-2 row-span-2 group relative overflow-hidden rounded-[24px] shadow-sm hover:shadow-2xl transition-all duration-700">
-                        <img src={moments[0].src} alt={moments[0].caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-8">
-                            <span className="text-[var(--color-accent)] text-[10px] uppercase font-bold tracking-widest mb-1">{moments[0].event}</span>
-                            <h3 className="text-white font-bold text-xl">{moments[0].caption}</h3>
-                        </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:h-[700px] auto-rows-[200px] md:auto-rows-auto">
+                {/* 1. Large Feature (2x2) */}
+                <div className="col-span-2 row-span-2 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-2xl transition-all duration-700">
+                    <img src={moments[0].src} alt={moments[0].caption} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" loading="lazy" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
+                        <span className="text-[var(--color-accent)] text-[8px] uppercase font-extrabold tracking-widest mb-1">{moments[0].event}</span>
+                        <h3 className="text-white font-bold text-lg leading-tight">{moments[0].caption}</h3>
                     </div>
-                )}
+                </div>
 
-                {/* Image 2 - Square */}
-                {moments[1] && (
-                    <div className="col-span-1 row-span-1 group relative overflow-hidden rounded-[24px] shadow-sm hover:shadow-xl transition-all duration-700">
-                        <img src={moments[1].src} alt={moments[1].caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-6">
-                            <p className="text-white text-sm font-bold text-center leading-tight">{moments[1].caption}</p>
-                        </div>
+                {/* 2. Wide Snapshot (2x1) */}
+                <div className="col-span-2 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-700">
+                    <img src={moments[1].src} alt={moments[1].caption} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" loading="lazy" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-4">
+                        <p className="text-white text-xs font-bold text-center leading-snug">{moments[1].caption}</p>
                     </div>
-                )}
+                </div>
 
-                {/* Image 3 - Square */}
-                {moments[2] && (
-                    <div className="col-span-1 row-span-1 group relative overflow-hidden rounded-[24px] shadow-sm hover:shadow-xl transition-all duration-700">
-                        <img src={moments[2].src} alt={moments[2].caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-6">
-                            <p className="text-white text-sm font-bold text-center leading-tight">{moments[2].caption}</p>
-                        </div>
+                {/* 3. Accent Square */}
+                <div className="col-span-1 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-700">
+                    <img src={moments[2].src} alt={moments[2].caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
+                    <div className="absolute inset-0 bg-[var(--color-primary)]/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-4">
+                        <p className="text-white text-[10px] font-bold text-center leading-tight">{moments[2].caption}</p>
                     </div>
-                )}
+                </div>
 
-                {/* Image 4 - Wide Feature */}
-                {moments[3] && (
-                    <div className="col-span-2 row-span-1 group relative overflow-hidden rounded-[24px] shadow-sm hover:shadow-xl transition-all duration-700">
-                        <img src={moments[3].src} alt={moments[3].caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
-                            <h3 className="text-white font-bold text-sm">{moments[3].caption}</h3>
-                        </div>
+                {/* 4. Accent Square */}
+                <div className="col-span-1 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-700">
+                    <img src={moments[3].src} alt={moments[3].caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
+                    <div className="absolute inset-0 bg-[var(--color-primary)]/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-4">
+                        <p className="text-white text-[10px] font-bold text-center leading-tight">{moments[3].caption}</p>
                     </div>
-                )}
+                </div>
+
+                {/* 5-8. Bottom Row Snapshots */}
+                {[4, 5, 6, 7].map((idx) => (
+                   <div key={idx} className="col-span-1 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-700">
+                        <img src={moments[idx].src} alt={moments[idx].caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-4">
+                            <p className="text-white text-[9px] font-bold text-center leading-tight uppercase tracking-tighter opacity-80">{moments[idx].event}</p>
+                        </div>
+                   </div>
+                ))}
             </div>
         </div>
     </section>
@@ -601,7 +596,7 @@ const InstitutionalHighlights = () => {
 
 const InstitutionalPulse = () => {
     return (
-        <section className="py-20 bg-[var(--color-background-body)] relative">
+        <section className="py-14 bg-[var(--color-background-soft)] relative border-t border-blue-100/30">
             {/* Subtle background element for the pulse section */}
             <div className="absolute top-0 right-0 w-1/3 h-full bg-[var(--color-accent)]/5 rounded-l-full blur-3xl -z-10"></div>
             
@@ -656,7 +651,7 @@ const Leadership = () => {
     }
 
     return (
-        <section className="py-16 bg-[var(--color-background-body)] border-t border-black/5">
+        <section className="py-14 bg-[var(--color-background-soft)] border-t border-blue-100/30">
             <div className="container mx-auto px-4 max-w-6xl">
                 <div className="text-center mb-12">
                     <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.3em] text-[var(--color-primary)] uppercase bg-blue-100/50 rounded-full mb-6">
@@ -703,7 +698,7 @@ const Leadership = () => {
     );
 };
 const Testimonials = () => (
-    <section className="bg-[var(--color-background-body)] py-16 border-t border-blue-100/50 overflow-hidden">
+    <section className="bg-[var(--color-background-body)] py-14 border-t border-blue-100/30 overflow-hidden">
         <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
             <div className="text-center mb-12">
                 <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.3em] text-[var(--color-primary)] uppercase bg-blue-100/50 rounded-full mb-6">
@@ -743,7 +738,7 @@ const Testimonials = () => (
 const FAQ = () => {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     return (
-        <section id="faq-section" className="relative bg-[var(--color-background-body)] py-20 border-t border-black/5 scroll-mt-[75px]">
+        <section id="faq-section" className="relative bg-[var(--color-background-soft)] py-14 border-t border-blue-100/30 scroll-mt-[75px]">
             <div className="container mx-auto px-4 max-w-4xl">
                 <div className="text-center mb-12">
                     <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.3em] text-[var(--color-primary)] uppercase bg-blue-100/50 rounded-full mb-6">

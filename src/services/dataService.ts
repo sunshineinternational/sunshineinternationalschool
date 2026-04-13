@@ -138,3 +138,31 @@ export async function fetchEventsData(): Promise<any[]> {
         return [];
     }
 }
+
+/**
+ * Fetches homepage specific curation settings from Sanity.
+ * Falls back to local config logic if empty.
+ */
+export async function fetchHomeSettings(): Promise<any> {
+    try {
+        const query = `*[_type == "homeSettings"][0]{
+            heroSlides[]{
+                type,
+                "src": select(type == "video" => videoUrl, urlFor(source).url()),
+                caption,
+                ctaText,
+                ctaLink
+            },
+            featuredGallery[]->{
+                "src": urlFor(image).url(),
+                caption,
+                "event": coalesce(category, "General")
+            }
+        }`;
+        const data = await client.fetch(query);
+        return data;
+    } catch (error) {
+        console.error("Home Settings fetch failed:", error);
+        return null;
+    }
+}
