@@ -21,7 +21,9 @@ export interface Event {
   title: string;
   date: string; // e.g., '2023-12-22'
   description: string;
-  category: 'Academic' | 'Sports' | 'Cultural' | 'Celebration';
+  category?: 'Academic' | 'Sports' | 'Cultural' | 'Celebration' | string;
+  gallery?: string[];
+  showOnHome?: boolean;
 }
 
 export interface Moment {

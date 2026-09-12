@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
 import { fetchNoticesData, fetchTeachersData, fetchEventsData, fetchGalleryData } from '../services/dataService';
-import type { Notice, QuickLink, Testimonial, Teacher } from '../types';
+import type { Notice, QuickLink, Testimonial, Teacher, Event } from '../types';
 import { handleImageError, parseDDMMYYYY } from '../utils';
 import { client } from '../lib/sanity';
 import { FaqItem } from '../components/common/FaqItem';
@@ -15,6 +15,7 @@ import NoticeTicker from '../components/common/NoticeTicker';
 import NoticeSkeleton from '../components/common/NoticeSkeleton';
 import { fetchHomeSettings } from '../services/dataService';
 import { heroSlidesData, featuredHomeGallery } from '../data/homeConfig';
+import EventDetailModal from '../components/common/EventDetailModal';
 
 
 const Hero: React.FC = () => {
@@ -370,6 +371,7 @@ const QuickLinks = () => (
 
 const SchoolLifeMoments = () => {
     const [moments, setMoments] = useState(featuredHomeGallery);
+    const [activeLightboxIndex, setActiveLightboxIndex] = useState<number | null>(null);
     
     useEffect(() => {
         const syncGallery = async () => {
@@ -381,66 +383,217 @@ const SchoolLifeMoments = () => {
         syncGallery();
     }, []);
 
+    // Guaranteed safe 8-item array preventing array undefined crashes
+    const safeMoments = moments.length >= 8 
+        ? moments 
+        : [...moments, ...featuredHomeGallery].slice(0, 8);
+
+    // Close lightbox on Escape and support Left/Right arrow navigation
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (activeLightboxIndex === null) return;
+            if (e.key === 'Escape') setActiveLightboxIndex(null);
+            if (e.key === 'ArrowRight') setActiveLightboxIndex((prev) => (prev !== null ? (prev + 1) % safeMoments.length : 0));
+            if (e.key === 'ArrowLeft') setActiveLightboxIndex((prev) => (prev !== null ? (prev - 1 + safeMoments.length) % safeMoments.length : 0));
+        };
+        if (activeLightboxIndex !== null) {
+            window.addEventListener('keydown', handleKeyDown);
+            document.body.style.overflow = 'hidden';
+        }
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            document.body.style.overflow = '';
+        };
+    }, [activeLightboxIndex, safeMoments.length]);
+
+    const m0 = safeMoments[0] || featuredHomeGallery[0];
+    const m1 = safeMoments[1] || featuredHomeGallery[1];
+    const m2 = safeMoments[2] || featuredHomeGallery[2];
+    const m3 = safeMoments[3] || featuredHomeGallery[3];
+
     return (
         <section className="py-14 bg-[var(--color-background-body)] border-t border-blue-100/30">
             <div className="container mx-auto px-4 max-w-6xl">
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-                <div>
-                    <span className="text-[var(--color-accent)] font-bold text-[10px] uppercase tracking-[0.3em] mb-2 block">Curated Memories</span>
-                    <h2 className="text-2xl md:text-4xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">School Life Moments</h2>
-                </div>
-                <Link to="/gallery" className="inline-flex items-center gap-2 font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-all group pb-1 border-b border-transparent hover:border-[var(--color-accent)] text-sm">
-                    Enter Full Gallery
-                    <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                </Link>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:h-[700px] auto-rows-[200px] md:auto-rows-auto">
-                {/* 1. Large Feature (2x2) */}
-                <div className="col-span-2 row-span-2 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-2xl transition-all duration-700">
-                    <img src={moments[0].src} alt={moments[0].caption} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" loading="lazy" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
-                        <span className="text-[var(--color-accent)] text-[8px] uppercase font-extrabold tracking-widest mb-1">{moments[0].event}</span>
-                        <h3 className="text-white font-bold text-lg leading-tight">{moments[0].caption}</h3>
+                    <div>
+                        <span className="text-[var(--color-accent)] font-bold text-[10px] uppercase tracking-[0.3em] mb-2 block">Curated Memories</span>
+                        <h2 className="text-2xl md:text-4xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">School Life Moments</h2>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <span className="text-xs text-gray-500 hidden sm:inline-flex items-center gap-1.5">
+                            <i className="fas fa-search-plus text-[var(--color-accent)]"></i>
+                            Click any photo to enlarge
+                        </span>
+                        <Link to="/gallery" className="inline-flex items-center gap-2 font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-all group pb-1 border-b border-transparent hover:border-[var(--color-accent)] text-sm">
+                            Enter Full Gallery
+                            <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                        </Link>
                     </div>
                 </div>
 
-                {/* 2. Wide Snapshot (2x1) */}
-                <div className="col-span-2 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-700">
-                    <img src={moments[1].src} alt={moments[1].caption} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" loading="lazy" />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-4">
-                        <p className="text-white text-xs font-bold text-center leading-snug">{moments[1].caption}</p>
-                    </div>
-                </div>
-
-                {/* 3. Accent Square */}
-                <div className="col-span-1 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-700">
-                    <img src={moments[2].src} alt={moments[2].caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
-                    <div className="absolute inset-0 bg-[var(--color-primary)]/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-4">
-                        <p className="text-white text-[10px] font-bold text-center leading-tight">{moments[2].caption}</p>
-                    </div>
-                </div>
-
-                {/* 4. Accent Square */}
-                <div className="col-span-1 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-700">
-                    <img src={moments[3].src} alt={moments[3].caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
-                    <div className="absolute inset-0 bg-[var(--color-primary)]/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-4">
-                        <p className="text-white text-[10px] font-bold text-center leading-tight">{moments[3].caption}</p>
-                    </div>
-                </div>
-
-                {/* 5-8. Bottom Row Snapshots */}
-                {[4, 5, 6, 7].map((idx) => (
-                   <div key={idx} className="col-span-1 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-700">
-                        <img src={moments[idx].src} alt={moments[idx].caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-4">
-                            <p className="text-white text-[9px] font-bold text-center leading-tight uppercase tracking-tighter opacity-80">{moments[idx].event}</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:h-[700px] auto-rows-[200px] md:auto-rows-auto">
+                    {/* 1. Large Feature (2x2) */}
+                    <div 
+                        onClick={() => setActiveLightboxIndex(0)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveLightboxIndex(0); } }}
+                        className="col-span-2 row-span-2 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-2xl transition-all duration-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                    >
+                        <img src={m0.src} alt={m0.caption} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6">
+                            <div className="flex items-end justify-between gap-3">
+                                <div>
+                                    <span className="text-[var(--color-accent)] text-[9px] uppercase font-extrabold tracking-widest mb-1 block">{m0.event}</span>
+                                    <h3 className="text-white font-bold text-lg leading-tight">{m0.caption}</h3>
+                                </div>
+                                <span className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center flex-shrink-0 shadow-lg group-hover:scale-110 transition-transform">
+                                    <i className="fas fa-expand-alt text-xs"></i>
+                                </span>
+                            </div>
                         </div>
-                   </div>
-                ))}
+                    </div>
+
+                    {/* 2. Wide Snapshot (2x1) */}
+                    <div 
+                        onClick={() => setActiveLightboxIndex(1)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveLightboxIndex(1); } }}
+                        className="col-span-2 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                    >
+                        <img src={m1.src} alt={m1.caption} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-between p-5">
+                            <div>
+                                <span className="text-[var(--color-accent)] text-[9px] uppercase font-extrabold tracking-widest mb-0.5 block">{m1.event}</span>
+                                <p className="text-white text-sm font-bold leading-snug">{m1.caption}</p>
+                            </div>
+                            <span className="w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center flex-shrink-0">
+                                <i className="fas fa-search-plus text-xs"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* 3. Accent Square */}
+                    <div 
+                        onClick={() => setActiveLightboxIndex(2)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveLightboxIndex(2); } }}
+                        className="col-span-1 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                    >
+                        <img src={m2.src} alt={m2.caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                        <div className="absolute inset-0 bg-[var(--color-primary)]/70 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-between p-4">
+                            <span className="text-[var(--color-accent)] text-[8px] uppercase font-extrabold tracking-widest">{m2.event}</span>
+                            <p className="text-white text-xs font-bold leading-tight line-clamp-2">{m2.caption}</p>
+                        </div>
+                    </div>
+
+                    {/* 4. Accent Square */}
+                    <div 
+                        onClick={() => setActiveLightboxIndex(3)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveLightboxIndex(3); } }}
+                        className="col-span-1 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                    >
+                        <img src={m3.src} alt={m3.caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                        <div className="absolute inset-0 bg-[var(--color-primary)]/70 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-between p-4">
+                            <span className="text-[var(--color-accent)] text-[8px] uppercase font-extrabold tracking-widest">{m3.event}</span>
+                            <p className="text-white text-xs font-bold leading-tight line-clamp-2">{m3.caption}</p>
+                        </div>
+                    </div>
+
+                    {/* 5-8. Bottom Row Snapshots */}
+                    {[4, 5, 6, 7].map((idx) => {
+                        const m = safeMoments[idx] || featuredHomeGallery[idx % featuredHomeGallery.length];
+                        return (
+                            <div 
+                                key={idx} 
+                                onClick={() => setActiveLightboxIndex(idx)}
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveLightboxIndex(idx); } }}
+                                className="col-span-1 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                            >
+                                <img src={m.src} alt={m.caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-between p-3.5">
+                                    <span className="text-[var(--color-accent)] text-[8px] font-bold uppercase tracking-wider">{m.event}</span>
+                                    <p className="text-white text-[10px] font-semibold leading-tight line-clamp-2">{m.caption}</p>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
-        </div>
-    </section>
+
+            {/* Lightbox Modal */}
+            {activeLightboxIndex !== null && safeMoments[activeLightboxIndex] && (
+                <div 
+                    className="fixed inset-0 z-[2100] bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4 animate-fade-in"
+                    onClick={() => setActiveLightboxIndex(null)}
+                >
+                    {/* Lightbox Controls */}
+                    <div className="absolute top-4 left-4 right-4 flex items-center justify-between text-white z-10">
+                        <div className="flex items-center gap-2">
+                            <span className="px-3 py-1 rounded-full bg-[var(--color-accent)] text-[#002A45] text-xs font-black uppercase">
+                                {safeMoments[activeLightboxIndex].event}
+                            </span>
+                            <span className="text-xs text-white/70 font-medium">
+                                {activeLightboxIndex + 1} of {safeMoments.length}
+                            </span>
+                        </div>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveLightboxIndex(null);
+                            }}
+                            aria-label="Close photo preview"
+                            className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-colors text-lg"
+                        >
+                            <i className="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    {/* Navigation Buttons */}
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveLightboxIndex((prev) => (prev !== null ? (prev - 1 + safeMoments.length) % safeMoments.length : 0));
+                        }}
+                        aria-label="Previous photo"
+                        className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition-colors text-lg z-10"
+                    >
+                        <i className="fas fa-chevron-left"></i>
+                    </button>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveLightboxIndex((prev) => (prev !== null ? (prev + 1) % safeMoments.length : 0));
+                        }}
+                        aria-label="Next photo"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition-colors text-lg z-10"
+                    >
+                        <i className="fas fa-chevron-right"></i>
+                    </button>
+
+                    {/* Zoomed Image & Caption */}
+                    <div 
+                        className="max-w-4xl max-h-[82vh] flex flex-col items-center justify-center p-2"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <img
+                            src={safeMoments[activeLightboxIndex].src}
+                            alt={safeMoments[activeLightboxIndex].caption}
+                            className="max-w-full max-h-[74vh] object-contain rounded-2xl shadow-2xl"
+                        />
+                        <p className="text-white text-center font-medium mt-3 text-sm md:text-base px-4">
+                            {safeMoments[activeLightboxIndex].caption}
+                        </p>
+                    </div>
+                </div>
+            )}
+        </section>
     );
 };
 
@@ -582,8 +735,9 @@ const InstitutionalNotices = () => {
 };
 
 const InstitutionalHighlights = () => {
-    const [events, setEvents] = useState<any[]>([]);
+    const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(true);
+    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
@@ -629,7 +783,7 @@ const InstitutionalHighlights = () => {
                     </div>
                     <div>
                         <h3 className="text-2xl font-bold font-['Work_Sans'] tracking-tight text-[var(--color-text-primary)]">Highlights & Events</h3>
-                        <p className="text-xs text-[var(--color-text-secondary)]">Celebrations, milestones, and vibrant campus life</p>
+                        <p className="text-xs text-[var(--color-text-secondary)]">Click any event to view photos and full story</p>
                     </div>
                 </div>
 
@@ -684,10 +838,18 @@ const InstitutionalHighlights = () => {
                     ))
                 ) : events.length > 0 ? (
                     events.map((event, index) => (
-                        <Link 
-                            to="/events" 
+                        <div 
                             key={index} 
-                            className="snap-start shrink-0 w-full sm:w-[380px] md:w-[420px] flex flex-col bg-white rounded-[22px] overflow-hidden group shadow-sm hover:shadow-2xl transition-all duration-500 border border-blue-100 hover:border-[var(--color-accent)]/50 hover:-translate-y-1.5 text-left cursor-pointer"
+                            onClick={() => setSelectedEvent(event)}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    setSelectedEvent(event);
+                                }
+                            }}
+                            className="snap-start shrink-0 w-full sm:w-[380px] md:w-[420px] flex flex-col bg-white rounded-[22px] overflow-hidden group shadow-sm hover:shadow-2xl transition-all duration-500 border border-blue-100 hover:border-[var(--color-accent)]/50 hover:-translate-y-1.5 text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
                         >
                             {/* Image Banner */}
                             <div className="relative aspect-[16/9] overflow-hidden bg-gray-100">
@@ -730,13 +892,13 @@ const InstitutionalHighlights = () => {
 
                                 {/* Card Footer CTA */}
                                 <div className="pt-4 border-t border-gray-100 mt-auto flex items-center justify-between text-xs font-bold text-[var(--color-primary)] group-hover:text-[var(--color-accent)] transition-colors">
-                                    <span>Explore Event Gallery & Details</span>
+                                    <span>{event.gallery && event.gallery.length > 0 ? 'View Photos & Event Details' : 'View Event Details'}</span>
                                     <span className="w-7 h-7 rounded-full bg-blue-50 text-[var(--color-primary)] group-hover:bg-[var(--color-accent)] group-hover:text-[#002A45] flex items-center justify-center transition-all duration-300">
                                         <i className="fas fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform"></i>
                                     </span>
                                 </div>
                             </div>
-                        </Link>
+                        </div>
                     ))
                 ) : (
                     <div className="w-full py-16 text-center text-gray-400 bg-white rounded-2xl border border-gray-100">
@@ -746,6 +908,13 @@ const InstitutionalHighlights = () => {
                     </div>
                 )}
             </div>
+
+            {/* Event Detail & Gallery Modal */}
+            <EventDetailModal
+                event={selectedEvent}
+                isOpen={selectedEvent !== null}
+                onClose={() => setSelectedEvent(null)}
+            />
         </div>
     );
 };
@@ -854,97 +1023,306 @@ const Leadership = () => {
         </section>
     );
 };
-const Testimonials = () => (
-    <section className="bg-[var(--color-background-body)] py-14 border-t border-blue-100/30 overflow-hidden">
-        <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
-            <div className="text-center mb-12">
-                <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.3em] text-[var(--color-primary)] uppercase bg-blue-100/50 rounded-full mb-6">
-                    Community Voices
-                </span>
-                <h2 className="text-2xl md:text-4xl font-bold mb-4 font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">Voices of our Community</h2>
-                <p className="text-[var(--color-text-secondary)] text-sm max-w-2xl mx-auto leading-relaxed">Hear from parents and alumni who have experienced the sunshine approach to excellence.</p>
-            </div>
-            
-            <div className="flex gap-4 overflow-x-auto no-scrollbar snap-scroll px-4 pb-12">
-                {testimonialsData.map((testimonial, index) => (
-                    <div key={index} className="snap-center shrink-0 w-[85%] md:w-[420px] bg-[var(--color-background-card)] p-6 md:p-8 rounded-[20px] shadow-sm relative border border-blue-100 hover:shadow-lg transition-all group">
-                        <span className="material-symbols-outlined text-[var(--color-text-primary)] absolute top-5 right-6 text-5xl opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity" style={{ fontVariationSettings: "'FILL' 1" }}>format_quote</span>
-                        <p className="text-base leading-relaxed text-[var(--color-text-primary)] italic mb-8 relative z-10 font-['Work_Sans']">"{testimonial.quote}"</p>
-                        <div className="flex items-center gap-5 relative z-10">
-                            <div className="w-14 h-14 rounded-xl overflow-hidden bg-white border-2 border-blue-100 group-hover:border-[var(--color-accent)] transition-colors shadow-sm">
-                                <img 
-                                    src={testimonial.img} 
-                                    alt={testimonial.name} 
-                                    className="w-full h-full object-cover"
-                                    onError={(e) => { e.currentTarget.onerror = null; handleImageError(e, { text: testimonial.name.charAt(0) }); }}
-                                />
-                            </div>
-                            <div>
-                                <p className="font-bold text-[var(--color-text-primary)] text-lg tracking-tight">{testimonial.name}</p>
-                                <p className="text-xs text-[var(--color-text-accent)] font-extrabold uppercase tracking-widest">{testimonial.relation}</p>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    </section>
-);
+const Testimonials = () => {
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(true);
+    const [activeIndex, setActiveIndex] = useState(0);
 
+    const checkScroll = useCallback(() => {
+        if (!scrollContainerRef.current) return;
+        const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+        setCanScrollLeft(scrollLeft > 20);
+        setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 20);
 
-const FAQ = () => {
-    const [openIndex, setOpenIndex] = useState<number | null>(null);
+        const cardWidth = 380;
+        const newIndex = Math.min(
+            testimonialsData.length - 1,
+            Math.max(0, Math.round(scrollLeft / cardWidth))
+        );
+        setActiveIndex(newIndex);
+    }, []);
+
+    useEffect(() => {
+        const el = scrollContainerRef.current;
+        if (!el) return;
+        checkScroll();
+        el.addEventListener('scroll', checkScroll, { passive: true });
+        window.addEventListener('resize', checkScroll);
+        return () => {
+            el.removeEventListener('scroll', checkScroll);
+            window.removeEventListener('resize', checkScroll);
+        };
+    }, [checkScroll]);
+
+    const scroll = (direction: 'left' | 'right') => {
+        if (!scrollContainerRef.current) return;
+        const scrollAmount = 420;
+        scrollContainerRef.current.scrollBy({
+            left: direction === 'left' ? -scrollAmount : scrollAmount,
+            behavior: 'smooth'
+        });
+    };
+
+    const scrollToIndex = (idx: number) => {
+        if (!scrollContainerRef.current) return;
+        const items = scrollContainerRef.current.children;
+        if (items[idx]) {
+            (items[idx] as HTMLElement).scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+            });
+        }
+    };
+
     return (
-        <section id="faq-section" className="relative bg-[var(--color-background-soft)] py-14 border-t border-blue-100/30 scroll-mt-[75px]">
-            <div className="container mx-auto px-4 max-w-4xl">
-                <div className="text-center mb-12">
-                    <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.3em] text-[var(--color-primary)] uppercase bg-blue-100/50 rounded-full mb-6">
-                        Knowledge Hub
-                    </span>
-                    <h2 className="text-2xl md:text-4xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] mb-4 tracking-tight">Frequently Asked Questions</h2>
-                    <p className="text-[var(--color-text-secondary)] text-md max-w-2xl mx-auto leading-relaxed">Providing clear answers to help you navigate our academic environment and community life.</p>
+        <section className="bg-[var(--color-background-body)] py-16 md:py-20 border-t border-blue-100/30 overflow-hidden relative">
+            <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
+                {/* Section Header with Desktop Navigation Controls */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-12 gap-6">
+                    <div>
+                        <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.3em] text-[var(--color-primary)] uppercase bg-blue-100/50 rounded-full mb-4">
+                            Community Voices
+                        </span>
+                        <h2 className="text-2xl md:text-4xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">
+                            Voices of Our Community
+                        </h2>
+                        <p className="text-[var(--color-text-secondary)] text-sm md:text-base max-w-2xl mt-2 leading-relaxed">
+                            Hear how parents and students experience the Sunshine standard of holistic growth and academic care.
+                        </p>
+                    </div>
+
+                    {/* Navigation Buttons (Desktop & Tablet) */}
+                    <div className="flex items-center gap-2 shrink-0">
+                        <button
+                            onClick={() => scroll('left')}
+                            disabled={!canScrollLeft}
+                            aria-label="Previous testimonial"
+                            className={`w-11 h-11 rounded-full flex items-center justify-center border transition-all duration-300 ${
+                                canScrollLeft
+                                    ? 'border-blue-200 bg-white text-[var(--color-text-primary)] hover:bg-blue-50 shadow-sm hover:scale-105 active:scale-95'
+                                    : 'border-blue-100/60 bg-white/40 text-blue-300 cursor-not-allowed'
+                            }`}
+                        >
+                            <span className="material-symbols-outlined text-xl">chevron_left</span>
+                        </button>
+                        <button
+                            onClick={() => scroll('right')}
+                            disabled={!canScrollRight}
+                            aria-label="Next testimonial"
+                            className={`w-11 h-11 rounded-full flex items-center justify-center border transition-all duration-300 ${
+                                canScrollRight
+                                    ? 'border-blue-200 bg-white text-[var(--color-text-primary)] hover:bg-blue-50 shadow-sm hover:scale-105 active:scale-95'
+                                    : 'border-blue-100/60 bg-white/40 text-blue-300 cursor-not-allowed'
+                            }`}
+                        >
+                            <span className="material-symbols-outlined text-xl">chevron_right</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div className="space-y-4">
-                    {homeFaqData.map((faq, index) => (
-                        <div 
-                            key={index} 
-                            className={`group border border-blue-100 rounded-[20px] transition-all duration-500 overflow-hidden ${openIndex === index ? 'bg-blue-100/50 shadow-md ring-1 ring-blue-200' : 'bg-white/60 hover:bg-white shadow-sm'}`}
+                {/* Testimonials Carousel Track */}
+                <div
+                    ref={scrollContainerRef}
+                    className="flex gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory px-1 pb-6 -mx-1"
+                >
+                    {testimonialsData.map((testimonial, index) => (
+                        <div
+                            key={index}
+                            className="snap-center shrink-0 w-[88vw] sm:w-[380px] md:w-[420px] bg-[var(--color-background-card)] p-6 md:p-8 rounded-[24px] shadow-sm relative border border-blue-100 hover:border-[var(--color-accent)]/40 hover:shadow-xl hover:shadow-blue-900/5 transition-all duration-300 flex flex-col justify-between group"
                         >
-                            <button 
-                                onClick={() => setOpenIndex(openIndex === index ? null : index)} 
-                                className="w-full text-left flex justify-between items-center py-7 px-8 focus:outline-none"
+                            {/* Watermark Quote Icon */}
+                            <span
+                                className="material-symbols-outlined text-[var(--color-text-primary)] absolute top-6 right-6 text-6xl opacity-5 pointer-events-none group-hover:opacity-10 group-hover:scale-110 transition-all duration-500"
+                                style={{ fontVariationSettings: "'FILL' 1" }}
                             >
-                                <span className={`font-bold text-xl font-['Work_Sans'] transition-colors duration-300 ${openIndex === index ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-primary)]'}`}>
-                                    {faq.q}
-                                </span>
-                                <span className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 ${openIndex === index ? 'bg-[var(--color-primary)] text-white rotate-180' : 'bg-blue-50 text-blue-400'}`}>
-                                    <span className="material-symbols-outlined text-2xl">
-                                        {openIndex === index ? 'remove' : 'add'}
+                                format_quote
+                            </span>
+
+                            <div>
+                                {/* Rating Stars & Verified Badge */}
+                                <div className="flex items-center justify-between mb-4 relative z-10">
+                                    <div className="flex items-center gap-1 text-amber-400">
+                                        {[...Array(5)].map((_, i) => (
+                                            <span
+                                                key={i}
+                                                className="material-symbols-outlined text-base"
+                                                style={{ fontVariationSettings: "'FILL' 1" }}
+                                            >
+                                                star
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-blue-700 bg-blue-50/80 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                        <span className="material-symbols-outlined text-xs text-blue-600">verified</span>
+                                        Verified
                                     </span>
-                                </span>
-                            </button>
-                            <div className={`overflow-hidden transition-all duration-700 ease-in-out ${openIndex === index ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                                <div className="px-8 pb-10">
-                                    <div className={`h-px mb-8 transition-colors duration-500 ${openIndex === index ? 'bg-blue-200/50' : 'bg-black/5'}`}></div>
-                                    <p className={`leading-relaxed text-lg transition-colors duration-500 ${openIndex === index ? 'text-[var(--color-text-primary)]/80' : 'text-[var(--color-text-secondary)]'}`}>
-                                        {faq.a}
+                                </div>
+
+                                {/* Quote Body */}
+                                <p className="text-sm md:text-base leading-relaxed text-[var(--color-text-primary)] italic mb-6 relative z-10 font-['Work_Sans']">
+                                    "{testimonial.quote}"
+                                </p>
+                            </div>
+
+                            {/* Author Row */}
+                            <div className="flex items-center gap-4 relative z-10 pt-4 border-t border-blue-50 mt-auto">
+                                <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl overflow-hidden bg-white border-2 border-blue-100 group-hover:border-[var(--color-accent)] transition-colors shadow-sm shrink-0">
+                                    <img
+                                        src={testimonial.img}
+                                        alt={testimonial.name}
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                            e.currentTarget.onerror = null;
+                                            handleImageError(e, { text: testimonial.name.charAt(0) });
+                                        }}
+                                    />
+                                </div>
+                                <div>
+                                    <p className="font-bold text-[var(--color-text-primary)] text-base md:text-lg tracking-tight">
+                                        {testimonial.name}
+                                    </p>
+                                    <p className="text-xs text-[var(--color-text-accent)] font-extrabold uppercase tracking-wider mt-0.5">
+                                        {testimonial.relation}
                                     </p>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
-                
-                <div className="mt-12 text-center">
-                    <div className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-8 p-6 bg-[var(--color-primary)] text-white rounded-[20px] shadow-lg">
-                        <div className="text-left">
-                            <p className="text-xs opacity-80 font-medium uppercase tracking-wider mb-1">Have more questions?</p>
-                            <p className="font-bold text-lg">Contact our Admissions Office</p>
+
+                {/* Pagination Dots (Mobile & Interactive Visual Feedback) */}
+                <div className="flex items-center justify-center gap-2 mt-4">
+                    {testimonialsData.map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => scrollToIndex(i)}
+                            aria-label={`Go to testimonial ${i + 1}`}
+                            className={`h-2 rounded-full transition-all duration-300 ${
+                                activeIndex === i
+                                    ? 'w-8 bg-[var(--color-primary)]'
+                                    : 'w-2 bg-blue-200 hover:bg-blue-300'
+                            }`}
+                        />
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+};
+
+
+const FAQ = () => {
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+    return (
+        <section id="faq-section" className="relative bg-[var(--color-background-soft)] pt-16 pb-14 border-t border-blue-100/30 scroll-mt-[75px]">
+            <div className="container mx-auto px-4 max-w-3xl">
+                {/* Header */}
+                <div className="text-center mb-10 md:mb-12">
+                    <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.3em] text-[var(--color-primary)] uppercase bg-blue-100/50 rounded-full mb-4">
+                        Knowledge Hub
+                    </span>
+                    <h2 className="text-2xl md:text-4xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] mb-3 tracking-tight">
+                        Frequently Asked Questions
+                    </h2>
+                    <p className="text-[var(--color-text-secondary)] text-sm md:text-base max-w-xl mx-auto leading-relaxed">
+                        Clear, transparent answers to help you navigate admissions, timings, and campus life.
+                    </p>
+                </div>
+
+                {/* Accordion List */}
+                <div className="space-y-3.5">
+                    {homeFaqData.map((faq, index) => {
+                        const isOpen = openIndex === index;
+                        return (
+                            <div
+                                key={index}
+                                className={`group border rounded-[20px] transition-all duration-300 overflow-hidden ${
+                                    isOpen
+                                        ? 'bg-white border-blue-200 shadow-md ring-1 ring-blue-100'
+                                        : 'bg-white/70 hover:bg-white border-blue-100/80 shadow-sm'
+                                }`}
+                            >
+                                <button
+                                    onClick={() => setOpenIndex(isOpen ? null : index)}
+                                    aria-expanded={isOpen}
+                                    className="w-full text-left flex justify-between items-center py-4 px-5 md:py-5 md:px-7 focus:outline-none transition-colors"
+                                >
+                                    <span
+                                        className={`font-bold text-base md:text-lg font-['Work_Sans'] transition-colors duration-200 pr-4 ${
+                                            isOpen
+                                                ? 'text-[var(--color-primary)]'
+                                                : 'text-[var(--color-text-primary)] group-hover:text-[var(--color-primary)]'
+                                        }`}
+                                    >
+                                        {faq.q}
+                                    </span>
+                                    <span
+                                        className={`w-9 h-9 md:w-10 md:h-10 shrink-0 rounded-full flex items-center justify-center transition-all duration-300 ${
+                                            isOpen
+                                                ? 'bg-[var(--color-primary)] text-white rotate-180 shadow-sm'
+                                                : 'bg-blue-50 text-blue-600 group-hover:bg-blue-100'
+                                        }`}
+                                    >
+                                        <span className="material-symbols-outlined text-xl">
+                                            {isOpen ? 'remove' : 'add'}
+                                        </span>
+                                    </span>
+                                </button>
+                                <div
+                                    className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                                        isOpen ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'
+                                    }`}
+                                >
+                                    <div className="px-5 pb-6 md:px-7 md:pb-7">
+                                        <div className="h-px mb-4 bg-blue-100/60"></div>
+                                        <p className="text-sm md:text-base leading-relaxed text-[var(--color-text-secondary)] font-normal">
+                                            {faq.a}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {/* Bottom CTA Card: Refined Admissions Banner that seamlessly transitions into the Footer */}
+                <div className="mt-12 md:mt-14">
+                    <div className="bg-white rounded-2xl md:rounded-3xl p-6 sm:p-7 border border-blue-100 shadow-md shadow-blue-950/5 flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-left relative overflow-hidden">
+                        <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-blue-50/70 rounded-full blur-2xl pointer-events-none -z-1"></div>
+                        <div>
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider text-blue-700 bg-blue-50 uppercase mb-2">
+                                <span className="material-symbols-outlined text-xs text-blue-600">support_agent</span>
+                                Admissions Helpdesk
+                            </span>
+                            <h3 className="text-lg md:text-xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)]">
+                                Have more questions?
+                            </h3>
+                            <p className="text-xs md:text-sm text-[var(--color-text-secondary)] mt-1">
+                                Our admissions team is ready to guide you through admission guidelines, transport routes, and campus tours.
+                            </p>
                         </div>
-                        <Link to="/contact" className="px-8 py-2.5 bg-[var(--color-accent)] text-[var(--color-primary)] font-bold rounded-full hover:scale-105 transition-transform text-xs uppercase tracking-widest">
-                            Ask Us
-                        </Link>
+                        <div className="flex items-center gap-3 shrink-0">
+                            <Link
+                                to="/contact"
+                                className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--color-primary)] text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-blue-900 transition-all shadow-sm hover:shadow group"
+                            >
+                                <span>Ask Us</span>
+                                <span className="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform">
+                                    arrow_forward
+                                </span>
+                            </Link>
+                            <a
+                                href="tel:+919692977727"
+                                className="inline-flex items-center justify-center w-10 h-10 bg-blue-50 text-[var(--color-primary)] rounded-xl hover:bg-blue-100 transition-colors"
+                                title="Call SIS Admissions"
+                                aria-label="Call Admissions Office"
+                            >
+                                <span className="material-symbols-outlined text-lg">call</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
