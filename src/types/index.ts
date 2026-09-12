@@ -63,6 +63,7 @@ export interface AdmissionProcessStep {
 
 export interface GalleryImage {
   src: string;
+  thumbnail?: string;
   caption: string;
   event: string;
 }
