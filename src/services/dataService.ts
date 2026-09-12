@@ -123,6 +123,18 @@ export async function fetchGalleryData(): Promise<GalleryImage[]> {
 }
 
 /**
+ * Safely resolves teacher image:
+ * 1. From Sanity image object (if uploaded)
+ * 2. Fallback to local staff image in /images/staff/{normalized-name}.jpg
+ * 3. Fallback to default school banner if neither exists
+ */
+export function getTeacherImageUrl(sanityImage: any, teacherName: string): string {
+    const slug = (teacherName || '').toLowerCase().replace(/[^a-z]/g, '');
+    const localStaffImage = slug ? `/images/staff/${slug}.jpg` : '/images/pages/home/hero-1.jpg';
+    return safeImageUrl(sanityImage, localStaffImage);
+}
+
+/**
  * Fetches teachers from Sanity.
  */
 export async function fetchTeachersData(): Promise<any[]> {
@@ -136,7 +148,7 @@ export async function fetchTeachersData(): Promise<any[]> {
                 role: t.role || 'Teacher',
                 qualification: t.qualification || '',
                 experience: t.experience || '',
-                img: safeImageUrl(t.image, '/images/staff/default-teacher.jpg'),
+                img: getTeacherImageUrl(t.image, t.name),
                 testimonial: t.bio || ''
             }));
         }

@@ -741,6 +741,7 @@ const InstitutionalHighlights = () => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
+    const [activeEventIndex, setActiveEventIndex] = useState(0);
 
     useEffect(() => {
         const loadEvents = async () => {
@@ -761,80 +762,107 @@ const InstitutionalHighlights = () => {
         if (!el) return;
         setCanScrollLeft(el.scrollLeft > 10);
         setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 10);
+
+        const cardWidth = el.clientWidth < 640 ? el.clientWidth * 0.84 : 380;
+        const newIndex = Math.min(
+            events.length - 1,
+            Math.max(0, Math.round(el.scrollLeft / cardWidth))
+        );
+        setActiveEventIndex(newIndex);
     };
 
     const handleScroll = (direction: 'left' | 'right') => {
         const el = scrollContainerRef.current;
         if (!el) return;
-        const scrollAmount = Math.min(el.clientWidth * 0.85, 460);
+        const scrollAmount = Math.min(el.clientWidth * 0.85, 420);
         el.scrollBy({
             left: direction === 'left' ? -scrollAmount : scrollAmount,
             behavior: 'smooth'
         });
     };
 
+    const scrollToIndex = (idx: number) => {
+        const el = scrollContainerRef.current;
+        if (!el) return;
+        const items = el.children;
+        if (items[idx]) {
+            (items[idx] as HTMLElement).scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'start'
+            });
+        }
+    };
+
     return (
         <div className="h-full flex flex-col">
-            {/* Header with Desktop Carousel Controls */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                <div className="flex items-center gap-3.5">
-                    <div className="w-12 h-12 rounded-2xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] flex items-center justify-center border border-blue-100 shadow-sm">
-                        <i className="fas fa-calendar-star text-xl"></i>
+            {/* Header with Carousel Controls & Swipe Hint */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 rounded-2xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] flex items-center justify-center border border-blue-100 shadow-sm shrink-0">
+                        <span className="material-symbols-outlined text-2xl text-[var(--color-primary)]">campaign</span>
                     </div>
                     <div>
-                        <h3 className="text-2xl font-bold font-['Work_Sans'] tracking-tight text-[var(--color-text-primary)]">Highlights & Events</h3>
+                        <div className="flex items-center gap-2">
+                            <h3 className="text-xl sm:text-2xl font-bold font-['Work_Sans'] tracking-tight text-[var(--color-text-primary)]">
+                                Highlights & Events
+                            </h3>
+                            <span className="inline-flex sm:hidden items-center gap-1 text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+                                <span className="material-symbols-outlined text-xs">swipe</span> Swipe
+                            </span>
+                        </div>
                         <p className="text-xs text-[var(--color-text-secondary)]">Click any event to view photos and full story</p>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3 self-end sm:self-auto">
+                <div className="flex items-center gap-3 justify-between sm:justify-end">
                     <Link 
                         to="/events" 
-                        className="text-xs font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors inline-flex items-center gap-1.5 mr-2"
+                        className="text-xs font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors inline-flex items-center gap-1.5"
                     >
                         <span>View All Events</span>
-                        <i className="fas fa-arrow-right text-[10px]"></i>
+                        <span className="material-symbols-outlined text-xs">arrow_forward</span>
                     </Link>
 
-                    {/* Left & Right Chevrons for Desktop Scrolling */}
-                    <div className="hidden md:flex items-center gap-2">
+                    {/* Left & Right Chevrons */}
+                    <div className="flex items-center gap-1.5">
                         <button
                             onClick={() => handleScroll('left')}
                             disabled={!canScrollLeft}
                             aria-label="Previous events"
-                            className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all duration-200 ${
+                            className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-200 ${
                                 canScrollLeft 
                                     ? 'bg-white border-blue-200 text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white shadow-sm hover:scale-105 active:scale-95' 
                                     : 'bg-gray-100 border-gray-200 text-gray-300 cursor-not-allowed'
                             }`}
                         >
-                            <i className="fas fa-chevron-left text-xs"></i>
+                            <span className="material-symbols-outlined text-base">chevron_left</span>
                         </button>
                         <button
                             onClick={() => handleScroll('right')}
                             disabled={!canScrollRight}
                             aria-label="Next events"
-                            className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all duration-200 ${
+                            className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-200 ${
                                 canScrollRight 
                                     ? 'bg-white border-blue-200 text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white shadow-sm hover:scale-105 active:scale-95' 
                                     : 'bg-gray-100 border-gray-200 text-gray-300 cursor-not-allowed'
                             }`}
                         >
-                            <i className="fas fa-chevron-right text-xs"></i>
+                            <span className="material-symbols-outlined text-base">chevron_right</span>
                         </button>
                     </div>
                 </div>
             </div>
             
-            {/* Horizontal Scroll Track */}
+            {/* Horizontal Scroll Track: w-[84vw] on mobile gives clear peek of next card */}
             <div 
                 ref={scrollContainerRef}
                 onScroll={checkScrollBounds}
-                className="flex gap-6 overflow-x-auto no-scrollbar snap-scroll pb-6 h-full items-stretch"
+                className="flex gap-4 sm:gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-4 h-full items-stretch -mx-4 px-4 sm:mx-0 sm:px-0"
             >
                 {loading ? (
                     [1, 2].map(i => (
-                        <div key={i} className="shrink-0 w-full sm:w-[380px] md:w-[420px] bg-white rounded-[22px] overflow-hidden shadow-sm animate-pulse h-[450px]"></div>
+                        <div key={i} className="shrink-0 w-[84vw] sm:w-[360px] md:w-[400px] bg-white rounded-[22px] overflow-hidden shadow-sm animate-pulse h-[430px]"></div>
                     ))
                 ) : events.length > 0 ? (
                     events.map((event, index) => (
@@ -849,10 +877,10 @@ const InstitutionalHighlights = () => {
                                     setSelectedEvent(event);
                                 }
                             }}
-                            className="snap-start shrink-0 w-full sm:w-[380px] md:w-[420px] flex flex-col bg-white rounded-[22px] overflow-hidden group shadow-sm hover:shadow-2xl transition-all duration-500 border border-blue-100 hover:border-[var(--color-accent)]/50 hover:-translate-y-1.5 text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                            className="snap-center sm:snap-start shrink-0 w-[84vw] sm:w-[360px] md:w-[400px] flex flex-col bg-white rounded-[22px] overflow-hidden group shadow-sm hover:shadow-2xl transition-all duration-500 border border-blue-100 hover:border-[var(--color-accent)]/50 hover:-translate-y-1 text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
                         >
                             {/* Image Banner */}
-                            <div className="relative aspect-[16/9] overflow-hidden bg-gray-100">
+                            <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
                                 <img 
                                     src={event.img} 
                                     alt={event.title} 
@@ -863,8 +891,8 @@ const InstitutionalHighlights = () => {
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
                                 {/* Floating Date Tag */}
-                                <div className="absolute top-3.5 left-3.5 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-md border border-black/5 flex items-center gap-2">
-                                    <i className="far fa-calendar-alt text-[var(--color-accent)] text-xs"></i>
+                                <div className="absolute top-3.5 left-3.5 bg-white/95 backdrop-blur-md px-3 py-1 rounded-xl shadow-md border border-black/5 flex items-center gap-1.5">
+                                    <span className="material-symbols-outlined text-xs text-amber-500">calendar_month</span>
                                     <span className="text-xs font-bold text-[var(--color-text-primary)]">
                                         {formatDisplayDate(event.date)}
                                     </span>
@@ -873,28 +901,28 @@ const InstitutionalHighlights = () => {
                                 {/* Gallery Count Indicator */}
                                 {event.gallery && event.gallery.length > 0 && (
                                     <div className="absolute top-3.5 right-3.5 bg-black/60 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-md">
-                                        <i className="fas fa-images text-[9px] text-[var(--color-accent)]"></i>
+                                        <span className="material-symbols-outlined text-xs text-[var(--color-accent)]">photo_library</span>
                                         <span>+{event.gallery.length} Photos</span>
                                     </div>
                                 )}
                             </div>
                             
                             {/* Card Body */}
-                            <div className="p-6 flex flex-col justify-between flex-grow bg-white">
+                            <div className="p-5 sm:p-6 flex flex-col justify-between flex-grow bg-white">
                                 <div>
-                                    <h4 className="text-[var(--color-text-primary)] text-lg md:text-xl font-bold leading-tight mb-2.5 group-hover:text-[var(--color-secondary)] transition-colors line-clamp-2 min-h-[52px] font-['Work_Sans']">
+                                    <h4 className="text-[var(--color-text-primary)] text-lg sm:text-xl font-bold leading-snug mb-2 group-hover:text-[var(--color-secondary)] transition-colors line-clamp-2 min-h-[48px] font-['Work_Sans']">
                                         {event.title}
                                     </h4>
-                                    <p className="text-[var(--color-text-secondary)] text-xs md:text-sm line-clamp-3 leading-relaxed mb-6">
+                                    <p className="text-[var(--color-text-secondary)] text-xs sm:text-sm line-clamp-3 leading-relaxed mb-4">
                                         {event.description || 'Join our vibrant school community in celebrating excellence and academic milestones.'}
                                     </p>
                                 </div>
 
                                 {/* Card Footer CTA */}
-                                <div className="pt-4 border-t border-gray-100 mt-auto flex items-center justify-between text-xs font-bold text-[var(--color-primary)] group-hover:text-[var(--color-accent)] transition-colors">
-                                    <span>{event.gallery && event.gallery.length > 0 ? 'View Photos & Event Details' : 'View Event Details'}</span>
+                                <div className="pt-3.5 border-t border-gray-100 mt-auto flex items-center justify-between text-xs font-bold text-[var(--color-primary)] group-hover:text-[var(--color-accent)] transition-colors">
+                                    <span>{event.gallery && event.gallery.length > 0 ? 'View Photos & Story' : 'View Event Details'}</span>
                                     <span className="w-7 h-7 rounded-full bg-blue-50 text-[var(--color-primary)] group-hover:bg-[var(--color-accent)] group-hover:text-[#002A45] flex items-center justify-center transition-all duration-300">
-                                        <i className="fas fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform"></i>
+                                        <span className="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
                                     </span>
                                 </div>
                             </div>
@@ -902,12 +930,30 @@ const InstitutionalHighlights = () => {
                     ))
                 ) : (
                     <div className="w-full py-16 text-center text-gray-400 bg-white rounded-2xl border border-gray-100">
-                        <i className="far fa-calendar-times text-4xl mb-3 text-gray-300"></i>
+                        <span className="material-symbols-outlined text-4xl mb-2 text-gray-300">event_busy</span>
                         <p className="text-base font-semibold text-gray-600">No events scheduled at this moment.</p>
                         <p className="text-xs text-gray-400 mt-1">Please check back soon for upcoming events.</p>
                     </div>
                 )}
             </div>
+
+            {/* Pagination Dots (showing active position on mobile and desktop) */}
+            {events.length > 1 && (
+                <div className="flex items-center justify-center gap-1.5 mt-2">
+                    {events.map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => scrollToIndex(i)}
+                            aria-label={`Go to event ${i + 1}`}
+                            className={`h-1.5 rounded-full transition-all duration-300 ${
+                                activeEventIndex === i
+                                    ? 'w-6 bg-[var(--color-primary)]'
+                                    : 'w-2 bg-blue-200 hover:bg-blue-300'
+                            }`}
+                        />
+                    ))}
+                </div>
+            )}
 
             {/* Event Detail & Gallery Modal */}
             <EventDetailModal
@@ -996,7 +1042,15 @@ const Leadership = () => {
                                     src={leader.img}
                                     alt={leader.name}
                                     className="w-28 h-28 md:w-36 md:h-36 rounded-[20px] object-cover object-center mx-auto border-4 border-white shadow-lg group-hover:border-[var(--color-accent)]/50 transition-all duration-500"
-                                    onError={(e) => { e.currentTarget.onerror = null; handleImageError(e, { width: 144, height: 144, text: leader.name }); }}
+                                    onError={(e) => {
+                                        const slug = (leader.name || '').toLowerCase().replace(/[^a-z]/g, '');
+                                        const localUrl = `/images/staff/${slug}.jpg`;
+                                        if (!e.currentTarget.src.includes(localUrl)) {
+                                            e.currentTarget.src = localUrl;
+                                        } else {
+                                            handleImageError(e, { width: 144, height: 144, text: leader.name });
+                                        }
+                                    }}
                                     loading="lazy"
                                 />
                             </div>

@@ -16,7 +16,15 @@ const TeacherCard: React.FC<{ imgSrc: string; name: string; role: string; qualif
                     src={imgSrc} 
                     alt={name} 
                     className="w-32 h-32 rounded-full object-cover object-top border-4 border-white shadow-md sm:w-full sm:h-full sm:rounded-none sm:border-0 sm:shadow-none"
-                    onError={(e) => handleImageError(e, { width: 128, height: 128, text: name.split(' ').map(n=>n[0]).join('') })}
+                    onError={(e) => {
+                        const slug = (name || '').toLowerCase().replace(/[^a-z]/g, '');
+                        const localUrl = `/images/staff/${slug}.jpg`;
+                        if (!e.currentTarget.src.includes(localUrl)) {
+                            e.currentTarget.src = localUrl;
+                        } else {
+                            handleImageError(e, { width: 128, height: 128, text: name.split(' ').map(n=>n[0]).join('') });
+                        }
+                    }}
                     loading="lazy"
                     decoding="async"
                     width="128"
