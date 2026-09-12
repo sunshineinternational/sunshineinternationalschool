@@ -391,6 +391,13 @@ const SchoolLifeMoments = () => {
         ? moments 
         : [...moments, ...featuredHomeGallery].slice(0, 8);
 
+    const swipeHandlers = useSwipeable({
+        onSwipedLeft: () => setActiveLightboxIndex((prev) => (prev !== null ? (prev + 1) % safeMoments.length : 0)),
+        onSwipedRight: () => setActiveLightboxIndex((prev) => (prev !== null ? (prev - 1 + safeMoments.length) % safeMoments.length : 0)),
+        trackMouse: false,
+        preventScrollOnSwipe: true,
+    });
+
     // Close lightbox on Escape and support Left/Right arrow navigation
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -588,55 +595,76 @@ const SchoolLifeMoments = () => {
             {/* Portal-Mounted Lightbox Dialog */}
             {mounted && activeLightboxIndex !== null && safeMoments[activeLightboxIndex] && createPortal(
                 <div 
-                    className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-md flex flex-col justify-between items-center p-3 sm:p-6 select-none animate-fade-in"
-                    onClick={() => setActiveLightboxIndex(null)}
+                    className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-md flex flex-col justify-between items-center select-none animate-fade-in h-[100dvh] w-screen overflow-hidden p-3 sm:p-6"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) {
+                            setActiveLightboxIndex(null);
+                        }
+                    }}
                 >
                     {/* Top Control Bar */}
-                    <div className="w-full max-w-6xl flex items-center justify-between text-white z-20 shrink-0 pt-1 sm:pt-0">
-                        <div className="flex items-center gap-2.5">
-                            <span className="px-3 py-1 rounded-full bg-[var(--color-accent)] text-[#002A45] text-xs font-black uppercase tracking-wider shadow-sm">
+                    <div className="w-full max-w-6xl flex items-center justify-between text-white z-20 shrink-0 pt-2 sm:pt-0 px-1 sm:px-0">
+                        <div className="flex items-center gap-2 sm:gap-2.5">
+                            <span className="px-2.5 sm:px-3 py-1 rounded-full bg-[var(--color-accent)] text-[#002A45] text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-sm">
                                 {safeMoments[activeLightboxIndex].event || 'School Life'}
                             </span>
-                            <span className="text-xs text-white/80 font-semibold bg-white/15 px-3 py-1 rounded-full backdrop-blur-md border border-white/10">
+                            <span className="text-[11px] sm:text-xs text-white/90 font-semibold bg-white/15 px-2.5 sm:px-3 py-1 rounded-full backdrop-blur-md border border-white/10">
                                 {activeLightboxIndex + 1} / {safeMoments.length}
                             </span>
                         </div>
 
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setActiveLightboxIndex(null);
-                            }}
-                            aria-label="Close photo preview"
-                            className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-transform hover:scale-105 active:scale-95 backdrop-blur-md border border-white/20 shadow-lg"
-                        >
-                            <span className="material-symbols-outlined text-xl">close</span>
-                        </button>
+                        <div className="flex items-center gap-2">
+                            {/* Mobile swipe hint */}
+                            <span className="inline-flex sm:hidden items-center gap-1 text-[10px] text-white/70 bg-white/10 px-2 py-1 rounded-full">
+                                <span className="material-symbols-outlined text-xs">swipe</span>
+                                <span>Swipe</span>
+                            </span>
+
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setActiveLightboxIndex(null);
+                                }}
+                                aria-label="Close photo preview"
+                                className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-transform hover:scale-105 active:scale-95 backdrop-blur-md border border-white/20 shadow-lg"
+                            >
+                                <span className="material-symbols-outlined text-xl">close</span>
+                            </button>
+                        </div>
                     </div>
 
-                    {/* Center Image Container with Navigation Arrows */}
-                    <div className="relative w-full max-w-6xl flex-grow flex items-center justify-center min-h-0 py-2">
-                        {/* Left Chevron */}
+                    {/* Center Image Container with Touch Swipe & Navigation Controls */}
+                    <div 
+                        {...swipeHandlers}
+                        className="relative w-full max-w-6xl flex-grow flex items-center justify-center min-h-0 py-2 touch-pan-y"
+                        onClick={(e) => {
+                            if (e.target === e.currentTarget) {
+                                setActiveLightboxIndex(null);
+                            }
+                        }}
+                    >
+                        {/* Left Chevron (Easy touch) */}
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setActiveLightboxIndex((prev) => (prev !== null ? (prev - 1 + safeMoments.length) % safeMoments.length : 0));
                             }}
                             aria-label="Previous photo"
-                            className="absolute left-1 sm:left-4 z-20 w-11 h-11 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition-all hover:scale-105 active:scale-95 border border-white/20 shadow-xl"
+                            className="absolute left-1 sm:left-4 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition-all hover:scale-105 active:scale-90 border border-white/20 shadow-xl"
                         >
-                            <span className="material-symbols-outlined text-2xl">chevron_left</span>
+                            <span className="material-symbols-outlined text-xl sm:text-2xl">chevron_left</span>
                         </button>
 
                         {/* Photo Display */}
                         <div 
-                            className="relative max-w-full max-h-[72vh] sm:max-h-[78vh] flex items-center justify-center"
+                            className="relative max-w-full max-h-[68vh] sm:max-h-[78vh] flex items-center justify-center px-10 sm:px-14"
                             onClick={(e) => e.stopPropagation()}
                         >
                             <img
+                                key={safeMoments[activeLightboxIndex].src}
                                 src={safeMoments[activeLightboxIndex].src}
                                 alt={safeMoments[activeLightboxIndex].caption}
-                                className="max-w-full max-h-[72vh] sm:max-h-[78vh] object-contain rounded-2xl shadow-2xl animate-scale-in"
+                                className="max-w-full max-h-[68vh] sm:max-h-[78vh] object-contain rounded-2xl shadow-2xl animate-scale-in"
                             />
                         </div>
 
@@ -647,20 +675,41 @@ const SchoolLifeMoments = () => {
                                 setActiveLightboxIndex((prev) => (prev !== null ? (prev + 1) % safeMoments.length : 0));
                             }}
                             aria-label="Next photo"
-                            className="absolute right-1 sm:right-4 z-20 w-11 h-11 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition-all hover:scale-105 active:scale-95 border border-white/20 shadow-xl"
+                            className="absolute right-1 sm:right-4 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition-all hover:scale-105 active:scale-90 border border-white/20 shadow-xl"
                         >
-                            <span className="material-symbols-outlined text-2xl">chevron_right</span>
+                            <span className="material-symbols-outlined text-xl sm:text-2xl">chevron_right</span>
                         </button>
                     </div>
 
-                    {/* Bottom Caption & Thumbnail Indicators */}
-                    <div className="w-full max-w-2xl text-center shrink-0 pb-2 z-20" onClick={(e) => e.stopPropagation()}>
-                        <p className="text-white text-sm sm:text-base font-medium px-4 leading-relaxed font-['Work_Sans'] drop-shadow-md">
+                    {/* Bottom Caption & Navigation Bar */}
+                    <div className="w-full max-w-2xl text-center shrink-0 pb-3 sm:pb-2 z-20 px-4" onClick={(e) => e.stopPropagation()}>
+                        <p className="text-white text-xs sm:text-base font-medium leading-relaxed font-['Work_Sans'] drop-shadow-md line-clamp-2 sm:line-clamp-none">
                             {safeMoments[activeLightboxIndex].caption}
                         </p>
 
-                        {/* Dot Progress Indicators */}
-                        <div className="flex items-center justify-center gap-1.5 mt-2.5">
+                        {/* Mobile Bottom Thumb Bar */}
+                        <div className="flex sm:hidden items-center justify-center gap-4 mt-2.5">
+                            <button
+                                onClick={() => setActiveLightboxIndex((prev) => (prev !== null ? (prev - 1 + safeMoments.length) % safeMoments.length : 0))}
+                                className="px-3.5 py-1.5 rounded-full bg-white/15 active:bg-white/30 text-white text-xs font-semibold flex items-center gap-1 backdrop-blur-md border border-white/10"
+                            >
+                                <span className="material-symbols-outlined text-sm">arrow_back</span>
+                                <span>Prev</span>
+                            </button>
+                            <span className="text-[11px] text-white/60 font-medium">
+                                {activeLightboxIndex + 1} / {safeMoments.length}
+                            </span>
+                            <button
+                                onClick={() => setActiveLightboxIndex((prev) => (prev !== null ? (prev + 1) % safeMoments.length : 0))}
+                                className="px-3.5 py-1.5 rounded-full bg-white/15 active:bg-white/30 text-white text-xs font-semibold flex items-center gap-1 backdrop-blur-md border border-white/10"
+                            >
+                                <span>Next</span>
+                                <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                            </button>
+                        </div>
+
+                        {/* Dot Progress Indicators (Desktop & Tablet) */}
+                        <div className="hidden sm:flex items-center justify-center gap-1.5 mt-2.5">
                             {safeMoments.map((_, i) => (
                                 <button
                                     key={i}
