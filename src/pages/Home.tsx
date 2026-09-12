@@ -444,6 +444,28 @@ const SchoolLifeMoments = () => {
     );
 };
 
+/**
+ * Helper to humanize dates for notices and events
+ */
+const formatDisplayDate = (dateStr: string): string => {
+    if (!dateStr) return '';
+    const d = parseDDMMYYYY(dateStr);
+    if (!isNaN(d.getTime())) {
+        return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+    const nativeDate = new Date(dateStr);
+    if (!isNaN(nativeDate.getTime())) {
+        return nativeDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+    return dateStr;
+};
+
+const isRecentNotice = (dateStr: string): boolean => {
+    const d = parseDDMMYYYY(dateStr);
+    if (isNaN(d.getTime())) return false;
+    return (Date.now() - d.getTime()) < 14 * 24 * 60 * 60 * 1000;
+};
+
 const InstitutionalNotices = () => {
     const [notices, setNotices] = useState<Notice[]>([]);
     const [loading, setLoading] = useState(true);
@@ -455,7 +477,7 @@ const InstitutionalNotices = () => {
                 const sorted = (data as Notice[]).sort((a, b) => parseDDMMYYYY(b.date).getTime() - parseDDMMYYYY(a.date).getTime());
                 setNotices(sorted.slice(0, 10));
             } catch (err) {
-                console.error(err);
+                console.error("Failed to load notices:", err);
             } finally {
                 setLoading(false);
             }
@@ -464,55 +486,95 @@ const InstitutionalNotices = () => {
     }, []);
 
     return (
-        <div className="bg-[#131b2e] text-white p-8 rounded-[16px] h-full flex flex-col shadow-2xl border border-white/5 relative overflow-hidden group">
-            {/* Soft glow/crest decoration for empty space */}
-            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-[var(--color-accent)]/5 rounded-full blur-3xl group-hover:bg-[var(--color-accent)]/10 transition-all duration-700"></div>
-            
-            <div className="flex items-center gap-4 mb-10 relative z-10">
-                <div className="w-12 h-12 bg-[var(--color-accent)]/20 rounded-xl flex items-center justify-center">
-                    <span className="material-symbols-outlined text-[var(--color-accent)] text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>notifications_active</span>
+        <div className="bg-gradient-to-b from-[#00253f] via-[#001e33] to-[#001727] text-white p-6 sm:p-7 rounded-[24px] h-full flex flex-col shadow-2xl border border-white/10 relative overflow-hidden group">
+            {/* Ambient Gold Glow */}
+            <div className="absolute -top-24 -right-24 w-60 h-60 bg-[var(--color-accent)]/15 rounded-full blur-3xl pointer-events-none group-hover:bg-[var(--color-accent)]/20 transition-all duration-700"></div>
+
+            {/* Header */}
+            <div className="flex items-start justify-between gap-4 mb-6 relative z-10">
+                <div className="flex items-center gap-3.5">
+                    <div className="w-12 h-12 bg-[var(--color-accent)]/20 rounded-2xl flex items-center justify-center border border-[var(--color-accent)]/30 text-[var(--color-accent)] shadow-inner">
+                        <i className="fas fa-bullhorn text-xl"></i>
+                    </div>
+                    <div>
+                        <div className="flex items-center gap-2">
+                            <h3 className="text-2xl font-bold font-['Work_Sans'] tracking-tight text-white">Latest Notices</h3>
+                        </div>
+                        <p className="text-[var(--color-accent)] text-[10px] uppercase tracking-widest font-extrabold mt-0.5">Circulars & Announcements</p>
+                    </div>
                 </div>
-                <div>
-                    <h3 className="text-2xl font-bold font-['Work_Sans'] tracking-tight">Latest Notices</h3>
-                    <p className="text-[var(--color-accent)] text-[10px] uppercase tracking-widest font-bold">Official Updates</p>
-                </div>
+                {notices.length > 0 && (
+                    <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 text-white/80 text-[11px] font-semibold border border-white/10">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]"></span>
+                        {notices.length} Circulars
+                    </span>
+                )}
             </div>
-            
-            <div className="flex-grow overflow-y-auto no-scrollbar space-y-2 relative z-10">
+
+            {/* Scrollable Notice List */}
+            <div className="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-1 max-h-[480px] relative z-10">
                 {loading ? (
                     [1, 2, 3, 4].map(i => (
-                        <div key={i} className="animate-pulse py-4 border-b border-white/5 space-y-2">
-                            <div className="h-2 bg-white/10 rounded w-1/4"></div>
+                        <div key={i} className="animate-pulse bg-white/5 border border-white/5 rounded-xl p-4 space-y-2">
+                            <div className="h-2.5 bg-white/10 rounded w-1/3"></div>
                             <div className="h-4 bg-white/20 rounded w-full"></div>
                         </div>
                     ))
-                ) : (
-                    notices.map((notice, index) => (
-                        <a key={index} href={notice.url} target="_blank" rel="noopener noreferrer" className="block group/item py-5 border-b border-white/5 hover:border-[var(--color-accent)]/30 transition-all">
-                            <div className="flex items-start gap-3">
-                                <div className="mt-1 w-1 h-1 rounded-full bg-[var(--color-accent)] shrink-0 group-hover/item:scale-150 transition-transform"></div>
-                                <div className="space-y-1">
-                                    <p className="text-[10px] text-[var(--color-accent)] font-bold uppercase tracking-wider">{notice.date}</p>
-                                    <h4 className="font-medium text-white/90 group-hover/item:text-white transition-colors leading-relaxed">
-                                        {notice.title}
-                                    </h4>
+                ) : notices.length > 0 ? (
+                    notices.map((notice, index) => {
+                        const isNew = isRecentNotice(notice.date);
+                        const isExternal = notice.url && notice.url !== '#';
+                        return (
+                            <a
+                                key={index}
+                                href={notice.url}
+                                target={isExternal ? "_blank" : "_self"}
+                                rel={isExternal ? "noopener noreferrer" : undefined}
+                                className="block bg-white/[0.04] hover:bg-white/[0.09] border border-white/5 hover:border-[var(--color-accent)]/40 rounded-xl p-4 transition-all duration-300 group/item shadow-sm hover:translate-x-1"
+                            >
+                                <div className="flex items-center justify-between gap-2 mb-1.5">
+                                    <div className="flex items-center gap-2">
+                                        <i className="far fa-calendar-alt text-[var(--color-accent)] text-xs"></i>
+                                        <span className="text-[11px] font-bold text-[var(--color-accent)] tracking-wide">
+                                            {formatDisplayDate(notice.date)}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        {isNew && (
+                                            <span className="px-1.5 py-0.5 rounded-md bg-[var(--color-accent)] text-[#002A45] text-[9px] font-black uppercase tracking-wider shadow-sm">
+                                                NEW
+                                            </span>
+                                        )}
+                                        {isExternal && (
+                                            <i className="fas fa-external-link-alt text-[10px] text-white/40 group-hover/item:text-white transition-colors"></i>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    ))
-                )}
-                {!loading && notices.length < 3 && (
-                    <div className="py-10 opacity-30 text-center">
-                        <span className="material-symbols-outlined text-4xl mb-2">history_edu</span>
-                        <p className="text-xs">More updates coming soon</p>
+                                <h4 className="font-medium text-white/90 group-hover/item:text-white transition-colors leading-snug line-clamp-2 text-sm">
+                                    {notice.title}
+                                </h4>
+                            </a>
+                        );
+                    })
+                ) : (
+                    <div className="py-16 text-center text-white/50">
+                        <i className="far fa-bell-slash text-3xl mb-3 block"></i>
+                        <p className="text-sm font-medium">No notices published at this moment.</p>
+                        <p className="text-xs text-white/30 mt-1">Check back later for school circulars.</p>
                     </div>
                 )}
             </div>
-            
-            <div className="mt-8 pt-6 border-t border-white/10 relative z-10">
-                <Link to="/notices" className="flex items-center justify-between w-full group/btn">
-                    <span className="text-sm font-bold text-[var(--color-accent)] group-hover/btn:tracking-widest transition-all uppercase tracking-wider">View All Notices</span>
-                    <span className="material-symbols-outlined text-[var(--color-accent)] text-xl group-hover/btn:translate-x-2 transition-transform">arrow_right_alt</span>
+
+            {/* Footer Link */}
+            <div className="mt-5 pt-4 border-t border-white/10 relative z-10">
+                <Link 
+                    to="/notices" 
+                    className="flex items-center justify-between w-full text-xs font-bold text-[var(--color-accent)] hover:text-white transition-colors group/btn py-1"
+                >
+                    <span className="uppercase tracking-wider">View All Circulars & Archive</span>
+                    <span className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center group-hover/btn:bg-[var(--color-accent)] group-hover/btn:text-[#002A45] transition-all duration-300">
+                        <i className="fas fa-arrow-right text-xs group-hover/btn:translate-x-0.5 transition-transform"></i>
+                    </span>
                 </Link>
             </div>
         </div>
@@ -522,14 +584,17 @@ const InstitutionalNotices = () => {
 const InstitutionalHighlights = () => {
     const [events, setEvents] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(true);
 
     useEffect(() => {
         const loadEvents = async () => {
             try {
                 const data = await fetchEventsData();
-                setEvents(data.slice(0, 6));
+                setEvents(data.slice(0, 8));
             } catch (err) {
-                console.error(err);
+                console.error("Failed to load events:", err);
             } finally {
                 setLoading(false);
             }
@@ -537,57 +602,148 @@ const InstitutionalHighlights = () => {
         loadEvents();
     }, []);
 
+    const checkScrollBounds = () => {
+        const el = scrollContainerRef.current;
+        if (!el) return;
+        setCanScrollLeft(el.scrollLeft > 10);
+        setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 10);
+    };
+
+    const handleScroll = (direction: 'left' | 'right') => {
+        const el = scrollContainerRef.current;
+        if (!el) return;
+        const scrollAmount = Math.min(el.clientWidth * 0.85, 460);
+        el.scrollBy({
+            left: direction === 'left' ? -scrollAmount : scrollAmount,
+            behavior: 'smooth'
+        });
+    };
+
     return (
         <div className="h-full flex flex-col">
-            <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-[var(--color-primary)] text-3xl">event_upcoming</span>
-                    <h3 className="text-2xl font-bold font-['Work_Sans'] tracking-tight text-[var(--color-text-primary)]">Highlights & Events</h3>
+            {/* Header with Desktop Carousel Controls */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div className="flex items-center gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] flex items-center justify-center border border-blue-100 shadow-sm">
+                        <i className="fas fa-calendar-star text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 className="text-2xl font-bold font-['Work_Sans'] tracking-tight text-[var(--color-text-primary)]">Highlights & Events</h3>
+                        <p className="text-xs text-[var(--color-text-secondary)]">Celebrations, milestones, and vibrant campus life</p>
+                    </div>
                 </div>
-                <Link to="/events" className="text-sm font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors hidden sm:block">
-                    View All Events &rarr;
-                </Link>
+
+                <div className="flex items-center gap-3 self-end sm:self-auto">
+                    <Link 
+                        to="/events" 
+                        className="text-xs font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors inline-flex items-center gap-1.5 mr-2"
+                    >
+                        <span>View All Events</span>
+                        <i className="fas fa-arrow-right text-[10px]"></i>
+                    </Link>
+
+                    {/* Left & Right Chevrons for Desktop Scrolling */}
+                    <div className="hidden md:flex items-center gap-2">
+                        <button
+                            onClick={() => handleScroll('left')}
+                            disabled={!canScrollLeft}
+                            aria-label="Previous events"
+                            className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all duration-200 ${
+                                canScrollLeft 
+                                    ? 'bg-white border-blue-200 text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white shadow-sm hover:scale-105 active:scale-95' 
+                                    : 'bg-gray-100 border-gray-200 text-gray-300 cursor-not-allowed'
+                            }`}
+                        >
+                            <i className="fas fa-chevron-left text-xs"></i>
+                        </button>
+                        <button
+                            onClick={() => handleScroll('right')}
+                            disabled={!canScrollRight}
+                            aria-label="Next events"
+                            className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all duration-200 ${
+                                canScrollRight 
+                                    ? 'bg-white border-blue-200 text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white shadow-sm hover:scale-105 active:scale-95' 
+                                    : 'bg-gray-100 border-gray-200 text-gray-300 cursor-not-allowed'
+                            }`}
+                        >
+                            <i className="fas fa-chevron-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
             
-            <div className="flex gap-6 overflow-x-auto no-scrollbar snap-scroll pb-6 h-full">
+            {/* Horizontal Scroll Track */}
+            <div 
+                ref={scrollContainerRef}
+                onScroll={checkScrollBounds}
+                className="flex gap-6 overflow-x-auto no-scrollbar snap-scroll pb-6 h-full items-stretch"
+            >
                 {loading ? (
-                    [1, 2].map(i => <div key={i} className="shrink-0 w-full md:w-[420px] bg-white rounded-[16px] overflow-hidden shadow-sm animate-pulse h-full"></div>)
-                ) : (
+                    [1, 2].map(i => (
+                        <div key={i} className="shrink-0 w-full sm:w-[380px] md:w-[420px] bg-white rounded-[22px] overflow-hidden shadow-sm animate-pulse h-[450px]"></div>
+                    ))
+                ) : events.length > 0 ? (
                     events.map((event, index) => (
-                        <div key={index} className="snap-center shrink-0 w-full md:w-[420px] flex flex-col bg-white rounded-[16px] overflow-hidden group shadow-sm hover:shadow-xl transition-all border border-black/5">
-                            {/* Image Part */}
-                            <div className="relative aspect-[16/9] overflow-hidden">
+                        <Link 
+                            to="/events" 
+                            key={index} 
+                            className="snap-start shrink-0 w-full sm:w-[380px] md:w-[420px] flex flex-col bg-white rounded-[22px] overflow-hidden group shadow-sm hover:shadow-2xl transition-all duration-500 border border-blue-100 hover:border-[var(--color-accent)]/50 hover:-translate-y-1.5 text-left cursor-pointer"
+                        >
+                            {/* Image Banner */}
+                            <div className="relative aspect-[16/9] overflow-hidden bg-gray-100">
                                 <img 
                                     src={event.img} 
                                     alt={event.title} 
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
                                     onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/images/pages/home/hero-1.jpg'; }}
                                     loading="lazy"
                                 />
-                                <div className="absolute top-4 left-4">
-                                    <span className="px-3 py-1 bg-[var(--color-accent)] text-[var(--color-primary)] text-[10px] font-bold rounded-full uppercase tracking-tighter shadow-lg">
-                                        {event.date}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                                {/* Floating Date Tag */}
+                                <div className="absolute top-3.5 left-3.5 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-md border border-black/5 flex items-center gap-2">
+                                    <i className="far fa-calendar-alt text-[var(--color-accent)] text-xs"></i>
+                                    <span className="text-xs font-bold text-[var(--color-text-primary)]">
+                                        {formatDisplayDate(event.date)}
+                                    </span>
+                                </div>
+
+                                {/* Gallery Count Indicator */}
+                                {event.gallery && event.gallery.length > 0 && (
+                                    <div className="absolute top-3.5 right-3.5 bg-black/60 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-md">
+                                        <i className="fas fa-images text-[9px] text-[var(--color-accent)]"></i>
+                                        <span>+{event.gallery.length} Photos</span>
+                                    </div>
+                                )}
+                            </div>
+                            
+                            {/* Card Body */}
+                            <div className="p-6 flex flex-col justify-between flex-grow bg-white">
+                                <div>
+                                    <h4 className="text-[var(--color-text-primary)] text-lg md:text-xl font-bold leading-tight mb-2.5 group-hover:text-[var(--color-secondary)] transition-colors line-clamp-2 min-h-[52px] font-['Work_Sans']">
+                                        {event.title}
+                                    </h4>
+                                    <p className="text-[var(--color-text-secondary)] text-xs md:text-sm line-clamp-3 leading-relaxed mb-6">
+                                        {event.description || 'Join our vibrant school community in celebrating excellence and academic milestones.'}
+                                    </p>
+                                </div>
+
+                                {/* Card Footer CTA */}
+                                <div className="pt-4 border-t border-gray-100 mt-auto flex items-center justify-between text-xs font-bold text-[var(--color-primary)] group-hover:text-[var(--color-accent)] transition-colors">
+                                    <span>Explore Event Gallery & Details</span>
+                                    <span className="w-7 h-7 rounded-full bg-blue-50 text-[var(--color-primary)] group-hover:bg-[var(--color-accent)] group-hover:text-[#002A45] flex items-center justify-center transition-all duration-300">
+                                        <i className="fas fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform"></i>
                                     </span>
                                 </div>
                             </div>
-                            
-                            {/* Content Part */}
-                            <div className="p-6 flex flex-col justify-between flex-grow bg-white">
-                                <div>
-                                    <h4 className="text-[var(--color-text-primary)] text-xl font-bold leading-tight mb-3 group-hover:text-[var(--color-primary)] transition-colors line-clamp-2 min-h-[56px] font-['Work_Sans']">
-                                        {event.title}
-                                    </h4>
-                                    <p className="text-[var(--color-text-secondary)] text-sm line-clamp-3 leading-relaxed mb-6 italic">
-                                        "{event.description}"
-                                    </p>
-                                </div>
-                                <div className="pt-4 border-t border-gray-100 mt-auto flex items-center justify-between">
-                                    <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400">Featured Highlight</span>
-                                    <span className="material-symbols-outlined text-[var(--color-primary)] group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
-                                </div>
-                            </div>
-                        </div>
+                        </Link>
                     ))
+                ) : (
+                    <div className="w-full py-16 text-center text-gray-400 bg-white rounded-2xl border border-gray-100">
+                        <i className="far fa-calendar-times text-4xl mb-3 text-gray-300"></i>
+                        <p className="text-base font-semibold text-gray-600">No events scheduled at this moment.</p>
+                        <p className="text-xs text-gray-400 mt-1">Please check back soon for upcoming events.</p>
+                    </div>
                 )}
             </div>
         </div>
@@ -596,19 +752,20 @@ const InstitutionalHighlights = () => {
 
 const InstitutionalPulse = () => {
     return (
-        <section className="py-14 bg-[var(--color-background-soft)] relative border-t border-blue-100/30">
-            {/* Subtle background element for the pulse section */}
-            <div className="absolute top-0 right-0 w-1/3 h-full bg-[var(--color-accent)]/5 rounded-l-full blur-3xl -z-10"></div>
+        <section className="py-16 bg-[var(--color-background-soft)] relative border-t border-blue-100/30 overflow-hidden">
+            {/* Subtle background ambient blur */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--color-accent)]/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
             
             <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch">
-                    {/* Notices Column - Dynamic but minimum matching height */}
-                    <div className="lg:col-span-4 min-h-[580px] h-full flex flex-col">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
+                    {/* Notices Column (4 cols) */}
+                    <div className="lg:col-span-4 flex flex-col">
                         <InstitutionalNotices />
                     </div>
                     
-                    {/* Highlights Column */}
-                    <div className="lg:col-span-8 h-full flex flex-col">
+                    {/* Highlights Column (8 cols) */}
+                    <div className="lg:col-span-8 flex flex-col">
                         <InstitutionalHighlights />
                     </div>
                 </div>
