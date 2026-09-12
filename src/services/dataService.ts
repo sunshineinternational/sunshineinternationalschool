@@ -34,6 +34,36 @@ function parseCsvRobust(csv: string): any[] {
 }
 
 /**
+ * Safely resolves an image URL from a Sanity source without throwing if asset is missing or invalid.
+ */
+function safeImageUrl(source: any, fallback: string = ''): string {
+    if (!source) return fallback;
+    const hasAsset = Boolean(source.asset?._ref || source.asset?._id || source._ref || (typeof source === 'string' && source.length > 0));
+    if (!hasAsset) return fallback;
+    try {
+        const url = urlFor(source)?.url();
+        return url || fallback;
+    } catch {
+        return fallback;
+    }
+}
+
+/**
+ * Safely resolves a cropped thumbnail URL from a Sanity source.
+ */
+function safeThumbnailUrl(source: any, width: number = 400, height: number = 400, fallback: string = ''): string {
+    if (!source) return fallback;
+    const hasAsset = Boolean(source.asset?._ref || source.asset?._id || source._ref || (typeof source === 'string' && source.length > 0));
+    if (!hasAsset) return fallback;
+    try {
+        const url = urlFor(source)?.width(width)?.height(height)?.fit('crop')?.url();
+        return url || fallback;
+    } catch {
+        return fallback;
+    }
+}
+
+/**
  * Fetches notices from Sanity, or falls back to Google Sheets if Sanity is empty.
  */
 export async function fetchNoticesData(): Promise<Notice[]> {
@@ -45,8 +75,8 @@ export async function fetchNoticesData(): Promise<Notice[]> {
         const sanityNotices = await client.fetch(query);
         if (sanityNotices && sanityNotices.length > 0) {
             const formatted = sanityNotices.map((n: any) => ({
-                title: n.title,
-                date: n.date.split('-').reverse().join('-'),
+                title: n.title || 'Untitled Notice',
+                date: n.date && typeof n.date === 'string' ? n.date.split('-').reverse().join('-') : '',
                 url: n.url || '#'
             }));
             noticesCache = { data: formatted, timestamp: now };
@@ -56,7 +86,8 @@ export async function fetchNoticesData(): Promise<Notice[]> {
         const data = parseCsvRobust(await response.text()) as Notice[];
         noticesCache = { data, timestamp: now };
         return data;
-    } catch {
+    } catch (error) {
+        console.error("Notices fetch failed:", error);
         return noticesCache ? noticesCache.data : [];
     }
 }
@@ -73,12 +104,14 @@ export async function fetchGalleryData(): Promise<GalleryImage[]> {
         const sanityImages = await client.fetch(query);
         
         if (sanityImages && sanityImages.length > 0) {
-            const formatted = sanityImages.map((img: any) => ({
-                src: urlFor(img.image).url(),
-                thumbnail: urlFor(img.image).width(400).height(400).fit('crop').url(),
-                caption: img.caption || img.title,
-                event: img.category ? (img.category.charAt(0).toUpperCase() + img.category.slice(1)) : 'General'
-            }));
+            const formatted = sanityImages
+                .filter((img: any) => img && img.image && (img.image.asset || img.image._ref))
+                .map((img: any) => ({
+                    src: safeImageUrl(img.image, '/images/pages/home/hero-1.jpg'),
+                    thumbnail: safeThumbnailUrl(img.image, 400, 400, '/images/pages/home/hero-1.jpg'),
+                    caption: img.caption || img.title || 'School Moment',
+                    event: img.category ? (img.category.charAt(0).toUpperCase() + img.category.slice(1)) : 'General'
+                }));
             galleryCache = { data: formatted, timestamp: now };
             return formatted;
         }
@@ -99,11 +132,11 @@ export async function fetchTeachersData(): Promise<any[]> {
         
         if (sanityTeachers && sanityTeachers.length > 0) {
             return sanityTeachers.map((t: any) => ({
-                name: t.name,
-                role: t.role,
+                name: t.name || 'Faculty Member',
+                role: t.role || 'Teacher',
                 qualification: t.qualification || '',
                 experience: t.experience || '',
-                img: t.image ? urlFor(t.image).url() : '/images/staff/default-teacher.jpg',
+                img: safeImageUrl(t.image, '/images/staff/default-teacher.jpg'),
                 testimonial: t.bio || ''
             }));
         }
@@ -123,14 +156,22 @@ export async function fetchEventsData(): Promise<any[]> {
         const sanityEvents = await client.fetch(query);
         
         if (sanityEvents && sanityEvents.length > 0) {
-            return sanityEvents.map((e: any) => ({
-                title: e.title,
-                date: e.date,
-                img: e.mainImage ? urlFor(e.mainImage).url() : '/images/pages/home/hero-1.jpg',
-                description: e.description || '',
-                showOnHome: e.showOnHome || false,
-                gallery: e.gallery ? e.gallery.map((img: any) => urlFor(img).url()) : []
-            }));
+            return sanityEvents.map((e: any) => {
+                const galleryUrls: string[] = Array.isArray(e.gallery)
+                    ? e.gallery
+                        .map((img: any) => safeImageUrl(img, ''))
+                        .filter((url: string) => url.length > 0)
+                    : [];
+
+                return {
+                    title: e.title || 'School Event',
+                    date: e.date || '',
+                    img: safeImageUrl(e.mainImage, '/images/pages/home/hero-1.jpg'),
+                    description: e.description || '',
+                    showOnHome: Boolean(e.showOnHome),
+                    gallery: galleryUrls
+                };
+            });
         }
         return [];
     } catch (error) {
