@@ -6,6 +6,8 @@ import { fetchGalleryData } from '../services/dataService';
 import ScrollAnimator from '../components/common/ScrollAnimator';
 import { handleImageError } from '../utils';
 
+import { createPortal } from 'react-dom';
+
 // Lightbox Component
 const Lightbox: React.FC<{
     images: GalleryImage[];
@@ -14,6 +16,11 @@ const Lightbox: React.FC<{
     onPrev: () => void;
     onNext: () => void;
 }> = ({ images, currentIndex, onClose, onPrev, onNext }) => {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
     
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -25,22 +32,88 @@ const Lightbox: React.FC<{
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [onClose, onPrev, onNext]);
 
-    if (currentIndex < 0 || currentIndex >= images.length) {
+    if (!mounted || currentIndex < 0 || currentIndex >= images.length) {
         return null;
     }
 
     const image = images[currentIndex];
 
-    return (
-        <div className="lightbox-overlay" onClick={onClose}>
-            <button className="lightbox-close" onClick={onClose} aria-label="Close lightbox">&times;</button>
-            <button className="lightbox-prev" onClick={(e) => { e.stopPropagation(); onPrev(); }} aria-label="Previous image">&#10094;</button>
-            <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-                <img src={image.src} alt={image.caption} className="lightbox-image" />
-                <div className="lightbox-caption">{image.caption}</div>
+    return createPortal(
+        <div 
+            className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-md flex flex-col justify-between items-center p-3 sm:p-6 select-none animate-fade-in"
+            onClick={onClose}
+        >
+            {/* Top Control Bar */}
+            <div className="w-full max-w-6xl flex items-center justify-between text-white z-20 shrink-0 pt-1 sm:pt-0">
+                <div className="flex items-center gap-2.5">
+                    <span className="px-3 py-1 rounded-full bg-[var(--color-accent)] text-[#002A45] text-xs font-black uppercase tracking-wider shadow-sm">
+                        {image.event || 'Gallery'}
+                    </span>
+                    <span className="text-xs text-white/80 font-semibold bg-white/15 px-3 py-1 rounded-full backdrop-blur-md border border-white/10">
+                        {currentIndex + 1} / {images.length}
+                    </span>
+                </div>
+
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onClose();
+                    }}
+                    aria-label="Close photo preview"
+                    className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-transform hover:scale-105 active:scale-95 backdrop-blur-md border border-white/20 shadow-lg"
+                >
+                    <span className="material-symbols-outlined text-xl">close</span>
+                </button>
             </div>
-            <button className="lightbox-next" onClick={(e) => { e.stopPropagation(); onNext(); }} aria-label="Next image">&#10095;</button>
-        </div>
+
+            {/* Center Image Container with Navigation Arrows */}
+            <div className="relative w-full max-w-6xl flex-grow flex items-center justify-center min-h-0 py-2">
+                {/* Left Chevron */}
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onPrev();
+                    }}
+                    aria-label="Previous photo"
+                    className="absolute left-1 sm:left-4 z-20 w-11 h-11 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition-all hover:scale-105 active:scale-95 border border-white/20 shadow-xl"
+                >
+                    <span className="material-symbols-outlined text-2xl">chevron_left</span>
+                </button>
+
+                {/* Photo Display */}
+                <div 
+                    className="relative max-w-full max-h-[72vh] sm:max-h-[78vh] flex items-center justify-center"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <img
+                        src={image.src}
+                        alt={image.caption}
+                        className="max-w-full max-h-[72vh] sm:max-h-[78vh] object-contain rounded-2xl shadow-2xl animate-scale-in"
+                        onError={(e) => handleImageError(e, { width: 800, height: 600, text: image.caption })}
+                    />
+                </div>
+
+                {/* Right Chevron */}
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onNext();
+                    }}
+                    aria-label="Next photo"
+                    className="absolute right-1 sm:right-4 z-20 w-11 h-11 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition-all hover:scale-105 active:scale-95 border border-white/20 shadow-xl"
+                >
+                    <span className="material-symbols-outlined text-2xl">chevron_right</span>
+                </button>
+            </div>
+
+            {/* Bottom Caption Bar */}
+            <div className="w-full max-w-2xl text-center shrink-0 pb-2 z-20" onClick={(e) => e.stopPropagation()}>
+                <p className="text-white text-sm sm:text-base font-medium px-4 leading-relaxed font-['Work_Sans'] drop-shadow-md">
+                    {image.caption}
+                </p>
+            </div>
+        </div>,
+        document.body
     );
 };
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
 import { fetchNoticesData, fetchTeachersData, fetchEventsData, fetchGalleryData } from '../services/dataService';
@@ -372,8 +373,10 @@ const QuickLinks = () => (
 const SchoolLifeMoments = () => {
     const [moments, setMoments] = useState(featuredHomeGallery);
     const [activeLightboxIndex, setActiveLightboxIndex] = useState<number | null>(null);
-    
+    const [mounted, setMounted] = useState(false);
+
     useEffect(() => {
+        setMounted(true);
         const syncGallery = async () => {
             const liveData = await fetchHomeSettings();
             if (liveData && liveData.featuredGallery && liveData.featuredGallery.length > 0) {
@@ -414,41 +417,64 @@ const SchoolLifeMoments = () => {
     return (
         <section className="py-14 bg-[var(--color-background-body)] border-t border-blue-100/30">
             <div className="container mx-auto px-4 max-w-6xl">
-                <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                {/* Header with Prominent Enlarge Hints */}
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 md:mb-10 gap-4">
                     <div>
-                        <span className="text-[var(--color-accent)] font-bold text-[10px] uppercase tracking-[0.3em] mb-2 block">Curated Memories</span>
-                        <h2 className="text-2xl md:text-4xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">School Life Moments</h2>
+                        <span className="text-[var(--color-accent)] font-bold text-[10px] uppercase tracking-[0.3em] mb-1.5 block">
+                            Curated Memories
+                        </span>
+                        <h2 className="text-2xl md:text-4xl font-bold font-['Work_Sans'] text-[var(--color-text-primary)] tracking-tight">
+                            School Life Moments
+                        </h2>
                     </div>
-                    <div className="flex items-center gap-4">
-                        <span className="text-xs text-gray-500 hidden sm:inline-flex items-center gap-1.5">
-                            <i className="fas fa-search-plus text-[var(--color-accent)]"></i>
+                    <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                        {/* Visible on Mobile */}
+                        <span className="inline-flex sm:hidden items-center gap-1.5 text-xs text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-100/80 font-bold">
+                            <span className="material-symbols-outlined text-xs text-blue-600">zoom_in</span>
+                            Tap photo to enlarge
+                        </span>
+                        {/* Visible on Desktop */}
+                        <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-gray-500 font-medium">
+                            <span className="material-symbols-outlined text-sm text-[var(--color-accent)]">zoom_in</span>
                             Click any photo to enlarge
                         </span>
-                        <Link to="/gallery" className="inline-flex items-center gap-2 font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-all group pb-1 border-b border-transparent hover:border-[var(--color-accent)] text-sm">
-                            Enter Full Gallery
+                        <Link to="/gallery" className="inline-flex items-center gap-1.5 font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-all group pb-0.5 border-b border-transparent hover:border-[var(--color-accent)] text-xs sm:text-sm">
+                            <span>Enter Full Gallery</span>
                             <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
                         </Link>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:h-[700px] auto-rows-[200px] md:auto-rows-auto">
+                {/* Bento Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:h-[700px] auto-rows-[180px] sm:auto-rows-[200px] md:auto-rows-auto">
                     {/* 1. Large Feature (2x2) */}
                     <div 
                         onClick={() => setActiveLightboxIndex(0)}
                         role="button"
                         tabIndex={0}
+                        aria-label={`Enlarge photo: ${m0.caption}`}
                         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveLightboxIndex(0); } }}
-                        className="col-span-2 row-span-2 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-2xl transition-all duration-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                        className="col-span-2 row-span-2 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-2xl transition-all duration-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] bg-gray-100"
                     >
                         <img src={m0.src} alt={m0.caption} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6">
+                        
+                        {/* Mobile Zoom Cue Icon */}
+                        <span className="absolute bottom-2.5 right-2.5 w-7 h-7 rounded-full bg-black/50 text-white flex items-center justify-center sm:hidden backdrop-blur-md shadow-md pointer-events-none">
+                            <span className="material-symbols-outlined text-xs">zoom_in</span>
+                        </span>
+                        <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-white text-[9px] font-bold sm:hidden">
+                            {m0.event}
+                        </span>
+
+                        {/* Desktop Hover Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 hidden sm:flex flex-col justify-end p-6">
                             <div className="flex items-end justify-between gap-3">
                                 <div>
                                     <span className="text-[var(--color-accent)] text-[9px] uppercase font-extrabold tracking-widest mb-1 block">{m0.event}</span>
                                     <h3 className="text-white font-bold text-lg leading-tight">{m0.caption}</h3>
                                 </div>
                                 <span className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center flex-shrink-0 shadow-lg group-hover:scale-110 transition-transform">
-                                    <i className="fas fa-expand-alt text-xs"></i>
+                                    <span className="material-symbols-outlined text-base">zoom_in</span>
                                 </span>
                             </div>
                         </div>
@@ -459,17 +485,25 @@ const SchoolLifeMoments = () => {
                         onClick={() => setActiveLightboxIndex(1)}
                         role="button"
                         tabIndex={0}
+                        aria-label={`Enlarge photo: ${m1.caption}`}
                         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveLightboxIndex(1); } }}
-                        className="col-span-2 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                        className="col-span-2 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] bg-gray-100"
                     >
                         <img src={m1.src} alt={m1.caption} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-between p-5">
+                        
+                        {/* Mobile Zoom Cue Icon */}
+                        <span className="absolute bottom-2.5 right-2.5 w-7 h-7 rounded-full bg-black/50 text-white flex items-center justify-center sm:hidden backdrop-blur-md shadow-md pointer-events-none">
+                            <span className="material-symbols-outlined text-xs">zoom_in</span>
+                        </span>
+
+                        {/* Desktop Hover Overlay */}
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 hidden sm:flex items-center justify-between p-5">
                             <div>
                                 <span className="text-[var(--color-accent)] text-[9px] uppercase font-extrabold tracking-widest mb-0.5 block">{m1.event}</span>
                                 <p className="text-white text-sm font-bold leading-snug">{m1.caption}</p>
                             </div>
                             <span className="w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center flex-shrink-0">
-                                <i className="fas fa-search-plus text-xs"></i>
+                                <span className="material-symbols-outlined text-sm">zoom_in</span>
                             </span>
                         </div>
                     </div>
@@ -479,11 +513,19 @@ const SchoolLifeMoments = () => {
                         onClick={() => setActiveLightboxIndex(2)}
                         role="button"
                         tabIndex={0}
+                        aria-label={`Enlarge photo: ${m2.caption}`}
                         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveLightboxIndex(2); } }}
-                        className="col-span-1 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                        className="col-span-1 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] bg-gray-100"
                     >
                         <img src={m2.src} alt={m2.caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
-                        <div className="absolute inset-0 bg-[var(--color-primary)]/70 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-between p-4">
+                        
+                        {/* Mobile Zoom Cue Icon */}
+                        <span className="absolute bottom-2 right-2 w-6 h-6 rounded-full bg-black/50 text-white flex items-center justify-center sm:hidden backdrop-blur-md shadow-md pointer-events-none">
+                            <span className="material-symbols-outlined text-[10px]">zoom_in</span>
+                        </span>
+
+                        {/* Desktop Hover Overlay */}
+                        <div className="absolute inset-0 bg-[var(--color-primary)]/80 opacity-0 group-hover:opacity-100 transition-all duration-300 hidden sm:flex flex-col justify-between p-4">
                             <span className="text-[var(--color-accent)] text-[8px] uppercase font-extrabold tracking-widest">{m2.event}</span>
                             <p className="text-white text-xs font-bold leading-tight line-clamp-2">{m2.caption}</p>
                         </div>
@@ -494,11 +536,19 @@ const SchoolLifeMoments = () => {
                         onClick={() => setActiveLightboxIndex(3)}
                         role="button"
                         tabIndex={0}
+                        aria-label={`Enlarge photo: ${m3.caption}`}
                         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveLightboxIndex(3); } }}
-                        className="col-span-1 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                        className="col-span-1 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] bg-gray-100"
                     >
                         <img src={m3.src} alt={m3.caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
-                        <div className="absolute inset-0 bg-[var(--color-primary)]/70 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-between p-4">
+                        
+                        {/* Mobile Zoom Cue Icon */}
+                        <span className="absolute bottom-2 right-2 w-6 h-6 rounded-full bg-black/50 text-white flex items-center justify-center sm:hidden backdrop-blur-md shadow-md pointer-events-none">
+                            <span className="material-symbols-outlined text-[10px]">zoom_in</span>
+                        </span>
+
+                        {/* Desktop Hover Overlay */}
+                        <div className="absolute inset-0 bg-[var(--color-primary)]/80 opacity-0 group-hover:opacity-100 transition-all duration-300 hidden sm:flex flex-col justify-between p-4">
                             <span className="text-[var(--color-accent)] text-[8px] uppercase font-extrabold tracking-widest">{m3.event}</span>
                             <p className="text-white text-xs font-bold leading-tight line-clamp-2">{m3.caption}</p>
                         </div>
@@ -513,11 +563,19 @@ const SchoolLifeMoments = () => {
                                 onClick={() => setActiveLightboxIndex(idx)}
                                 role="button"
                                 tabIndex={0}
+                                aria-label={`Enlarge photo: ${m.caption}`}
                                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveLightboxIndex(idx); } }}
-                                className="col-span-1 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                                className="col-span-1 row-span-1 group relative overflow-hidden rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] bg-gray-100"
                             >
                                 <img src={m.src} alt={m.caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
-                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-between p-3.5">
+                                
+                                {/* Mobile Zoom Cue Icon */}
+                                <span className="absolute bottom-2 right-2 w-6 h-6 rounded-full bg-black/50 text-white flex items-center justify-center sm:hidden backdrop-blur-md shadow-md pointer-events-none">
+                                    <span className="material-symbols-outlined text-[10px]">zoom_in</span>
+                                </span>
+
+                                {/* Desktop Hover Overlay */}
+                                <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-all duration-300 hidden sm:flex flex-col justify-between p-3.5">
                                     <span className="text-[var(--color-accent)] text-[8px] font-bold uppercase tracking-wider">{m.event}</span>
                                     <p className="text-white text-[10px] font-semibold leading-tight line-clamp-2">{m.caption}</p>
                                 </div>
@@ -527,71 +585,98 @@ const SchoolLifeMoments = () => {
                 </div>
             </div>
 
-            {/* Lightbox Modal */}
-            {activeLightboxIndex !== null && safeMoments[activeLightboxIndex] && (
+            {/* Portal-Mounted Lightbox Dialog */}
+            {mounted && activeLightboxIndex !== null && safeMoments[activeLightboxIndex] && createPortal(
                 <div 
-                    className="fixed inset-0 z-[2100] bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4 animate-fade-in"
+                    className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-md flex flex-col justify-between items-center p-3 sm:p-6 select-none animate-fade-in"
                     onClick={() => setActiveLightboxIndex(null)}
                 >
-                    {/* Lightbox Controls */}
-                    <div className="absolute top-4 left-4 right-4 flex items-center justify-between text-white z-10">
-                        <div className="flex items-center gap-2">
-                            <span className="px-3 py-1 rounded-full bg-[var(--color-accent)] text-[#002A45] text-xs font-black uppercase">
-                                {safeMoments[activeLightboxIndex].event}
+                    {/* Top Control Bar */}
+                    <div className="w-full max-w-6xl flex items-center justify-between text-white z-20 shrink-0 pt-1 sm:pt-0">
+                        <div className="flex items-center gap-2.5">
+                            <span className="px-3 py-1 rounded-full bg-[var(--color-accent)] text-[#002A45] text-xs font-black uppercase tracking-wider shadow-sm">
+                                {safeMoments[activeLightboxIndex].event || 'School Life'}
                             </span>
-                            <span className="text-xs text-white/70 font-medium">
-                                {activeLightboxIndex + 1} of {safeMoments.length}
+                            <span className="text-xs text-white/80 font-semibold bg-white/15 px-3 py-1 rounded-full backdrop-blur-md border border-white/10">
+                                {activeLightboxIndex + 1} / {safeMoments.length}
                             </span>
                         </div>
+
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setActiveLightboxIndex(null);
                             }}
                             aria-label="Close photo preview"
-                            className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-colors text-lg"
+                            className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-transform hover:scale-105 active:scale-95 backdrop-blur-md border border-white/20 shadow-lg"
                         >
-                            <i className="fas fa-times"></i>
+                            <span className="material-symbols-outlined text-xl">close</span>
                         </button>
                     </div>
 
-                    {/* Navigation Buttons */}
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveLightboxIndex((prev) => (prev !== null ? (prev - 1 + safeMoments.length) % safeMoments.length : 0));
-                        }}
-                        aria-label="Previous photo"
-                        className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition-colors text-lg z-10"
-                    >
-                        <i className="fas fa-chevron-left"></i>
-                    </button>
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveLightboxIndex((prev) => (prev !== null ? (prev + 1) % safeMoments.length : 0));
-                        }}
-                        aria-label="Next photo"
-                        className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition-colors text-lg z-10"
-                    >
-                        <i className="fas fa-chevron-right"></i>
-                    </button>
+                    {/* Center Image Container with Navigation Arrows */}
+                    <div className="relative w-full max-w-6xl flex-grow flex items-center justify-center min-h-0 py-2">
+                        {/* Left Chevron */}
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveLightboxIndex((prev) => (prev !== null ? (prev - 1 + safeMoments.length) % safeMoments.length : 0));
+                            }}
+                            aria-label="Previous photo"
+                            className="absolute left-1 sm:left-4 z-20 w-11 h-11 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition-all hover:scale-105 active:scale-95 border border-white/20 shadow-xl"
+                        >
+                            <span className="material-symbols-outlined text-2xl">chevron_left</span>
+                        </button>
 
-                    {/* Zoomed Image & Caption */}
-                    <div 
-                        className="max-w-4xl max-h-[82vh] flex flex-col items-center justify-center p-2"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <img
-                            src={safeMoments[activeLightboxIndex].src}
-                            alt={safeMoments[activeLightboxIndex].caption}
-                            className="max-w-full max-h-[74vh] object-contain rounded-2xl shadow-2xl"
-                        />
-                        <p className="text-white text-center font-medium mt-3 text-sm md:text-base px-4">
+                        {/* Photo Display */}
+                        <div 
+                            className="relative max-w-full max-h-[72vh] sm:max-h-[78vh] flex items-center justify-center"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <img
+                                src={safeMoments[activeLightboxIndex].src}
+                                alt={safeMoments[activeLightboxIndex].caption}
+                                className="max-w-full max-h-[72vh] sm:max-h-[78vh] object-contain rounded-2xl shadow-2xl animate-scale-in"
+                            />
+                        </div>
+
+                        {/* Right Chevron */}
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveLightboxIndex((prev) => (prev !== null ? (prev + 1) % safeMoments.length : 0));
+                            }}
+                            aria-label="Next photo"
+                            className="absolute right-1 sm:right-4 z-20 w-11 h-11 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition-all hover:scale-105 active:scale-95 border border-white/20 shadow-xl"
+                        >
+                            <span className="material-symbols-outlined text-2xl">chevron_right</span>
+                        </button>
+                    </div>
+
+                    {/* Bottom Caption & Thumbnail Indicators */}
+                    <div className="w-full max-w-2xl text-center shrink-0 pb-2 z-20" onClick={(e) => e.stopPropagation()}>
+                        <p className="text-white text-sm sm:text-base font-medium px-4 leading-relaxed font-['Work_Sans'] drop-shadow-md">
                             {safeMoments[activeLightboxIndex].caption}
                         </p>
+
+                        {/* Dot Progress Indicators */}
+                        <div className="flex items-center justify-center gap-1.5 mt-2.5">
+                            {safeMoments.map((_, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => setActiveLightboxIndex(i)}
+                                    aria-label={`Jump to photo ${i + 1}`}
+                                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                                        activeLightboxIndex === i
+                                            ? 'w-6 bg-[var(--color-accent)]'
+                                            : 'w-2 bg-white/30 hover:bg-white/60'
+                                    }`}
+                                />
+                            ))}
+                        </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </section>
     );
