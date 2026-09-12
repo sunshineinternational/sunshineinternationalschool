@@ -33,7 +33,11 @@ export const eventType = defineType({
       title: 'Event Photos',
       type: 'array',
       of: [{ type: 'image', options: { hotspot: true } }],
-      description: 'Upload all photos for this specific event here.',
+      options: {
+        layout: 'grid',
+      },
+      validation: (Rule) => Rule.max(10).warning('Maximum 10 photos allowed per event.'),
+      description: 'Upload up to 10 photos for this specific event. You can select or drag-and-drop multiple photos at once.',
     }),
     defineField({
       name: 'showOnHome',
